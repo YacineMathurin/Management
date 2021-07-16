@@ -1,0 +1,20 @@
+export const listeNombrePartants = [
+  { partant:'4'},
+  { partant:'5'},
+  { partant:'6'},
+  { partant:'7'},
+  { partant:'8'},
+  { partant:'9'},
+  { partant:'10'},
+  { partant:'11'},
+  { partant:'12'},
+  { partant:'13'},
+  { partant:'14'},
+  { partant:'15'},
+  { partant:'16'},
+  { partant:'17'},
+  { partant:'18'},
+  { partant:'19'},
+  { partant:'20'},
+  ];
+

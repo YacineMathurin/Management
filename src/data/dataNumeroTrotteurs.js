@@ -1,0 +1,23 @@
+export const listeNumeroTrotteurs = [
+  { numero:'1'},
+  { numero:'2'},
+  { numero:'3'},
+  { numero:'4'},
+  { numero:'5'},
+  { numero:'6'},
+  { numero:'7'},
+  { numero:'8'},
+  { numero:'9'},
+  { numero:'10'},
+  { numero:'11'},
+  { numero:'12'},
+  { numero:'13'},
+  { numero:'14'},
+  { numero:'15'},
+  { numero:'16'},
+  { numero:'17'},
+  { numero:'18'},
+  { numero:'19'},
+  { numero:'20'},
+  ];
+

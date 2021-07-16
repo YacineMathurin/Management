@@ -1,0 +1,11 @@
+Pour changer le code de la react filter box
+cd third-party/react-filter-box
+change le code
+npm install > va recompiler et mettre le js dans ./lib
+apres compile dans lib on peux garder seulement le react-filter-box.js et .css
+
+si on changer le css, il faut changer le .less dans src et recompiler
+
+apres recompile, y'a *peut etre* besoin de redemmarrer l'appli
+
+on peut recompiler meme si le react-filter-box est 'link' a l'appli (npm link)
