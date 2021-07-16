@@ -1,19 +1,31 @@
-Récupèrer le code source sur avec la commande suivante :
+# Introduction
 
-**git@www.qenvilab2.space:Laurent/client_softrobot.git**
+This branch called main. This is protected branch. Settings can be changed by admin [here](https://www.qenvilab.space/laurent/client_softrobot/-/settings/repository).
 
-Installer le projet avec les commandes suivante :
+Please before working in repo, make a branch, implement and test your feature, after request to merge into main.
 
-**npm install**
+# Getting Started
 
-(celle ci est déja installer dans cette version) npm link ./third-party/react-filter-box
+Récupèrer le code source sur avec la commande suivante, if you have your SSH key registered on qenvilab.space :
+
+```
+git clone git@www.qenvilab.space:Laurent/client_softrobot.git
+```
+
+Installer le projet avec les commandes suivante (use cmd, nodejscmd or Powershell) :
+
+```npm install```
+
+(celle ci est déja installé dans cette version) npm link ./third-party/react-filter-box
 
 Démarrer le projet en local avec la commande suivante :
-**npm start**
+```npm start```
 
 Pour compiler le projet pour un déploiement utiliser la commande suivante :
-**npm run-script build**
+```npm run-script build```
 
 Le résultat de la compilation se trouve dans le dossier build du projet.
 ** Uploader le contenu du dossier build sur le serveur HTTP **(Apache par exemple).
 
+# PS.
+Before deployment [read instructions](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Understanding_client-side_tools/Deployment).
