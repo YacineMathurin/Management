@@ -14,15 +14,21 @@ git clone git@www.qenvilab.space:Laurent/client_softrobot.git
 
 Installer le projet avec les commandes suivante (use cmd, nodejscmd or Powershell) :
 
-```npm install```
+```
+npm install
+```
 
 (celle ci est déja installé dans cette version) npm link ./third-party/react-filter-box
 
 Démarrer le projet en local avec la commande suivante :
-```npm start```
+```
+npm start
+```
 
 Pour compiler le projet pour un déploiement utiliser la commande suivante :
-```npm run-script build```
+```
+npm run-script build
+```
 
 Le résultat de la compilation se trouve dans le dossier build du projet.
 ** Uploader le contenu du dossier build sur le serveur HTTP **(Apache par exemple).
