@@ -20,6 +20,13 @@ npm install
 
 (celle ci est déja installé dans cette version) npm link ./third-party/react-filter-box
 
+**ATTENTION: Dans l'etat actuelle:
+added 2282 packages from 2582 contributors and audited 2288 packages in 56.33s
+found 82 moderate severity vulnerabilities
+  run `npm audit fix` to fix them, or `npm audit` for details
+Le projet contienne beacoup des vulnerabilities.**
+
+
 Démarrer le projet en local avec la commande suivante :
 ```
 npm start
