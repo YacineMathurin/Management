@@ -31,6 +31,15 @@ Démarrer le projet en local avec la commande suivante :
 npm start
 ```
 
+Application desormais disponible en locale:
+```
+http://localhost:3000/apps
+```
+verifiez, si le backend fonctionne pour autorisation et utilisation du logicielle.
+
+
+# Deployment
+
 Pour compiler le projet pour un déploiement utiliser la commande suivante :
 ```
 npm run-script build
