@@ -50,3 +50,31 @@ Le résultat de la compilation se trouve dans le dossier build du projet.
 
 # PS.
 Before deployment [read instructions](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Understanding_client-side_tools/Deployment).
+
+# cellarium.ovh
+
+```
+debian@vps-7aa42d99:~/client_softrobot$ npm install
+
+added 2034 packages, and audited 2289 packages in 35s
+
+11 packages are looking for funding
+  run `npm fund` for details
+
+11 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm notice
+npm notice New minor version of npm available! 7.6.3 -> 7.20.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v7.20.0
+npm notice Run npm install -g npm@7.20.0 to update!
+npm notice
+
+```
+
