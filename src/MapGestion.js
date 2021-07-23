@@ -219,9 +219,9 @@ class MapGestion extends React.Component {
           } 
          
         //Add color to the last point
-        MAP.areas[s.nb_pts-2].preFillColor="#00FF00"
+        MAP.areas[s.nb_pts-1].preFillColor="#00FF00"
         //
-        console.log(MAP.areas[s.nb_pts-2].preFillColor)
+        console.log(MAP.areas[s.nb_pts-1].preFillColor)
         }
         
         )
