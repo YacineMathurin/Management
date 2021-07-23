@@ -42,7 +42,7 @@ class MapGestion extends React.Component {
     createStyles({
     }),
   );
-
+  
   provideCoordinates(){
     var fields = this.props.showDetailsMapGestion.split('blob');
     var id = fields[0];
@@ -56,89 +56,172 @@ class MapGestion extends React.Component {
         console.log('coordinate', this.state.coodinates)
         var MAP = {
           name: "my-map",
-          areas: [
-            {
-              name: "1",
-              shape: "circle",
-              coords: [228, 338,5],
-              preFillColor: "green",
-              fillColor: "#0000ff"
-            },
-            
-          ]
+          areas: []
         }
-        let arra=[];
+               
         this.state.coodinates.map((s) => { 
+          MAP.areas.push({
+            name: "0",
+            shape: "circle",
+            coords: [s.x0_pixel, s.y0_pixel,4],
+            preFillColor: "blue",
+            fillColor: "#0000ff"
+          })
+
+          if (s.x1_pixel!=0 & s.y1_pixel!=0) {
           MAP.areas.push({
             name: "1",
             shape: "circle",
-            coords: [s.x0_pixel, s.y0_pixel,5],
-            preFillColor: "green",
+            coords: [s.x1_pixel, s.y1_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
-          }) 
+          })
+          }
+
+          if (s.x2_pixel!=0 & s.y2_pixel!=0) {
           MAP.areas.push({
             name: "2",
             shape: "circle",
-            coords: [s.x1_pixel, s.y1_pixel,5],
-            preFillColor: "green",
+            coords: [s.x2_pixel, s.y2_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
-          }) 
+          })
+          } 
+
+          if (s.x3_pixel!=0 & s.y3_pixel!=0) {
           MAP.areas.push({
             name: "3",
             shape: "circle",
-            coords: [s.x3_pixel, s.y3_pixel,5],
-            preFillColor: "green",
+            coords: [s.x3_pixel, s.y3_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
           }) 
+          }
+
+          if (s.x4_pixel!=0 & s.y4_pixel!=0) {
           MAP.areas.push({
             name: "4",
             shape: "circle",
-            coords: [s.x4_pixel, s.y4_pixel,5],
-            preFillColor: "green",
+            coords: [s.x4_pixel, s.y4_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
           }) 
+          }
+
+          if (s.x5_pixel!=0 & s.y5_pixel!=0) {
           MAP.areas.push({
             name: "5",
             shape: "circle",
-            coords: [s.x5_pixel, s.y5_pixel,5],
-            preFillColor: "green",
+            coords: [s.x5_pixel, s.y5_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
           }) 
+          }
+
+          if (s.x6_pixel!=0 & s.y6_pixel!=0) {
           MAP.areas.push({
             name: "6",
             shape: "circle",
-            coords: [s.x6_pixel, s.y6_pixel,5],
-            preFillColor: "green",
+            coords: [s.x6_pixel, s.y6_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
           }) 
+          }
+
+          if (s.x7_pixel!=0 & s.y7_pixel!=0) { 
           MAP.areas.push({
             name: "7",
             shape: "circle",
-            coords: [s.x7_pixel, s.y7_pixel,5],
-            preFillColor: "green",
+            coords: [s.x7_pixel, s.y7_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
-          }) 
+          })
+          }
+
+          if (s.x8_pixel!=0 & s.y8_pixel!=0) {
           MAP.areas.push({
             name: "8",
             shape: "circle",
-            coords: [s.x8_pixel, s.y8_pixel,5],
-            preFillColor: "green",
+            coords: [s.x8_pixel, s.y8_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
-          }) 
+          })
+          }
+
+          if (s.x9_pixel!=0 & s.y9_pixel!=0) {
           MAP.areas.push({
             name: "9",
             shape: "circle",
-            coords: [s.x9_pixel, s.y9_pixel,5],
-            preFillColor: "green",
+            coords: [s.x9_pixel, s.y9_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
           }) 
+          }
+
+          if (s.x10_pixel!=0 & s.y10_pixel!=0) {
           MAP.areas.push({
             name: "10",
             shape: "circle",
-            coords: [s.x10_pixel, s.y10_pixel,5],
-            preFillColor: "green",
+            coords: [s.x10_pixel, s.y10_pixel,4],
+            preFillColor: "blue",
             fillColor: "#0000ff"
           }) 
+          }
+
+          if (s.x11_pixel!=0 & s.y11_pixel!=0) {
+          MAP.areas.push({
+            name: "11",
+            shape: "circle",
+            coords: [s.x11_pixel, s.y11_pixel,4],
+            preFillColor: "blue",
+            fillColor: "#0000ff"
+          }) 
+          } 
+
+          if (s.x12_pixel!=0 & s.y12_pixel!=0) {
+          MAP.areas.push({
+            name: "12",
+            shape: "circle",
+            coords: [s.x12_pixel, s.y12_pixel,4],
+            preFillColor: "blue",
+            fillColor: "#0000ff"
+          })
+          } 
+
+          if (s.x13_pixel!=0 & s.y13_pixel!=0) {
+          MAP.areas.push({
+            name: "13",
+            shape: "circle",
+            coords: [s.x13_pixel, s.y13_pixel,4],
+            preFillColor: "blue",
+            fillColor: "#0000ff"
+          })
+          }
+
+          if (s.x14_pixel!=0 & s.y14_pixel!=0) {
+          MAP.areas.push({
+            name: "14",
+            shape: "circle",
+            coords: [s.x14_pixel, s.y14_pixel,4],
+            preFillColor: "blue",
+            fillColor: "#0000ff"
+          }) 
+          }
+
+          if (s.x15_pixel!=0 & s.y15_pixel!=0) {
+          MAP.areas.push({
+            name: "15",
+            shape: "circle",
+            coords: [s.x15_pixel, s.y15_pixel,4],
+            preFillColor: "blue",
+            fillColor: "#0000ff"
+          })
+          } 
+         
+        //Add color to the last point
+        MAP.areas[s.nb_pts-2].preFillColor="#00FF00"
+        //
+        console.log(MAP.areas[s.nb_pts-2].preFillColor)
         }
         
         )
@@ -170,9 +253,7 @@ class MapGestion extends React.Component {
       console.log('Request failed', error)
     })
   }
-  load() {
-		this.setState({ msg: "Interact with image !" });
-	}
+  
   getMAJMaps(){
     
     fetch(Const.URL_WS_PROVIDE_METRICS, { retry: 3, retryDelay: 1000 })
@@ -190,7 +271,7 @@ class MapGestion extends React.Component {
     })
   }
   load() {
-		this.setState({ msg: "Interact with image !" });
+		this.setState({ msg: "" });
 	}
 
 	clicked(area) {
@@ -207,7 +288,7 @@ class MapGestion extends React.Component {
 	clickedOutside(evt) {
 		const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
 		this.setState({
-			msg: `You clicked on the image at coords ${JSON.stringify(coords)} !`
+			msg: `Vous avez cliqué sur  ${JSON.stringify(coords)} `
 		});
     this.setState({
       xCoord:evt.nativeEvent.layerX,
@@ -220,25 +301,21 @@ class MapGestion extends React.Component {
 	moveOnImage(evt) {
 		const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
 		this.setState({
-			moveMsg: `Coordonnées  ${JSON.stringify(coords)} !`
+			moveMsg: `Coordonnées  ${JSON.stringify(coords)} `
 		});
 	}
 
 	enterArea(area) {
 		this.setState({
 			hoveredArea: area,
-			msg: `You entered ${area.shape} ${area.name} at coords ${JSON.stringify(
-				area.coords
-			)} !`
+			msg: `Vous êtes rentré sur ${area.shape} ${area.name} `
 		});
 	}
 
 	leaveArea(area) {
 		this.setState({
 			hoveredArea: null,
-			msg: `You leaved ${area.shape} ${area.name} at coords ${JSON.stringify(
-				area.coords
-			)} !`
+			msg: `Vous avez quitté ${area.shape} ${area.name}`
 		});
 	}
 
@@ -293,6 +370,7 @@ class MapGestion extends React.Component {
     
         <div>
         <img style={{float:"left", marginTop:"0.5em"}} width="40" src="./images/carrier.svg"/>
+        <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourMaps() }/>
         </div>
                     
         <div style={{marginLeft:"3.5em"}}>
@@ -301,41 +379,43 @@ class MapGestion extends React.Component {
         </Typography>
         </div>
         <span >&nbsp;</span>
-  
-      <div style={{float:"left", marginTop:"2em",alignSelf: 'center',paddingLeft:"22%"}} >
-        <ImageMapper 
-			src={ `data:image/png;base64,`+blob}
-			map={this.state.mp}
-			width={500}
-			onLoad={() => this.load()}
-			onClick={area => this.clicked(area)}
-			onMouseEnter={area => this.enterArea(area)}
-			onMouseLeave={area => this.leaveArea(area)}
-			onMouseMove={(area, _, evt) => this.moveOnArea(area, evt)}
-			onImageClick={evt => this.clickedOutside(evt)}
-			onImageMouseMove={evt => this.moveOnImage(evt)}
-			lineWidth={4}
-			strokeColor={"white"}
-		/>
-		{this.state.hoveredArea && (
-		<span
-		className="tooltip"
-		style={{ ...this.getTipPosition(this.state.hoveredArea) }}
-		>
-		{this.state.hoveredArea && this.state.hoveredArea.name}
-		</span>
-		)}
-        <pre className="message">
-		 {this.state.msg ? this.state.msg : null}   {this.state.moveMsg ? this.state.moveMsg : null}
-		</pre>
-		<pre>
-    {this.state.xCoord ? this.state.xCoord : null}   {this.state.yCoord ? this.state.yCoord : null}   
-        </pre>
-       
-	</div>
-    <div style={{float:"left", marginTop:"2em",alignSelf: 'center',paddingLeft:"22%",marginBottom:"2em"}} >				
-    
-                     <span >&nbsp;</span>
+        <Table>
+                <TableHead>
+                  <TableRow>
+                      <TableCell align="center">Map</TableCell>
+                      <TableCell align="center">Commandes</TableCell>
+                  </TableRow>
+                </TableHead>
+        <TableRow>
+            <TableCell align="center">
+                <ImageMapper 
+                  src={ `data:image/png;base64,`+blob}
+                  map={this.state.mp}
+                  width={500}
+                  onLoad={() => this.load()}
+                  onClick={area => this.clicked(area)}
+                  onMouseEnter={area => this.enterArea(area)}
+                  onMouseLeave={area => this.leaveArea(area)}
+                  onMouseMove={(area, _, evt) => this.moveOnArea(area, evt)}
+                  onImageClick={evt => this.clickedOutside(evt)}
+                  onImageMouseMove={evt => this.moveOnImage(evt)}
+                  lineWidth={4}
+                  strokeColor={"white"}
+                />
+            </TableCell>
+            <TableCell align="center">
+            {this.state.hoveredArea && (
+            <span
+            className="tooltip"
+            style={{ ...this.getTipPosition(this.state.hoveredArea) }}
+            >
+            {this.state.hoveredArea && this.state.hoveredArea.name}
+            </span>
+            )}
+            <h3 className="message">
+            {this.state.msg ? this.state.msg : null}</h3>
+            <h3> {this.state.moveMsg ? this.state.moveMsg : null} </h3>
+            <span>&nbsp;</span>
                      <Button
                       fullWidth="false"
                       width="2em"
@@ -343,9 +423,9 @@ class MapGestion extends React.Component {
                       variant="contained"
                         color="primary"
                         size="medium"
-                      >Déplacer robot
-                         
-                      </Button> <span>&nbsp;</span>
+                      >
+                        Déplacer robot
+                     </Button> <span>&nbsp;</span>
                       <Button
                       fullWidth="false"
                       width="2em"
@@ -354,7 +434,7 @@ class MapGestion extends React.Component {
                         color="primary"
                         size="large"
                       >
-                         Mise à jour Map
+                        Rafraichir Map
                       </Button><span>&nbsp;</span>
                       <Button
                       fullWidth="false"
@@ -376,8 +456,9 @@ class MapGestion extends React.Component {
                       >
                          Démarrage
                       </Button>
-      
-     </div>
+            </TableCell>
+        </TableRow>
+        </Table>
      
     </CardContent>
     </Card>

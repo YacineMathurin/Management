@@ -78,7 +78,7 @@ class PageTableauDeBord extends React.Component {
   }
 
   provideMetrics(){
-    fetch(Const.URL_WS_PROVIDE_METRICS, { retry: 3, retryDelay: 1000 })
+    fetch(Const.URL_WS_ALL_ROBOTS+"?email="+localStorage.getItem('username'), { retry: 3, retryDelay: 1000 })
     .then(res => res.json())
     .then((data) => {
       console.log("it's me MR")
@@ -168,12 +168,12 @@ class PageTableauDeBord extends React.Component {
             <Table>
                 <TableHead>
                   <TableRow>
-                      <TableCell align="center">ID Client</TableCell>
+                      <TableCell align="center">ID Client </TableCell>
                       <TableCell align="center">ID Robot</TableCell>
                       <TableCell align="center">Disponibilité</TableCell>
-                      <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>
+                     {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
                       <TableCell align="center"><img  width="24" src="./images/car-battery.svg"/></TableCell>
-                      <TableCell align="center"></TableCell>
+                    {/*<TableCell align="center"></TableCell>*/}
                       <TableCell align="center"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -208,9 +208,9 @@ class PageTableauDeBord extends React.Component {
                   <TableCell align="center">{s.ID_CLIENT}</TableCell>
                   <TableCell align="center">{s.ID_ROBOT}</TableCell>
                   <TableCell align="center"> <img style={{marginTop:"0.5em"}} width="34" src={dispo}/></TableCell>
-                  <TableCell align="center"></TableCell>
+                 {/*  <TableCell align="center"></TableCell>*/}
                   <TableCell align="center"><img  width="30" src={batterie}/></TableCell>
-                  <TableCell align="center">
+                 {/* <TableCell align="center">
                   
                   <Button
                       fullWidth="false"
@@ -223,7 +223,7 @@ class PageTableauDeBord extends React.Component {
                         détails
                       </Button>
                       
-                  </TableCell>
+                  </TableCell>*/}
                   <TableCell align="center">
                   
                      <Button
