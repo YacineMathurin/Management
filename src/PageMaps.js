@@ -83,12 +83,11 @@ class PageMaps extends React.Component {
   render() {
   return (
     <div className={this.classes.root}>
-    
-    {/* Section recherche  */}
-    <Container style={{minWidth:'1200px', maxWidth:'1200px', backgroundColor: '#FAFBFC',height: '100%' }}>
-    
-    
+    <Grid container spacing={2}>
+       
+    <Grid item  xs={12} md={8} lg={9}>
     <Card>
+    
     <CardContent >
     
         <div>
@@ -106,12 +105,11 @@ class PageMaps extends React.Component {
       { (this.state.maps != null) && (  this.state.maps.map((s) => { 
                 
                 return ( 
-                  
-                    <div key={s.pk} style={{paddingLeft:400,backgroundColor:"#E0F2FB",border: 2}}>
-                    <h2 > Map {s.pk}</h2>
-                    <img  style={{paddingBottom:10}}  width="250"  src={ `data:image/png;base64,`+s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk+"blob"+s.blob) }/>
-                                             
-                    </div>
+
+                    <figure >
+                    <figcaption style={{textAlign: "left"}}><b>Map {s.pk}</b></figcaption>
+                    <img key={s.pk} style={{paddingBottom:10}}  width="250"  src={ `data:image/png;base64,`+s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk+"blob"+s.blob) }/>
+                    </figure>
                 
                 )
           }))
@@ -124,7 +122,9 @@ class PageMaps extends React.Component {
        
     </CardContent>
     </Card>
-    </Container>
+    
+    </Grid>
+    </Grid>
     </div>
   )}
 }

@@ -34,7 +34,8 @@ class MapGestion extends React.Component {
       blob:null,
       xCoord:null,
       yCoord:null,
-      hoveredArea: null, msg: null, moveMsg: null
+      hoveredArea: null, msg: null, moveMsg: null,status:null,
+      nbpts:null
     }
   }
 
@@ -60,6 +61,7 @@ class MapGestion extends React.Component {
         }
                
         this.state.coodinates.map((s) => { 
+          this.setState({nbpts:s.nb_pts})
           MAP.areas.push({
             name: "0",
             shape: "circle",
@@ -227,7 +229,7 @@ class MapGestion extends React.Component {
         )
 
         console.log('co', MAP)
-        
+        console.log('nbpts', this.state.nbpts)
         this.setState({mp:MAP})
         //this.setState({co:arra})
      
@@ -247,6 +249,9 @@ class MapGestion extends React.Component {
     .then((data) => {
       console.log("J'ai ajouté un point x="+ x+"  y="+y)
       console.log(data)
+      this.setState({
+        status:"J'ai ajouté un point x="+ x+"  y="+y
+      })
       
     })
     .catch((error) => {
@@ -276,7 +281,7 @@ class MapGestion extends React.Component {
 
 	clicked(area) {
 		this.setState({
-			msg: `You clicked on ${area.shape} at coords ${JSON.stringify(
+			msg: `Vous avez cliqué sur ${area.shape} à ${JSON.stringify(
 				area.coords
 			)} !`
 		});
@@ -322,7 +327,7 @@ class MapGestion extends React.Component {
 	moveOnArea(area, evt) {
 		const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
 		this.setState({
-			moveMsg: `You moved on ${area.shape} ${
+			moveMsg: `Vous êtes à  ${area.shape} ${
 				area.name
 			} at coords ${JSON.stringify(coords)} !`
 		});
@@ -361,10 +366,9 @@ class MapGestion extends React.Component {
   return (
     <div className={this.classes.root}>
     
-    {/* Section recherche  */}
-    <Container style={{minWidth:'1200px', maxWidth:'1200px', backgroundColor: '#FAFBFC',height: '100%' }}>
-    
-    
+    <Grid container spacing={2}>
+       
+    <Grid item  xs={12} md={8} lg={9}>
     <Card>
     <CardContent>
     
@@ -404,6 +408,7 @@ class MapGestion extends React.Component {
                 />
             </TableCell>
             <TableCell align="center">
+            <h1 style={{color:'orange', fontWeight: 'bold'}}> {this.state.nbpts ? this.state.nbpts +" positions ": null}</h1> 
             {this.state.hoveredArea && (
             <span
             className="tooltip"
@@ -415,6 +420,8 @@ class MapGestion extends React.Component {
             <h3 className="message">
             {this.state.msg ? this.state.msg : null}</h3>
             <h3> {this.state.moveMsg ? this.state.moveMsg : null} </h3>
+
+            <h3 style={{color:'green', fontWeight: 'bold'}}> {this.state.status ? this.state.status : null}</h3>
             <span>&nbsp;</span>
                      <Button
                       fullWidth="false"
@@ -462,7 +469,8 @@ class MapGestion extends React.Component {
      
     </CardContent>
     </Card>
-    </Container>
+    </Grid>
+    </Grid>
     </div>
   )}
 }
