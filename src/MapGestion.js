@@ -374,7 +374,7 @@ class MapGestion extends React.Component {
     
         <div>
         <img style={{float:"left", marginTop:"0.5em"}} width="40" src="./images/carrier.svg"/>
-        <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourMaps() }/>
+        <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/backI.png" onClick={() => this.props.callBackRetourMaps() }/>
         </div>
                     
         <div style={{marginLeft:"3.5em"}}>
