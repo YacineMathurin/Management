@@ -47,6 +47,7 @@ class MapGestion extends React.Component {
   provideCoordinates(){
     var fields = this.props.showDetailsMapGestion.split('blob');
     var id = fields[0];
+    var lgg=0;
     console.log("Wait Please !!!!!")
     console.log("my Id: "+id)
     fetch(Const.URL_WS_ALL_DEF+"?id="+id, { retry: 3, retryDelay: 1000 })
@@ -61,173 +62,24 @@ class MapGestion extends React.Component {
         }
                
         this.state.coodinates.map((s) => { 
-          this.setState({nbpts:s.nb_pts})
+          //this.setState({nbpts:s.nb_pts})
           MAP.areas.push({
-            name: "0",
+            name: s.pk,
             shape: "circle",
-            coords: [s.x0_pixel, s.y0_pixel,4],
+            coords: [s.x_pixel, s.y_pixel,4],
             preFillColor: "blue",
             fillColor: "#0000ff"
           })
+          
+        })
 
-          if (s.x1_pixel!=0 & s.y1_pixel!=0) {
-          MAP.areas.push({
-            name: "1",
-            shape: "circle",
-            coords: [s.x1_pixel, s.y1_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          })
-          }
-
-          if (s.x2_pixel!=0 & s.y2_pixel!=0) {
-          MAP.areas.push({
-            name: "2",
-            shape: "circle",
-            coords: [s.x2_pixel, s.y2_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          })
-          } 
-
-          if (s.x3_pixel!=0 & s.y3_pixel!=0) {
-          MAP.areas.push({
-            name: "3",
-            shape: "circle",
-            coords: [s.x3_pixel, s.y3_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          }) 
-          }
-
-          if (s.x4_pixel!=0 & s.y4_pixel!=0) {
-          MAP.areas.push({
-            name: "4",
-            shape: "circle",
-            coords: [s.x4_pixel, s.y4_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          }) 
-          }
-
-          if (s.x5_pixel!=0 & s.y5_pixel!=0) {
-          MAP.areas.push({
-            name: "5",
-            shape: "circle",
-            coords: [s.x5_pixel, s.y5_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          }) 
-          }
-
-          if (s.x6_pixel!=0 & s.y6_pixel!=0) {
-          MAP.areas.push({
-            name: "6",
-            shape: "circle",
-            coords: [s.x6_pixel, s.y6_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          }) 
-          }
-
-          if (s.x7_pixel!=0 & s.y7_pixel!=0) { 
-          MAP.areas.push({
-            name: "7",
-            shape: "circle",
-            coords: [s.x7_pixel, s.y7_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          })
-          }
-
-          if (s.x8_pixel!=0 & s.y8_pixel!=0) {
-          MAP.areas.push({
-            name: "8",
-            shape: "circle",
-            coords: [s.x8_pixel, s.y8_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          })
-          }
-
-          if (s.x9_pixel!=0 & s.y9_pixel!=0) {
-          MAP.areas.push({
-            name: "9",
-            shape: "circle",
-            coords: [s.x9_pixel, s.y9_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          }) 
-          }
-
-          if (s.x10_pixel!=0 & s.y10_pixel!=0) {
-          MAP.areas.push({
-            name: "10",
-            shape: "circle",
-            coords: [s.x10_pixel, s.y10_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          }) 
-          }
-
-          if (s.x11_pixel!=0 & s.y11_pixel!=0) {
-          MAP.areas.push({
-            name: "11",
-            shape: "circle",
-            coords: [s.x11_pixel, s.y11_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          }) 
-          } 
-
-          if (s.x12_pixel!=0 & s.y12_pixel!=0) {
-          MAP.areas.push({
-            name: "12",
-            shape: "circle",
-            coords: [s.x12_pixel, s.y12_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          })
-          } 
-
-          if (s.x13_pixel!=0 & s.y13_pixel!=0) {
-          MAP.areas.push({
-            name: "13",
-            shape: "circle",
-            coords: [s.x13_pixel, s.y13_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          })
-          }
-
-          if (s.x14_pixel!=0 & s.y14_pixel!=0) {
-          MAP.areas.push({
-            name: "14",
-            shape: "circle",
-            coords: [s.x14_pixel, s.y14_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          }) 
-          }
-
-          if (s.x15_pixel!=0 & s.y15_pixel!=0) {
-          MAP.areas.push({
-            name: "15",
-            shape: "circle",
-            coords: [s.x15_pixel, s.y15_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
-          })
-          } 
-         
-        //Add color to the last point
-        MAP.areas[s.nb_pts-1].preFillColor="#00FF00"
-        //
-        console.log(MAP.areas[s.nb_pts-1].preFillColor)
-        }
+        if(this.state.coodinates.length>0) {
+          //ajouter la couleur
+          lgg=this.state.coodinates.length
+          console.log(lgg)
+          MAP.areas[lgg-1].preFillColor="#00FF00"
+         }
         
-        )
-
         console.log('co', MAP)
         console.log('nbpts', this.state.nbpts)
         this.setState({mp:MAP})
