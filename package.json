@@ -29,6 +29,8 @@
     "react-filter-box": "^3.4.2",
     "react-grid-layout": "^0.17.1",
     "react-image-mapper": "0.0.15",
+    "react-lineto": "^3.2.1",
+    "react-native-svg": "^12.1.1",
     "react-number-format": "^4.4.1",
     "react-responsive-carousel": "^3.2.18",
     "react-router-dom": "^5.1.2",

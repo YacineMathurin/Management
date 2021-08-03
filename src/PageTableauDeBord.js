@@ -170,10 +170,11 @@ class PageTableauDeBord extends React.Component {
                   <TableRow>
                       <TableCell align="center">ID Client </TableCell>
                       <TableCell align="center">ID Robot</TableCell>
-                      <TableCell align="center">Disponibilité</TableCell>
+                      <TableCell align="center">En mouvement</TableCell>
+                      <TableCell align="center">Connecté</TableCell>
                      {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
-                      <TableCell align="center"><img  width="24" src="./images/car-battery.svg"/></TableCell>
-                    {/*<TableCell align="center"></TableCell>*/}
+                      <TableCell align="center">Autonomie </TableCell>
+                      <TableCell align="center"></TableCell>
                       <TableCell align="center"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -208,9 +209,9 @@ class PageTableauDeBord extends React.Component {
                   <TableCell align="center">{s.ID_CLIENT}</TableCell>
                   <TableCell align="center">{s.ID_ROBOT}</TableCell>
                   <TableCell align="center"> <img style={{marginTop:"0.5em"}} width="34" src={dispo}/></TableCell>
-                 {/*  <TableCell align="center"></TableCell>*/}
+                  <TableCell align="center"></TableCell>
                   <TableCell align="center"><img  width="30" src={batterie}/></TableCell>
-                 {/* <TableCell align="center">
+                <TableCell align="center">
                   
                   <Button
                       fullWidth="false"
@@ -223,7 +224,7 @@ class PageTableauDeBord extends React.Component {
                         détails
                       </Button>
                       
-                  </TableCell>*/}
+                  </TableCell>
                   <TableCell align="center">
                   
                      <Button

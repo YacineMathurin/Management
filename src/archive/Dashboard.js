@@ -121,7 +121,7 @@ export default function Dashboard() {
          
           <img width='75' src={"./images/logo3.png"}></img>
           <Typography variant="h6" className={classes.title}>
-      Trotstats référentiel
+      RobotFlit
     </Typography>
     
 

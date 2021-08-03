@@ -21,6 +21,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Button from '@material-ui/core/Button';
 import ImageMapper from 'react-image-mapper';
+import LineTo from 'react-lineto';
 
 class MapGestion extends React.Component {
   constructor(props) {
@@ -43,10 +44,43 @@ class MapGestion extends React.Component {
     createStyles({
     }),
   );
-  
+  deleteOnePoint(pk){
+    console.log("vous voulez effacer  le point de pk="+ pk)
+    fetch(Const.URL_WS_DEL_DEF+"?pk="+pk, { retry: 3, retryDelay: 1000 })
+    .then(res => res.json())
+    .then((data) => {
+     
+      this.setState({
+        status:"J'ai supprimé un point, Veuillez Rafraichir"
+      })
+      this.provideCoordinates()
+    })
+    .catch((error) => {
+      console.log('Request failed', error)
+    })
+  }
+  deletePoints(id){
+    console.log("vous voulez effacer tous les points de id="+ id)
+    fetch(Const.URL_WS_DEL_ALL_DEF+"?id="+id, { retry: 3, retryDelay: 1000 })
+    .then(res => res.json())
+    .then((data) => {
+     
+      this.setState({
+        status:"J'ai supprimé plusieurs points, Veuillez Rafraichir"
+      })
+      this.provideCoordinates()
+    })
+    .catch((error) => {
+      console.log('Request failed', error)
+    })
+
+  }
   provideCoordinates(){
     var fields = this.props.showDetailsMapGestion.split('blob');
     var id = fields[0];
+    this.setState({
+      actualID: id
+    })
     var lgg=0;
     console.log("Wait Please !!!!!")
     console.log("my Id: "+id)
@@ -66,9 +100,9 @@ class MapGestion extends React.Component {
           MAP.areas.push({
             name: s.pk,
             shape: "circle",
-            coords: [s.x_pixel, s.y_pixel,4],
-            preFillColor: "blue",
-            fillColor: "#0000ff"
+            coords: [s.x_pixel, s.y_pixel,9],
+            preFillColor: "#0099ff",
+            fillColor: "red"
           })
           
         })
@@ -77,7 +111,7 @@ class MapGestion extends React.Component {
           //ajouter la couleur
           lgg=this.state.coodinates.length
           console.log(lgg)
-          MAP.areas[lgg-1].preFillColor="#00FF00"
+          MAP.areas[lgg-1].preFillColor="red"
          }
         
         console.log('co', MAP)
@@ -88,6 +122,7 @@ class MapGestion extends React.Component {
       console.log('co', this.state.co)
       console.log('map', this.state.mp)
       console.log("Finish i have points !!!!!")
+      this.getLines()
     })
     .catch((error) => {
       console.log('Request failed', error)
@@ -102,7 +137,7 @@ class MapGestion extends React.Component {
       console.log("J'ai ajouté un point x="+ x+"  y="+y)
       console.log(data)
       this.setState({
-        status:"J'ai ajouté un point x="+ x+"  y="+y
+        status:"J'ai ajouté un point x="+ x+"  y="+y +", Veuillez Rafraichir"
       })
       
     })
@@ -111,34 +146,17 @@ class MapGestion extends React.Component {
     })
   }
   
-  getMAJMaps(){
-    
-    fetch(Const.URL_WS_PROVIDE_METRICS, { retry: 3, retryDelay: 1000 })
-    .then(res => res.json())
-    .then((data) => {
-      console.log("it's me MR")
-      console.log(data)
-      
-        console.log("ELse it's me MR")
-        this.setState({ listeMetrics: data})
-      
-    })
-    .catch((error) => {
-      console.log('Request failed', error)
-    })
-  }
+
   load() {
 		this.setState({ msg: "" });
-	}
+ 	}
 
 	clicked(area) {
-		this.setState({
-			msg: `Vous avez cliqué sur ${area.shape} à ${JSON.stringify(
-				area.coords
-			)} !`
+  	this.setState({
+			msg: `Vous avez cliqué sur ${area.shape} à ${JSON.stringify(area.coords	)} !`,
+      actualPk : area.name
 		});
-
-    
+ 
   }
    
 
@@ -160,8 +178,33 @@ class MapGestion extends React.Component {
 		this.setState({
 			moveMsg: `Coordonnées  ${JSON.stringify(coords)} `
 		});
+    
 	}
-
+  getLines(){
+    let canvas = document.getElementsByTagName('canvas')[0];
+    console.log(canvas);
+    const ctx = canvas.getContext('2d');
+    
+    ctx.beginPath();
+    
+  
+    let prev= null
+    this.state.coodinates.map((s,i,e) => { 
+      
+      console.log("s "+s.x_pixel+" "+ s.y_pixel)
+      if (i+1 < e.length) {
+      ctx.moveTo(s.x_pixel, s.y_pixel);
+      ctx.lineTo(e[i+1].x_pixel, e[i+1].y_pixel);
+      } 
+      prev = s.x_pixel
+    })
+    
+    // set line color
+    ctx.strokeStyle = 'red';
+    ctx.stroke();
+    console.log("fdfdfdf");
+  
+  }
 	enterArea(area) {
 		this.setState({
 			hoveredArea: area,
@@ -188,27 +231,14 @@ class MapGestion extends React.Component {
 	getTipPosition(area) {
 		return { top: `${area.center[1]}px`, left: `${area.center[0]}px` };
 	}
-
+  
   componentDidMount() {
    this.provideCoordinates();
+   
   }
   
 
   render() {
-    
-    var MAP = {
-      name: "my-map",
-      areas: [
-        {
-          name: "1",
-          shape: "circle",
-          coords: [228, 338,5],
-          preFillColor: "green",
-          fillColor: "#0000ff"
-        },
-        
-      ]
-    }
    
     var fields = this.props.showDetailsMapGestion.split('blob');
     var id = fields[0];
@@ -232,9 +262,12 @@ class MapGestion extends React.Component {
         <div style={{marginLeft:"3.5em"}}>
         <Typography style={{color:"BLACK"}} component="h5" variant="h5">
         Map N°  {id}
-        </Typography>
+        </Typography> <span >&nbsp;</span>
         </div>
-        <span >&nbsp;</span>
+        <h3> 1-Ajout itinéraire, cliquez sur une position de l'image puis cliquer Ajouter itinéraire; </h3> 
+        <h3> 2-Supprimer itinéraire, cliquez sur un point existant de l'image puis cliquer Effacer itinéraire; </h3> 
+        <h3> 3-Supprimer itinéraires, cliquez juste sur Effacer points et itinéraires; </h3> 
+       
         <Table>
                 <TableHead>
                   <TableRow>
@@ -258,6 +291,7 @@ class MapGestion extends React.Component {
                   lineWidth={4}
                   strokeColor={"white"}
                 />
+              
             </TableCell>
             <TableCell align="center">
             <h1 style={{color:'orange', fontWeight: 'bold'}}> {this.state.nbpts ? this.state.nbpts +" positions ": null}</h1> 
@@ -283,7 +317,7 @@ class MapGestion extends React.Component {
                         color="primary"
                         size="medium"
                       >
-                        Déplacer robot
+                        Ajouter itinéraire
                      </Button> <span>&nbsp;</span>
                       <Button
                       fullWidth="false"
@@ -298,22 +332,62 @@ class MapGestion extends React.Component {
                       <Button
                       fullWidth="false"
                       width="2em"
-                      onClick={() => {} }
+                      onClick={() => this.deleteOnePoint(this.state.actualPk) }
                       variant="contained"
-                        color="secondary"
+                        color="primary"
                         size="large"
                       >
-                         Effacer carte
+                         Effacer itinéraire (garder points)
                       </Button><span>&nbsp;</span>
                       <Button
                       fullWidth="false"
-                      width="3em"
+                      width="2em"
+                      onClick={() => this.deletePoints(this.state.actualID) }
+                      variant="contained"
+                        color="primary"
+                        size="large"
+                      >
+                         Effacer points et itinéraires
+                      </Button><span>&nbsp;</span>
+                      <Button
+                      fullWidth="false"
+                      width="2em"
                       onClick={() => {} }
                       variant="contained"
                         color="primary"
                         size="large"
                       >
-                         Démarrage
+                        Envoyer les données au robot
+                      </Button><span>&nbsp;</span>
+                      <Button
+                      fullWidth="false"
+                      width="2em"
+                      onClick={() => {} }
+                      variant="contained"
+                        color="primary"
+                        size="large"
+                      >
+                        Démarrage immédiat
+                      </Button><span>&nbsp;</span>
+                      <Button
+                      fullWidth="false"
+                      width="2em"
+                      onClick={() => {} }
+                      variant="contained"
+                        color="primary"
+                        size="large"
+                      >
+                        Démarrage planifié
+                      </Button><span>&nbsp;</span>
+                      <Button
+                      fullWidth="false"
+                      width="2em"
+                      onClick={() => {} }
+                      variant="contained"
+                        color="primary"
+                        size="large"
+                      >
+                        Démarrage répetitif
                       </Button>
             </TableCell>
         </TableRow>

@@ -10,6 +10,8 @@ export const URL_WS_ALL_MAPS = "http://193.70.86.40:8081/GetAllMsgMapByRobotWS"
 export const URL_WS_INS_DEF = "http://193.70.86.40:8081/InsertMsgDefItineWS"
 export const URL_WS_ALL_ROBOTS = "http://193.70.86.40:8081/GetAllRobotByClientWS"
 export const URL_WS_ALL_DEF = "http://193.70.86.40:8081/GetAllDefItineWS"
+export const URL_WS_DEL_DEF = "http://193.70.86.40:8081/DeleteMsgDefItineWS"
+export const URL_WS_DEL_ALL_DEF = "http://193.70.86.40:8081/DeleteAllMsgDefItineWS"
 
 export const URL_WS_SYNTHESE = "http://localhost:8080/syntheseSelectionWS";
 export const URL_WS_DETAIL = "http://localhost:8080/detailSelectionWS";
