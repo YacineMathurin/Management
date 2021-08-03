@@ -264,8 +264,8 @@ class MapGestion extends React.Component {
         Map N°  {id}
         </Typography> <span >&nbsp;</span>
         </div>
-        <h3> 1-Ajout itinéraire, cliquez sur une position de l'image puis cliquer Ajouter itinéraire; </h3> 
-        <h3> 2-Supprimer itinéraire, cliquez sur un point existant de l'image puis cliquer Effacer itinéraire; </h3> 
+        <h3> 1-Ajout itinéraire, cliquez sur une position de l'image puis cliquez Ajouter itinéraire; </h3> 
+        <h3> 2-Supprimer itinéraire, cliquez sur un point existant de l'image puis cliquez Effacer itinéraire; </h3> 
         <h3> 3-Supprimer itinéraires, cliquez juste sur Effacer points et itinéraires; </h3> 
        
         <Table>
