@@ -128,6 +128,17 @@ class MapGestion extends React.Component {
       console.log('Request failed', error)
     })
   }
+  deleteMap(pk){
+    console.log("Delete MAp    " + pk);
+ 
+    fetch(Const.URL_WS_DEL_MAP+"?pk="+pk, { retry: 3, retryDelay: 1000 })
+        .then(response => response.json())
+        .catch((error) => {
+          console.log('Request failed', error)
+        })
+    this.props.callBackRetourMaps()
+  }
+
   deplacerRobot(x,y){
     var fields = this.props.showDetailsMapGestion.split('blob');
     var id = fields[0];
@@ -388,6 +399,16 @@ class MapGestion extends React.Component {
                         size="large"
                       >
                         Démarrage répetitif
+                      </Button><span>&nbsp;</span>
+                      <Button
+                      fullWidth="false"
+                      width="2em"
+                      onClick={() => this.deleteMap(this.state.actualID) }
+                      variant="contained"
+                        color="primary"
+                        size="large"
+                      >
+                        Effacer la Map
                       </Button>
             </TableCell>
         </TableRow>
