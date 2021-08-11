@@ -36,7 +36,7 @@ class MapGestion extends React.Component {
       xCoord:null,
       yCoord:null,
       hoveredArea: null, msg: null, moveMsg: null,status:null,
-      nbpts:null
+      nbpts:null, idClient:0
     }
   }
 
@@ -104,7 +104,11 @@ class MapGestion extends React.Component {
             preFillColor: "#0099ff",
             fillColor: "red"
           })
-          
+          if(this.state.coodinates.length>0) {
+          this.setState({
+            idClient:s.id_client,
+            idRobot:s.id_robot,
+          })}
         })
 
         if(this.state.coodinates.length>0) {
@@ -112,6 +116,9 @@ class MapGestion extends React.Component {
           lgg=this.state.coodinates.length
           console.log(lgg)
           MAP.areas[lgg-1].preFillColor="red"
+          this.setState({
+            nbpts:this.state.coodinates.length,
+          })
          }
         
         console.log('co', MAP)
@@ -139,10 +146,21 @@ class MapGestion extends React.Component {
     this.props.callBackRetourMaps()
   }
 
+  addAction(){
+    console.log("add Action");
+    let time= 5000;
+    fetch(Const.URL_WS_INS_ACT+"?idClient="+this.state.idClient+"&idRobot="+this.state.idRobot+"&id="+this.state.actualID+"&nbpts="+this.state.nbpts+"&time="+time, { retry: 3, retryDelay: 1000 })
+        .then(response => response.json())
+        .catch((error) => {
+          console.log('Request failed', error)
+        })
+    //this.props.callBackRetourMaps()
+  }
+
   deplacerRobot(x,y){
     var fields = this.props.showDetailsMapGestion.split('blob');
     var id = fields[0];
-    fetch(Const.URL_WS_INS_DEF+"?idClient=0&idRobot=1&id="+id+"&speed=6&x="+x+"&y="+y+"&breakTime=30", { retry: 3, retryDelay: 1000 })
+    fetch(Const.URL_WS_INS_DEF+"?idClient="+this.state.idClient+"&idRobot="+this.state.idRobot+"&id="+id+"&speed=6&x="+x+"&y="+y+"&breakTime=30", { retry: 3, retryDelay: 1000 })
     .then(res => res.json())
     .then((data) => {
       console.log("J'ai ajouté un point x="+ x+"  y="+y)
@@ -373,7 +391,7 @@ class MapGestion extends React.Component {
                       <Button
                       fullWidth="false"
                       width="2em"
-                      onClick={() => {} }
+                      onClick={() => this.addAction() }
                       variant="contained"
                         color="primary"
                         size="large"
