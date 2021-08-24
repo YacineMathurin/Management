@@ -28,7 +28,7 @@ class MapGestion extends React.Component {
     super(props);
     this.state = {
       apiKey : props.apiKey,
-      coodinates : null,
+      coodinates : null,infoR:null,
       map : this.props.showDetailsMaps,
       co:null,
       id:null,
@@ -36,7 +36,7 @@ class MapGestion extends React.Component {
       xCoord:null,
       yCoord:null,
       hoveredArea: null, msg: null, moveMsg: null,status:null,
-      nbpts:null, idClient:0
+      nbpts:null, idClient:null,idRobot:null
     }
   }
 
@@ -75,6 +75,7 @@ class MapGestion extends React.Component {
     })
 
   }
+
   provideCoordinates(){
     var fields = this.props.showDetailsMapGestion.split('blob');
     var id = fields[0];
@@ -104,11 +105,7 @@ class MapGestion extends React.Component {
             preFillColor: "#0099ff",
             fillColor: "red"
           })
-          if(this.state.coodinates.length>0) {
-          this.setState({
-            idClient:s.id_client,
-            idRobot:s.id_robot,
-          })}
+         
         })
 
         if(this.state.coodinates.length>0) {
@@ -130,6 +127,31 @@ class MapGestion extends React.Component {
       console.log('map', this.state.mp)
       console.log("Finish i have points !!!!!")
       this.getLines()
+    })
+    .catch((error) => {
+      console.log('Request failed', error)
+    })
+  }
+  provideRobotInfos(){
+    var fields = this.props.showDetailsMapGestion.split('blob');
+    var id = fields[0];
+    this.setState({
+      actualID: id
+    })
+    fetch(Const.URL_WS_ROBOT_INFO +"?id="+id, { retry: 3, retryDelay: 1000 })
+    .then(res => res.json())
+    .then((data) => {
+     
+        this.setState({ infoR: data})
+        this.state.infoR.map((inf) => { 
+          this.setState({
+            idClient:inf.id_client,
+            idRobot:inf.id_robot,
+          })
+         
+        })
+        console.log('idClient===', this.state.idClient)
+        console.log('idRobot===', this.state.idRobot)
     })
     .catch((error) => {
       console.log('Request failed', error)
@@ -263,6 +285,7 @@ class MapGestion extends React.Component {
   
   componentDidMount() {
    this.provideCoordinates();
+   this.provideRobotInfos()
    
   }
   
