@@ -313,7 +313,7 @@ class MapGestion extends React.Component {
                     
         <div style={{marginLeft:"3.5em"}}>
         <Typography style={{color:"BLACK"}} component="h5" variant="h5">
-        Map N°  {id} - Robot {this.props.showDetailsMapGestion.split('blob')[0]}
+        Map N°  {id} - Robot {this.state.idRobot}
         </Typography> <span >&nbsp;</span>
         </div>
        
