@@ -345,6 +345,7 @@ class MapGestion extends React.Component {
             </TableCell>
             <TableCell align="center">
             <span>&nbsp;</span>
+            
                      <Button
                       fullWidth={true}
                       width="2em"
