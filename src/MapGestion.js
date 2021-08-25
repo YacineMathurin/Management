@@ -313,7 +313,7 @@ class MapGestion extends React.Component {
                     
         <div style={{marginLeft:"3.5em"}}>
         <Typography style={{color:"BLACK"}} component="h5" variant="h5">
-        Map N°  {id}
+        Map N°  {id} - Robot {this.props.showDetailsMapGestion.split('blob')[0]}
         </Typography> <span >&nbsp;</span>
         </div>
        
@@ -344,20 +344,6 @@ class MapGestion extends React.Component {
               
             </TableCell>
             <TableCell align="center">
-            <h1 style={{color:'orange', fontWeight: 'bold'}}> {this.state.nbpts ? this.state.nbpts +" positions ": null}</h1> 
-            {this.state.hoveredArea && (
-            <span
-            className="tooltip"
-            style={{ ...this.getTipPosition(this.state.hoveredArea) }}
-            >
-            {this.state.hoveredArea && this.state.hoveredArea.name}
-            </span>
-            )}
-            <h3 className="message">
-            {this.state.msg ? this.state.msg : null}</h3>
-            <h3> {this.state.moveMsg ? this.state.moveMsg : null} </h3>
-
-            <h3 style={{color:'green', fontWeight: 'bold'}}> {this.state.status ? this.state.status : null}</h3>
             <span>&nbsp;</span>
                      <Button
                       fullWidth={true}
@@ -453,6 +439,22 @@ class MapGestion extends React.Component {
         </TableRow>
         </TableBody>
         </Table>
+        <div align="center" >
+        <h1 style={{color:'orange', fontWeight: 'bold'}}> {this.state.nbpts ? this.state.nbpts +" positions ": null}</h1> 
+            {this.state.hoveredArea && (
+            <span
+            className="tooltip"
+            style={{ ...this.getTipPosition(this.state.hoveredArea) }}
+            >
+            {this.state.hoveredArea && this.state.hoveredArea.name}
+            </span>
+            )}
+            <h3 className="message">
+            {this.state.msg ? this.state.msg : null}</h3>
+            <h3> {this.state.moveMsg ? this.state.moveMsg : null} </h3>
+
+            <h3 style={{color:'green', fontWeight: 'bold'}}> {this.state.status ? this.state.status : null}</h3></div>
+            <span>&nbsp;</span>
         <div align="center" style={{backgroundColor: "#FFD700"}}>
         <h3> 1-Ajout itinéraire, cliquez sur une position de l'image puis cliquez Ajouter itinéraire; </h3> 
         <h3> 2-Supprimer itinéraire, cliquez sur un point existant de l'image puis cliquez Effacer itinéraire; </h3> 
