@@ -345,7 +345,7 @@ class MapGestion extends React.Component {
             </TableCell>
             <TableCell align="center">
             <span>&nbsp;</span>
-            
+
                      <Button
                       fullWidth={true}
                       width="2em"
@@ -442,14 +442,7 @@ class MapGestion extends React.Component {
         </Table>
         <div align="center" >
         <h1 style={{color:'orange', fontWeight: 'bold'}}> {this.state.nbpts ? this.state.nbpts +" positions ": null}</h1> 
-            {this.state.hoveredArea && (
-            <span
-            className="tooltip"
-            style={{ ...this.getTipPosition(this.state.hoveredArea) }}
-            >
-            {this.state.hoveredArea && this.state.hoveredArea.name}
-            </span>
-            )}
+            
             <h3 className="message">
             {this.state.msg ? this.state.msg : null}</h3>
             <h3> {this.state.moveMsg ? this.state.moveMsg : null} </h3>
