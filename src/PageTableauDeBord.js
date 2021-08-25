@@ -1,63 +1,24 @@
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import * as Const from './Constant';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import NotificationsActiveOutlinedIcon from '@material-ui/icons/NotificationsActiveOutlined';
-import FormatListNumberedOutlinedIcon from '@material-ui/icons/FormatListNumberedOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
-import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
-import TableFavori from './TableFavori';
-import TableEngagement from './TableEngagement';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Slider from '@material-ui/core/Slider';
 import Button from '@material-ui/core/Button';
-import Alert from '@material-ui/lab/Alert';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { Divider } from '@material-ui/core';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import FindInPageOutlinedIcon from '@material-ui/icons/FindInPageOutlined';
-import TableResultats from './TableResultats';
-import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from '@material-ui/core/Paper';
-import Avatar from '@material-ui/core/Avatar';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import CloseIcon from '@material-ui/icons/Close';
 import TuneOutlinedIcon from '@material-ui/icons/TuneOutlined';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import TableProgrammePartants from './TableProgrammePartants';
-import TableSynthese from './TableSynthese';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 
@@ -140,9 +101,9 @@ class PageTableauDeBord extends React.Component {
             subheader="Retrouvez vos robots suiveurs"
           />
           <div style={{float:"right", marginTop:"-4em", marginRight:"2em"}}>
-          <Button
+               <Button
                       style={{marginTop:"1em", display:this.state.printTable}}
-                      fullWidth="false"
+                      fullWidth={false}
                       onClick={() => this.handlePrintCard() }
                       variant="outlined"
                         color="primary"
@@ -153,7 +114,7 @@ class PageTableauDeBord extends React.Component {
 
                        <Button
                       style={{marginTop:"1em", display:this.state.printCard}}
-                      fullWidth="false"
+                      fullWidth={false}
                       onClick={() => this.handlePrintTable() }
                       variant="outlined"
                         color="primary"
@@ -204,7 +165,7 @@ class PageTableauDeBord extends React.Component {
               }
 
                return ( 
-               
+                <TableBody key={s.ID_ROBOT}>
                 <TableRow>
                   <TableCell align="center">{s.ID_CLIENT}</TableCell>
                   <TableCell align="center">{s.ID_ROBOT}</TableCell>
@@ -214,7 +175,7 @@ class PageTableauDeBord extends React.Component {
                 <TableCell align="center">
                   
                   <Button
-                      fullWidth="false"
+                      fullWidth={false}
                       width="2em"
                       onClick={() => this.handleCallbackOpenDetails(s.ID_ROBOT) }
                       variant="contained"
@@ -228,7 +189,7 @@ class PageTableauDeBord extends React.Component {
                   <TableCell align="center">
                   
                      <Button
-                      fullWidth="false"
+                      fullWidth={false}
                       width="2em"
                       onClick={() => this.handleCallbackOpenMaps(s.ID_ROBOT) }
                       variant="contained"
@@ -239,7 +200,7 @@ class PageTableauDeBord extends React.Component {
                       </Button>
                   </TableCell>
                 </TableRow>
-              
+                </TableBody>
                )
             })) }
             </Table>
@@ -274,7 +235,7 @@ class PageTableauDeBord extends React.Component {
               }
 
               return ( 
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={4} lg={3} key={s.ID_ROBOT}>
                 <Card>
                
                   <CardContent>
@@ -285,10 +246,10 @@ class PageTableauDeBord extends React.Component {
                     <img style={{float:"right", marginTop:"0.5em"}} width="34" src={dispo}/>
                     </div>
                     <div style={{marginLeft:"2.5em"}}>
-                    <Typography style={{color:"BLACK"}} component="span" variant="span">
+                    <Typography style={{color:"BLACK"}} component="h3" variant="h3">
                       {s.ID_CLIENT}
                     </Typography>
-                    <Typography style={{color:"BLACK"}} component="span" variant="span">
+                    <Typography style={{color:"BLACK"}} component="h3" variant="h3">
                       {s.ID_ROBOT}
                     </Typography>
                     <Typography style={{fontSize:"14px"}} color="textSecondary">
@@ -298,6 +259,7 @@ class PageTableauDeBord extends React.Component {
                     <Divider style={{marginTop:"1em"}}/>
                     <div>
                       <Table>
+                      <TableBody>
                         <TableRow>
                           <TableCell><img  width="24" src="./images/microchip.svg"/></TableCell>
                           <TableCell align="right"><img  width="24" src={processor}/></TableCell>
@@ -306,11 +268,11 @@ class PageTableauDeBord extends React.Component {
                           <TableCell><img  width="24" src="./images/car-battery.svg"/></TableCell>
                           <TableCell align="right"><img  width="30" src={batterie}/></TableCell>
                         </TableRow>
-                        
+                        </TableBody>
                       </Table>
                       <Button
                       style={{marginTop:"1em"}}
-                      fullWidth="true"
+                      fullWidth={true}
                       onClick={() => this.handleCallbackOpenDetails(s) }
                       variant="contained"
                         color="primary"
@@ -320,7 +282,7 @@ class PageTableauDeBord extends React.Component {
                       </Button>
                       <Button
                       style={{marginTop:"1em"}}
-                      fullWidth="true"
+                      fullWidth={true}
                       onClick={() => {} }
                       variant="contained"
                         color="primary"
@@ -457,9 +419,9 @@ class PageTableauDeBord extends React.Component {
          label={<img  style={{marginTop:"0.5em"}} width="30" src="./images/b1.png"/>}
       />
 
- <Button
+      <Button
                  style={{marginTop:"1em"}}
-                 fullWidth="true"
+                 fullWidth={false}
                  variant="contained"
                    color="primary"
                    size="small"

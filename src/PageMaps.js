@@ -1,25 +1,15 @@
-
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import YouTube from 'react-youtube';
-import pdf_memo_img from './assets/DTF_MEMO.jpg';
-import pdf_memo from './assets/DTF_MEMO.pdf';
 import * as Const from './Constant';
-import CardHeader from '@material-ui/core/CardHeader';
 import { TableRow, TableCell } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TestLineChart from './TestLineChart';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
-import { Carousel } from 'react-responsive-carousel';
-import Button from '@material-ui/core/Button';
+
 
 class PageMaps extends React.Component {
   constructor(props) {
@@ -100,22 +90,25 @@ class PageMaps extends React.Component {
         </Typography>
         </div>
         <span >&nbsp;</span>
+        <h1 > Select your Map </h1>
       <Table>
-      <h1 > Select your Map </h1>
+        <TableBody >
       { (this.state.maps != null) && (  this.state.maps.map((s) => { 
                 
                 return ( 
-
+                  <TableRow key={s.pk} >
+                     <TableCell align="center">
+                     <h3 > Map {s.pk}</h3>
                     <figure >
-                    <figcaption style={{textAlign: "left"}}><b>Map {s.pk}</b></figcaption>
-                    <img key={s.pk} style={{paddingBottom:10}}  width="250"  src={ `data:image/png;base64,`+s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk+"blob"+s.blob) }/>
+                        <img key={s.pk} style={{paddingBottom:10}}  width="250"  src={ `data:image/png;base64,`+s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk+"blob"+s.blob) }/>
                     </figure>
-                
+                     </TableCell>
+                    </TableRow >
                 )
           }))
           
           }
-        
+       </TableBody>
      </Table>
      
        

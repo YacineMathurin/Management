@@ -316,9 +316,6 @@ class MapGestion extends React.Component {
         Map N°  {id}
         </Typography> <span >&nbsp;</span>
         </div>
-        <h3> 1-Ajout itinéraire, cliquez sur une position de l'image puis cliquez Ajouter itinéraire; </h3> 
-        <h3> 2-Supprimer itinéraire, cliquez sur un point existant de l'image puis cliquez Effacer itinéraire; </h3> 
-        <h3> 3-Supprimer itinéraires, cliquez juste sur Effacer points et itinéraires; </h3> 
        
         <Table>
                 <TableHead>
@@ -327,7 +324,8 @@ class MapGestion extends React.Component {
                       <TableCell align="center">Commandes</TableCell>
                   </TableRow>
                 </TableHead>
-        <TableRow>
+                <TableBody>
+            <TableRow>
             <TableCell align="center">
                 <ImageMapper 
                   src={ `data:image/png;base64,`+blob}
@@ -362,7 +360,7 @@ class MapGestion extends React.Component {
             <h3 style={{color:'green', fontWeight: 'bold'}}> {this.state.status ? this.state.status : null}</h3>
             <span>&nbsp;</span>
                      <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => this.deplacerRobot(this.state.xCoord,this.state.yCoord) }
                       variant="contained"
@@ -372,7 +370,7 @@ class MapGestion extends React.Component {
                         Ajouter itinéraire
                      </Button> <span>&nbsp;</span>
                       <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => this.provideCoordinates() }
                       variant="contained"
@@ -382,7 +380,7 @@ class MapGestion extends React.Component {
                         Rafraichir Map
                       </Button><span>&nbsp;</span>
                       <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => this.deleteOnePoint(this.state.actualPk) }
                       variant="contained"
@@ -392,7 +390,7 @@ class MapGestion extends React.Component {
                          Effacer itinéraire (garder points)
                       </Button><span>&nbsp;</span>
                       <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => this.deletePoints(this.state.actualID) }
                       variant="contained"
@@ -402,7 +400,7 @@ class MapGestion extends React.Component {
                          Effacer points et itinéraires
                       </Button><span>&nbsp;</span>
                       <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => {} }
                       variant="contained"
@@ -412,7 +410,7 @@ class MapGestion extends React.Component {
                         Envoyer les données au robot
                       </Button><span>&nbsp;</span>
                       <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => this.addAction() }
                       variant="contained"
@@ -422,7 +420,7 @@ class MapGestion extends React.Component {
                         Démarrage immédiat
                       </Button><span>&nbsp;</span>
                       <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => {} }
                       variant="contained"
@@ -432,7 +430,7 @@ class MapGestion extends React.Component {
                         Démarrage planifié
                       </Button><span>&nbsp;</span>
                       <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => {} }
                       variant="contained"
@@ -442,7 +440,7 @@ class MapGestion extends React.Component {
                         Démarrage répetitif
                       </Button><span>&nbsp;</span>
                       <Button
-                      fullWidth="false"
+                      fullWidth={true}
                       width="2em"
                       onClick={() => this.deleteMap(this.state.actualID) }
                       variant="contained"
@@ -453,8 +451,14 @@ class MapGestion extends React.Component {
                       </Button>
             </TableCell>
         </TableRow>
+        </TableBody>
         </Table>
-     
+        <div align="center" style={{backgroundColor: "#FFD700"}}>
+        <h3> 1-Ajout itinéraire, cliquez sur une position de l'image puis cliquez Ajouter itinéraire; </h3> 
+        <h3> 2-Supprimer itinéraire, cliquez sur un point existant de l'image puis cliquez Effacer itinéraire; </h3> 
+        <h3> 3-Supprimer itinéraires, cliquez juste sur Effacer points et itinéraires; </h3> 
+        <h3> 4-Effacer la Map, cliquez juste sur Effacer la Map ; </h3> 
+        </div>
     </CardContent>
     </Card>
     </Grid>
