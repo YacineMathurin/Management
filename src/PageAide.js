@@ -67,7 +67,8 @@ class PageAide extends React.Component {
     <CardContent>
     <div>
                <img style={{float:"left", marginTop:"0.5em"}} width="40" src="./images/carrier.svg"/>
-               </div>
+               <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourTableauDeBordAide() }/>
+                </div>
               
                <div style={{marginLeft:"3.5em"}}>
                <Typography style={{color:"BLACK"}} component="h5" variant="h5">

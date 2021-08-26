@@ -433,6 +433,18 @@ export default function MiniDrawer() {
     setShowTableauDeBord(-1)
   }
 
+  const handleRetourTableauDeBord = () => {
+    setShowAide(-1)
+    setShowMaps(-1)
+    setMapGestion(-1)
+    setShowTableauDeBord(1)
+  }
+  const handleRetourTableauDeBordAide = () => {
+    setShowAide(-1)
+    setShowMaps(-1)
+    setMapGestion(-1)
+    setShowTableauDeBord(1)
+  }
   return (
 
   <div className={classes.root}>
@@ -544,8 +556,8 @@ export default function MiniDrawer() {
         { (showStatsTrotteurs > -1) && (apiKey != null) && (<PageStatsTrotteurs callbackNeedToLogin = { handleCallbackNeedToLogin } apiKey = { apiKey } callbackViewDetails = { handleCallbackDetails } />) }
         { (showMonDossier > -1) && (apiKey != null) && (<PageMonDossier callbackNeedToLogin = { handleCallbackNeedToLogin } apiKey = { apiKey } callbackViewDetails = { handleCallbackDetails } callbackRetourDetails = { handleCallbackRetourDetails } />) }
         { (showAdmin > -1) && (apiKey != null) && (<PageAdministration callbackNeedToLogin = { handleCallbackNeedToLogin } apiKey = { apiKey } />) } {/* pas besoinde callback - pas de bouton de retour */}
-        { (showAide > -1) && (apiKey != null) && (<PageAide callbackNeedToLogin = { handleCallbackNeedToLogin } apiKey = { apiKey } showDetailsMetrics = { showDetailsMetrics } />) } {/* pas besoinde callback - pas de bouton de retour */}
-        { (showMaps > -1) && (apiKey != null) && (<PageMaps callbackNeedToLogin = { handleCallbackNeedToLogin } apiKey = { apiKey } showDetailsMaps = { showDetailsMaps } callbackOpenMapGestion = {handleCallbackOpenMapGestion}/>) } {/* pas besoinde callback - pas de bouton de retour */}
+        { (showAide > -1) && (apiKey != null) && (<PageAide callbackNeedToLogin = { handleCallbackNeedToLogin } callBackRetourTableauDeBordAide={ handleRetourTableauDeBordAide } apiKey = { apiKey } showDetailsMetrics = { showDetailsMetrics } />) } {/* pas besoinde callback - pas de bouton de retour */}
+        { (showMaps > -1) && (apiKey != null) && (<PageMaps callbackNeedToLogin = { handleCallbackNeedToLogin } apiKey = { apiKey } callBackRetourTableauDeBord={ handleRetourTableauDeBord } showDetailsMaps = { showDetailsMaps } callbackOpenMapGestion = {handleCallbackOpenMapGestion}/>) } {/* pas besoinde callback - pas de bouton de retour */}
         { (showMapGestion > -1) && (apiKey != null) && (<MapGestion callbackNeedToLogin = { handleCallbackNeedToLogin } callBackRetourMaps={ handleRetourMaps }  apiKey = { apiKey } showDetailsMapGestion = { showDetailsMapGestion } />) } {/* pas besoinde callback - pas de bouton de retour */}
         { (showScreener > -1) && (apiKey != null) && (<PageTopChrono callbackNeedToLogin = { handleCallbackNeedToLogin } apiKey = { apiKey } />) } {/* pas besoinde callback - pas de bouton de retour */}
         { (showBiblio > -1) && (apiKey != null) && (<PageBibliotheque callbackNeedToLogin = { handleCallbackNeedToLogin } apiKey = { apiKey } callbackRetourDetails = { handleCallbackRetourDetails } />) } {/* pas besoinde callback - pas de bouton de retour */}

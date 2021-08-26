@@ -1,4 +1,3 @@
-
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Container from '@material-ui/core/Container';
@@ -6,22 +5,16 @@ import Grid from '@material-ui/core/Grid';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import YouTube from 'react-youtube';
-import pdf_memo_img from './assets/DTF_MEMO.jpg';
-import pdf_memo from './assets/DTF_MEMO.pdf';
 import * as Const from './Constant';
 import CardHeader from '@material-ui/core/CardHeader';
 import { TableRow, TableCell } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TestLineChart from './TestLineChart';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
-import { Carousel } from 'react-responsive-carousel';
 import Button from '@material-ui/core/Button';
 import ImageMapper from 'react-image-mapper';
-import LineTo from 'react-lineto';
+import TuneOutlinedIcon from '@material-ui/icons/TuneOutlined';
 
 class MapGestion extends React.Component {
   constructor(props) {
@@ -36,7 +29,8 @@ class MapGestion extends React.Component {
       xCoord:null,
       yCoord:null,
       hoveredArea: null, msg: null, moveMsg: null,status:null,
-      nbpts:null, idClient:null,idRobot:null
+      nbpts:null, idClient:null,
+      idRobot:null,destination:'destination'
     }
   }
 
@@ -51,7 +45,7 @@ class MapGestion extends React.Component {
     .then((data) => {
      
       this.setState({
-        status:"J'ai supprimé un point, Veuillez Rafraichir"
+        status:"Vous avez supprimé une destination, Veuillez Rafraichir"
       })
       this.provideCoordinates()
     })
@@ -60,13 +54,13 @@ class MapGestion extends React.Component {
     })
   }
   deletePoints(id){
-    console.log("vous voulez effacer tous les points de id="+ id)
+    //console.log("vous voulez effacer toutes les destinations de id="+ id)
     fetch(Const.URL_WS_DEL_ALL_DEF+"?id="+id, { retry: 3, retryDelay: 1000 })
     .then(res => res.json())
     .then((data) => {
      
       this.setState({
-        status:"J'ai supprimé plusieurs points, Veuillez Rafraichir"
+        status:"Vous avez supprimé plusieures destinations, Veuillez Rafraichir"
       })
       this.provideCoordinates()
     })
@@ -116,8 +110,13 @@ class MapGestion extends React.Component {
           this.setState({
             nbpts:this.state.coodinates.length,
           })
+          if(this.state.coodinates.length>1) {
+            this.setState({
+              destination:"destinations",
+            })
+          } 
          }
-        
+             
         console.log('co', MAP)
         console.log('nbpts', this.state.nbpts)
         this.setState({mp:MAP})
@@ -185,10 +184,10 @@ class MapGestion extends React.Component {
     fetch(Const.URL_WS_INS_DEF+"?idClient="+this.state.idClient+"&idRobot="+this.state.idRobot+"&id="+id+"&speed=6&x="+x+"&y="+y+"&breakTime=30", { retry: 3, retryDelay: 1000 })
     .then(res => res.json())
     .then((data) => {
-      console.log("J'ai ajouté un point x="+ x+"  y="+y)
+      console.log("Vous avez ajouté une destination x="+ x+"  y="+y)
       console.log(data)
       this.setState({
-        status:"J'ai ajouté un point x="+ x+"  y="+y +", Veuillez Rafraichir"
+        status:"Vous avez une nouvelle destination, Veuillez Rafraichir"
       })
       
     })
@@ -204,7 +203,7 @@ class MapGestion extends React.Component {
 
 	clicked(area) {
   	this.setState({
-			msg: `Vous avez cliqué sur ${area.shape} à ${JSON.stringify(area.coords	)} !`,
+			msg: `Vous avez cliqué sur la destination  ${JSON.stringify(area.center	)} .`,
       actualPk : area.name
 		});
  
@@ -226,10 +225,12 @@ class MapGestion extends React.Component {
 
 	moveOnImage(evt) {
 		const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
-		this.setState({
+    //vous pouvez suivre le deplacement du curseur, ne marche que sur web et non sur smartphone
+    /*
+    this.setState({
 			moveMsg: `Coordonnées  ${JSON.stringify(coords)} `
 		});
-    
+    */
 	}
   getLines(){
     let canvas = document.getElementsByTagName('canvas')[0];
@@ -253,21 +254,25 @@ class MapGestion extends React.Component {
     // set line color
     ctx.strokeStyle = 'red';
     ctx.stroke();
-    console.log("fdfdfdf");
-  
+     
   }
 	enterArea(area) {
+    //Pas Besoin
+    /*
 		this.setState({
 			hoveredArea: area,
 			msg: `Vous êtes rentré sur ${area.shape} ${area.name} `
 		});
+    */
 	}
 
 	leaveArea(area) {
+    //Pas Besoin
+    /*
 		this.setState({
 			hoveredArea: null,
 			msg: `Vous avez quitté ${area.shape} ${area.name}`
-		});
+		});*/
 	}
 
 	moveOnArea(area, evt) {
@@ -308,13 +313,13 @@ class MapGestion extends React.Component {
     
         <div>
         <img style={{float:"left", marginTop:"0.5em"}} width="40" src="./images/carrier.svg"/>
-        <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/backI.png" onClick={() => this.props.callBackRetourMaps() }/>
+        <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourMaps() }/>
         </div>
                     
         <div style={{marginLeft:"3.5em"}}>
         <Typography style={{color:"BLACK"}} component="h5" variant="h5">
         Map N°  {id} - Robot {this.state.idRobot}
-        </Typography> <span >&nbsp;</span>
+        </Typography> 
         </div>
        
         <Table>
@@ -345,7 +350,13 @@ class MapGestion extends React.Component {
             </TableCell>
             <TableCell align="center">
             <span>&nbsp;</span>
-
+            <div align="center" >
+            <h1 style={{color:'blue', fontWeight: 'bold'}}> {this.state.nbpts ? <b> {this.state.nbpts}  {this.state.destination} </b>: <b>&nbsp;</b>}</h1> 
+              
+              <h3 className="message">
+              {this.state.msg ? <b >{this.state.msg}</b> : <b>&nbsp;</b>}</h3>
+             <h3 style={{color:'green', fontWeight: 'bold'}}> {this.state.status ? this.state.status : <b>&nbsp;</b>}</h3>
+            </div>
                      <Button
                       fullWidth={true}
                       width="2em"
@@ -354,7 +365,7 @@ class MapGestion extends React.Component {
                         color="primary"
                         size="medium"
                       >
-                        Ajouter itinéraire
+                        1-Ajouter une destination
                      </Button> <span>&nbsp;</span>
                       <Button
                       fullWidth={true}
@@ -374,24 +385,24 @@ class MapGestion extends React.Component {
                         color="primary"
                         size="large"
                       >
-                         Effacer itinéraire (garder points)
+                         2-Effacer une destination
                       </Button><span>&nbsp;</span>
                       <Button
                       fullWidth={true}
                       width="2em"
-                      onClick={() => this.deletePoints(this.state.actualID) }
+                      onClick={() => {if(window.confirm(' Voulez-vous vraiment supprimer toutes les destinations ?')){ this.deletePoints(this.state.actualID)};} }
                       variant="contained"
                         color="primary"
                         size="large"
                       >
-                         Effacer points et itinéraires
+                         3-Effacer destinations (Tous les points)
                       </Button><span>&nbsp;</span>
                       <Button
                       fullWidth={true}
                       width="2em"
-                      onClick={() => {} }
+                      onClick={() => {}}
                       variant="contained"
-                        color="primary"
+                        color="default"
                         size="large"
                       >
                         Envoyer les données au robot
@@ -404,14 +415,14 @@ class MapGestion extends React.Component {
                         color="primary"
                         size="large"
                       >
-                        Démarrage immédiat
+                        4-Démarrage immédiat
                       </Button><span>&nbsp;</span>
                       <Button
                       fullWidth={true}
                       width="2em"
                       onClick={() => {} }
                       variant="contained"
-                        color="primary"
+                        color="default"
                         size="large"
                       >
                         Démarrage planifié
@@ -421,7 +432,7 @@ class MapGestion extends React.Component {
                       width="2em"
                       onClick={() => {} }
                       variant="contained"
-                        color="primary"
+                        color="default"
                         size="large"
                       >
                         Démarrage répetitif
@@ -429,35 +440,42 @@ class MapGestion extends React.Component {
                       <Button
                       fullWidth={true}
                       width="2em"
-                      onClick={() => this.deleteMap(this.state.actualID) }
+                      onClick={() => {if(window.confirm(' Voulez-vous vraiment supprimer la Map ?')){ this.deleteMap(this.state.actualID)};}} 
                       variant="contained"
                         color="primary"
                         size="large"
                       >
-                        Effacer la Map
+                        5-Effacer la Map
                       </Button>
             </TableCell>
         </TableRow>
         </TableBody>
         </Table>
-        <div align="center" >
-        <h1 style={{color:'orange', fontWeight: 'bold'}}> {this.state.nbpts ? this.state.nbpts +" positions ": null}</h1> 
-            
-            <h3 className="message">
-            {this.state.msg ? this.state.msg : null}</h3>
-            <h3> {this.state.moveMsg ? this.state.moveMsg : null} </h3>
-
-            <h3 style={{color:'green', fontWeight: 'bold'}}> {this.state.status ? this.state.status : null}</h3></div>
-            <span>&nbsp;</span>
-        <div align="center" style={{backgroundColor: "#FFD700"}}>
-        <h3> 1-Ajout itinéraire, cliquez sur une position de l'image puis cliquez Ajouter itinéraire; </h3> 
-        <h3> 2-Supprimer itinéraire, cliquez sur un point existant de l'image puis cliquez Effacer itinéraire; </h3> 
-        <h3> 3-Supprimer itinéraires, cliquez juste sur Effacer points et itinéraires; </h3> 
-        <h3> 4-Effacer la Map, cliquez juste sur Effacer la Map ; </h3> 
-        </div>
+       
+        
     </CardContent>
     </Card>
     </Grid>
+    <Grid item xs={12} md={4} lg={3} >
+        <Card><span>&nbsp;</span>
+          <CardHeader
+            avatar={
+              <TuneOutlinedIcon fontSize="large"/>
+            }
+            title="Informations"
+          />
+            <CardContent>
+            <span>&nbsp;</span>
+            <div align="center" style={{backgroundColor: "#FFFFCC"}}>
+            <h3> 1-Ajout d'une destination, cliquez sur une position de l'image puis cliquez "Ajouter une destination"; </h3> 
+            <h3> 2-Supprimer une destination, cliquez sur un point existant de l'image puis cliquez sur "Effacer une destination"; </h3> 
+            <h3> 3-Supprimer toutes les destination, cliquez juste sur "Effacer destinations"; </h3> 
+            <h3> 4-Démarrage Immédiat, Envoie une action avec le nombre de points au robot; </h3> 
+            <h3> 5-Effacer la Map, Effacera la Map et toutes les destinations affiliées cliquez juste sur "Effacer la Map" ; </h3> 
+            </div>
+            </CardContent>
+          </Card>
+        </Grid>
     </Grid>
     </div>
   )}

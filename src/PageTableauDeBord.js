@@ -5,9 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import * as Const from './Constant';
 import CardHeader from '@material-ui/core/CardHeader';
-import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import FormControl from '@material-ui/core/FormControl';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Button from '@material-ui/core/Button';
 import { Divider } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,6 +19,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TuneOutlinedIcon from '@material-ui/icons/TuneOutlined';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import TextField from '@material-ui/core/TextField';
 
 class PageTableauDeBord extends React.Component {
   constructor(props) {
@@ -35,6 +34,7 @@ class PageTableauDeBord extends React.Component {
       listeMetrics: null,
       printTable: "block",
       printCard:"none",
+      search:'',default:null,
     }
   }
 
@@ -42,14 +42,11 @@ class PageTableauDeBord extends React.Component {
     fetch(Const.URL_WS_ALL_ROBOTS+"?email="+localStorage.getItem('username'), { retry: 3, retryDelay: 1000 })
     .then(res => res.json())
     .then((data) => {
-      console.log("it's me MR")
-      console.log(data)
-      if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
-        this.props.callbackNeedToLogin()
-      } else {
-        console.log("ELse it's me MR")
-        this.setState({ listeMetrics: data})
-      }
+      this.setState({
+          listeMetrics: data,
+          default: data
+      })
+     
     })
     .catch((error) => {
       console.log('Request failed', error)
@@ -83,6 +80,17 @@ class PageTableauDeBord extends React.Component {
     this.setState( { printTable: "none" })
     this.setState( { printCard: "block" })
   }
+  searchFilterFunction = (text) => {
+    //console.log("recherche robot n° "+text )
+    const newData = this.state.default.filter((item) => {
+      const itemData = `${item.ID_ROBOT}`;
+      return itemData.includes(text);
+    });
+
+    this.setState({
+      listeMetrics: newData,
+    });
+  };
 
   render() {
   return (
@@ -158,7 +166,7 @@ class PageTableauDeBord extends React.Component {
               var timeS= Date.now() - s.TIMESTAMP;
               var dateS = new Date(timeS * 1000);
               var minutesS = dateS.getMinutes();
-              console.log("robot " +s.ID_ROBOT +" nb minutes="+minutesS);
+              //console.log("robot " +s.ID_ROBOT +" nb minutes="+minutesS);
 
               if(minutesS>=15){
                 dispo = "./images/switch-off.svg";
@@ -321,11 +329,20 @@ class PageTableauDeBord extends React.Component {
 
                   <FormControl size="small" fullWidth variant="outlined">
           
-          <OutlinedInput
+          <TextField
             size="small"
-            value={this.state.motCle}
-            onChange={this.handleMotCle}
-            startAdornment={<SearchOutlinedIcon position="start"></SearchOutlinedIcon>}
+            placeholder="Rechercher un ID Robot"
+            value={this.state.search}
+            onChange={event => {
+              const { value } = event.target;
+              this.setState({ search: value });
+              if (value !== "") {
+                this.searchFilterFunction(value);
+              } else {
+                this.setState({ listeMetrics: this.state.default,
+                 });
+              }
+            }}
           />
         </FormControl>
 
@@ -418,7 +435,7 @@ class PageTableauDeBord extends React.Component {
         }
          label={<img  style={{marginTop:"0.5em"}} width="30" src="./images/b1.png"/>}
       />
-
+       
       <Button
                  style={{marginTop:"1em"}}
                  fullWidth={false}

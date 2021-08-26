@@ -9,7 +9,10 @@ import { TableRow, TableCell } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
-
+import TuneOutlinedIcon from '@material-ui/icons/TuneOutlined';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import CardHeader from '@material-ui/core/CardHeader';
 
 class PageMaps extends React.Component {
   constructor(props) {
@@ -18,7 +21,9 @@ class PageMaps extends React.Component {
       apiKey : props.apiKey,
       maps : null,
       map : this.props.showDetailsMaps,
-      hoveredArea: null, msg: null, moveMsg: null
+      hoveredArea: null, msg: null, 
+      moveMsg: null, 
+      search:'',default:null,
     }
   }
 
@@ -34,31 +39,15 @@ class PageMaps extends React.Component {
       if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
         this.props.callbackNeedToLogin()
       } else {
-        this.setState({ maps: data})
+        this.setState({ maps: data,
+                        default: data})
       }
     })
     .catch((error) => {
       console.log('Request failed', error)
     })
   }
-  getMAJMaps(){
-    
-    fetch(Const.URL_WS_PROVIDE_METRICS, { retry: 3, retryDelay: 1000 })
-    .then(res => res.json())
-    .then((data) => {
-      console.log("it's me MR")
-      console.log(data)
-      if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
-        this.props.callbackNeedToLogin()
-      } else {
-        console.log("ELse it's me MR")
-        this.setState({ listeMetrics: data})
-      }
-    })
-    .catch((error) => {
-      console.log('Request failed', error)
-    })
-  }
+  
   
   handleCallbackOpenMapGestion= (idMap) =>{
     console.log("send robot id to MapGestion")
@@ -68,7 +57,17 @@ class PageMaps extends React.Component {
   componentDidMount() {
     this.provideMaps();
   }
-  
+  searchFilterFunction = (text) => {
+    //console.log("recherche Map n° "+text )
+    const newData = this.state.default.filter((item) => {
+      const itemData = `${item.pk}`;
+      return itemData.includes(text);
+    });
+
+    this.setState({
+      maps: newData,
+    });
+  };
 
   render() {
   return (
@@ -82,6 +81,7 @@ class PageMaps extends React.Component {
     
         <div>
         <img style={{float:"left", marginTop:"0.5em"}} width="40" src="./images/carrier.svg"/>
+        <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourTableauDeBord() }/>
         </div>
                     
         <div style={{marginLeft:"3.5em"}}>
@@ -90,7 +90,7 @@ class PageMaps extends React.Component {
         </Typography>
         </div>
         <span >&nbsp;</span>
-        <h1 > Select your Map </h1>
+        <h1 > Selectionne une Map </h1>
       <Table>
         <TableBody >
       { (this.state.maps != null) && (  this.state.maps.map((s) => { 
@@ -117,6 +117,42 @@ class PageMaps extends React.Component {
     </Card>
     
     </Grid>
+    <Grid item xs={12} md={4} lg={3} >
+        <Card>
+          <CardHeader
+            avatar={
+              <TuneOutlinedIcon fontSize="large"/>
+            }
+            
+            title="Filtrage"
+            subheader="Filtrez sur les Map"
+          />
+          
+            <CardContent>
+
+                  <FormControl size="small" fullWidth variant="outlined">
+          
+          <TextField
+            size="small"
+            placeholder="Rechercher un ID Map"
+            value={this.state.search}
+            onChange={event => {
+              const { value } = event.target;
+              this.setState({ search: value });
+              if (value !== "") {
+                this.searchFilterFunction(value);
+              } else {
+                this.setState({ maps: this.state.default,
+                 });
+              }
+            }}
+          />
+        </FormControl>
+
+     
+            </CardContent>
+          </Card>
+        </Grid>
     </Grid>
     </div>
   )}
