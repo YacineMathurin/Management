@@ -100,7 +100,7 @@ class PageMaps extends React.Component {
                      <TableCell align="center">
                      <h3 > Map {s.pk}</h3>
                     <figure >
-                        <img key={s.pk} style={{paddingBottom:10}}  width="250"  src={ `data:image/png;base64,`+s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk+"blob"+s.blob) }/>
+                        <img key={s.pk} style={{paddingBottom:10}}  width="250"  src={ `data:image/jpeg;base64,`+s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk+"blob"+s.blob) }/>
                     </figure>
                      </TableCell>
                     </TableRow >

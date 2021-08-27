@@ -333,7 +333,7 @@ class MapGestion extends React.Component {
             <TableRow>
             <TableCell align="center">
                 <ImageMapper 
-                  src={ `data:image/png;base64,`+blob}
+                  src={ `data:image/jpeg;base64,`+blob}
                   map={this.state.mp}
                   width={500}
                   onLoad={() => this.load()}
