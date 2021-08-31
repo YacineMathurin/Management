@@ -26,7 +26,7 @@ class PageAide extends React.Component {
       detail: "",
       synthese : null,
       details : null,
-      metric : this.props.showDetailsMetrics
+      robot : this.props.showDetailsMetrics
     }
   }
 
@@ -35,15 +35,13 @@ class PageAide extends React.Component {
     }),
   );
 
-  provideMetrics(){
-    fetch(Const.URL_WS_PROVIDE_DETAILS + `?id=${this.state.metric}`, { retry: 3, retryDelay: 1000 })
+  provideHeartBeats(){
+    fetch(Const.URL_WS_ROBOT_HEARTS + `?robot=${this.state.robot}`)
     .then(res => res.json())
     .then((data) => {
-      if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
-        this.props.callbackNeedToLogin()
-      } else {
+      console.log("je suis là")
         this.setState({ details: data})
-      }
+      
     })
     .catch((error) => {
       console.log('Request failed', error)
@@ -51,7 +49,7 @@ class PageAide extends React.Component {
   }
 
   componentDidMount() {
-  //  this.provideMetrics();
+     this.provideHeartBeats()
   }
   
 
@@ -72,7 +70,7 @@ class PageAide extends React.Component {
               
                <div style={{marginLeft:"3.5em"}}>
                <Typography style={{color:"BLACK"}} component="h5" variant="h5">
-               {this.state.metric}
+               {this.state.robot}
                </Typography>
                <Typography style={{fontSize:"14px"}} color="textSecondary">
                  description
@@ -150,7 +148,7 @@ class PageAide extends React.Component {
                     <TableCell><img  width="30" src="./images/ip-address.svg"/></TableCell>
                     <TableCell align="right">
                     <Typography style={{fontSize:"18px"}} >
-                        {this.state.metric}
+                        {this.state.robot}
                     </Typography>
                     </TableCell>
                 </TableRow>
@@ -166,7 +164,7 @@ class PageAide extends React.Component {
                     <TableCell><img  width="30" src="./images/cpu.svg"/></TableCell>
                     <TableCell align="right">
                     <Typography style={{fontSize:"18px"}} >
-                    {this.state.metric} %
+                    {this.state.robot} %
                     </Typography>
                     </TableCell>
                 </TableRow>
@@ -174,7 +172,7 @@ class PageAide extends React.Component {
                     <TableCell><img  width="30" src="./images/memory.svg"/></TableCell>
                     <TableCell align="right">
                     <Typography style={{fontSize:"18px"}} >
-                    {this.state.metric} %
+                    {this.state.robot} %
                     </Typography>
                     </TableCell>
                 </TableRow>
@@ -294,7 +292,7 @@ class PageAide extends React.Component {
                     <TableCell><img  width="30" src="./images/wheel.svg"/></TableCell>
                     <TableCell align="right">
                     <Typography style={{fontSize:"18px"}} >
-                    {this.state.metric} tr/min
+                    {this.state.robot} tr/min
                     </Typography>
                     </TableCell>
                 </TableRow>
@@ -302,14 +300,14 @@ class PageAide extends React.Component {
                     <TableCell><img  width="30" src="./images/wheel.svg"/></TableCell>
                     <TableCell align="right">
                     <Typography style={{fontSize:"18px"}} >
-                    {this.state.metric} tr/min
+                    {this.state.robot} tr/min
                     </Typography>
                     </TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell><img  width="30" src="./images/car-battery.svg"/></TableCell>
                     <TableCell align="right">  <Typography style={{fontSize:"18px"}} >
-                    {this.state.metric} %
+                    {this.state.robot} %
                     </Typography></TableCell>
                 </TableRow>
                 
