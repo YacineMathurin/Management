@@ -281,7 +281,8 @@ class PageTableauDeBord extends React.Component {
                       <Button
                       style={{marginTop:"1em"}}
                       fullWidth={true}
-                      onClick={() => this.handleCallbackOpenDetails(s) }
+                      //onClick={() => this.handleCallbackOpenDetails(s) }
+                      onClick={() => this.handleCallbackOpenDetails(s.ID_ROBOT) }
                       variant="contained"
                         color="primary"
                         size="small"
@@ -291,7 +292,7 @@ class PageTableauDeBord extends React.Component {
                       <Button
                       style={{marginTop:"1em"}}
                       fullWidth={true}
-                      onClick={() => {} }
+                      onClick={() => this.handleCallbackOpenMaps(s.ID_ROBOT) }
                       variant="contained"
                         color="primary"
                         size="small"

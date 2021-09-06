@@ -86,12 +86,16 @@ class PageAide extends React.Component {
     },
     grid: {
       row: {
-        colors: ['#012BFE', 'transparent'], 
+        colors: ['transparent', 'transparent'], 
         opacity: 0.6
       },
     },
     xaxis: {
       categories: this.state.mapDat,
+      labels:{
+        show: true,
+        rotate: -45
+      }
     }
   }
 
