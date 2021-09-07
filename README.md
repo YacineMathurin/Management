@@ -1,3 +1,5 @@
+# UPD 7 September 2021
+
 # Introduction
 
 This branch called main. This is protected branch. Settings can be changed by admin [here](https://www.qenvilab.space/laurent/client_softrobot/-/settings/repository).
@@ -12,7 +14,7 @@ Récupèrer le code source sur avec la commande suivante, if you have your SSH k
 git clone git@www.qenvilab.space:Laurent/client_softrobot.git
 ```
 
-Installer le projet avec les commandes suivante (use cmd, nodejscmd or Powershell) :
+Installer le projet avec les commandes suivantes (use cmd, nodejscmd or Powershell, NOT git-bash) :
 
 ```
 npm install
@@ -51,7 +53,7 @@ Le résultat de la compilation se trouve dans le dossier build du projet.
 # PS.
 Before deployment [read instructions](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Understanding_client-side_tools/Deployment).
 
-# cellarium.ovh
+# qenvi.space:3000
 
 ```
 debian@vps-7aa42d99:~/client_softrobot$ npm install
