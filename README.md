@@ -44,11 +44,29 @@ verifiez, si le backend fonctionne pour autorisation et utilisation du logiciell
 
 Pour compiler le projet pour un déploiement utiliser la commande suivante :
 ```
-npm run-script build
+debian@vps-7aa42d99 ~/client_softrobot (main) $ npm run-script build
+
+> Qenvi_Robotics@1.0.0 build
+> react-scripts build
+
+Creating an optimized production build...
+
 ```
 
 Le résultat de la compilation se trouve dans le dossier build du projet.
-** Uploader le contenu du dossier build sur le serveur HTTP **(Apache par exemple).
+
+Deplacer le contenu du dossier build sur le serveur HTTP **(Apache par exemple).
+
+Example:
+
+```
+debian@vps-7aa42d99 /var/www/html $ ls
+apps  index.nginx-debian.html  old  qdb
+debian@vps-7aa42d99 /var/www/html $ cd apps/
+debian@vps-7aa42d99 /var/www/html/apps $ ls
+asset-manifest.json  datalogs.csv  DTF_MANUEL.pdf  favicon.ico  icon.png  images  index.html  logo.png  manifest.json  robots.txt  static
+debian@vps-7aa42d99 /var/www/html/apps $ 
+```
 
 # PS.
 Before deployment [read instructions](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Understanding_client-side_tools/Deployment).
