@@ -135,7 +135,8 @@ class MapGestion extends React.Component {
     var fields = this.props.showDetailsMapGestion.split('blob');
     var id = fields[0];
     this.setState({
-      actualID: id
+      actualID: id,
+      
     })
     fetch(Const.URL_WS_ROBOT_INFO +"?id="+id, { retry: 3, retryDelay: 1000 })
     .then(res => res.json())
@@ -151,6 +152,7 @@ class MapGestion extends React.Component {
         })
         console.log('idClient===', this.state.idClient)
         console.log('idRobot===', this.state.idRobot)
+        console.log('idMap===', id) // id = pk
     })
     .catch((error) => {
       console.log('Request failed', error)
@@ -303,181 +305,176 @@ class MapGestion extends React.Component {
     
     
   return (
-    <div className={this.classes.root}>
+  <div className={this.classes.root}>
     
     <Grid container spacing={2}>
        
-    <Grid item  xs={12} md={8} lg={9}>
-    <Card>
-    <CardContent>
-    
-        <div>
-        <img style={{float:"left", marginTop:"0.5em"}} width="40" src="./images/carrier.svg"/>
-        <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourMaps() }/>
-        </div>
-                    
-        <div style={{marginLeft:"3.5em"}}>
-        <Typography style={{color:"BLACK"}} component="h5" variant="h5">
-        Map N°  {id} - Robot {this.state.idRobot}
-        </Typography> 
-        </div>
-       
-        <Table>
-                <TableHead>
-                  <TableRow>
-                      <TableCell align="center">Map</TableCell>
-                      <TableCell align="center">Commandes</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-            <TableRow>
-            <TableCell align="center">
-                <ImageMapper 
-                  src={ `data:image/jpeg;base64,`+blob}
-                  map={this.state.mp}
-                  width={500}
-                  onLoad={() => this.load()}
-                  onClick={area => this.clicked(area)}
-                  onMouseEnter={area => this.enterArea(area)}
-                  onMouseLeave={area => this.leaveArea(area)}
-                  onMouseMove={(area, _, evt) => this.moveOnArea(area, evt)}
-                  onImageClick={evt => this.clickedOutside(evt)}
-                  onImageMouseMove={evt => this.moveOnImage(evt)}
-                  lineWidth={4}
-                  strokeColor={"white"}
-                />
-              
-            </TableCell>
-            <TableCell align="center">
-            <span>&nbsp;</span>
-            <div align="center" >
-            <h1 style={{color:'blue', fontWeight: 'bold'}}> {this.state.nbpts ? <b> {this.state.nbpts}  {this.state.destination} </b>: <b>&nbsp;</b>}</h1> 
-              
-              <h3 className="message">
-              {this.state.msg ? <b >{this.state.msg}</b> : <b>&nbsp;</b>}</h3>
-             <h3 style={{color:'green', fontWeight: 'bold'}}> {this.state.status ? this.state.status : <b>&nbsp;</b>}</h3>
-            </div>
-                     <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => this.deplacerRobot(this.state.xCoord,this.state.yCoord) }
-                      variant="contained"
-                        color="primary"
-                        size="medium"
-                      >
-                        1-Ajouter une destination
-                     </Button> <span>&nbsp;</span>
-                      <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => this.provideCoordinates() }
-                      variant="contained"
-                        color="primary"
-                        size="large"
-                      >
-                        Rafraichir Map
-                      </Button><span>&nbsp;</span>
-                      <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => this.deleteOnePoint(this.state.actualPk) }
-                      variant="contained"
-                        color="primary"
-                        size="large"
-                      >
-                         2-Effacer une destination
-                      </Button><span>&nbsp;</span>
-                      <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => {if(window.confirm(' Voulez-vous vraiment supprimer toutes les destinations ?')){ this.deletePoints(this.state.actualID)};} }
-                      variant="contained"
-                        color="primary"
-                        size="large"
-                      >
-                         3-Effacer destinations (Tous les points)
-                      </Button><span>&nbsp;</span>
-                      <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => {}}
-                      variant="contained"
-                        color="default"
-                        size="large"
-                      >
-                        Envoyer les données au robot
-                      </Button><span>&nbsp;</span>
-                      <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => this.addAction() }
-                      variant="contained"
-                        color="primary"
-                        size="large"
-                      >
-                        4-Démarrage immédiat
-                      </Button><span>&nbsp;</span>
-                      <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => {} }
-                      variant="contained"
-                        color="default"
-                        size="large"
-                      >
-                        Démarrage planifié
-                      </Button><span>&nbsp;</span>
-                      <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => {} }
-                      variant="contained"
-                        color="default"
-                        size="large"
-                      >
-                        Démarrage répetitif
-                      </Button><span>&nbsp;</span>
-                      <Button
-                      fullWidth={true}
-                      width="2em"
-                      onClick={() => {if(window.confirm(' Voulez-vous vraiment supprimer la Map ?')){ this.deleteMap(this.state.actualID)};}} 
-                      variant="contained"
-                        color="primary"
-                        size="large"
-                      >
-                        5-Effacer la Map
-                      </Button>
-            </TableCell>
-        </TableRow>
-        </TableBody>
-        </Table>
-       
+      <Grid item  xs={12} md={8} lg={9}>
+        <Card>
+          <CardContent>
         
-    </CardContent>
-    </Card>
-    </Grid>
-    <Grid item xs={12} md={4} lg={3} >
-        <Card><span>&nbsp;</span>
-          <CardHeader
-            avatar={
-              <TuneOutlinedIcon fontSize="large"/>
-            }
-            title="Informations"
-          />
-            <CardContent>
-            <span>&nbsp;</span>
-            <div align="center" style={{backgroundColor: "#FFFFCC"}}>
-            <h3> 1-Ajout d'une destination, cliquez sur une position de l'image puis cliquez "Ajouter une destination"; </h3> 
-            <h3> 2-Supprimer une destination, cliquez sur un point existant de l'image puis cliquez sur "Effacer une destination"; </h3> 
-            <h3> 3-Supprimer toutes les destination, cliquez juste sur "Effacer destinations"; </h3> 
-            <h3> 4-Démarrage Immédiat, Envoie une action avec le nombre de points au robot; </h3> 
-            <h3> 5-Effacer la Map, Effacera la Map et toutes les destinations affiliées cliquez juste sur "Effacer la Map" ; </h3> 
+            <div>
+              <img style={{float:"left", marginTop:"0.5em"}} width="40" src="./images/carrier.svg"/>
+              <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourMaps() }/>
             </div>
-            </CardContent>
-          </Card>
-        </Grid>
+                        
+            <div style={{marginLeft:"3.5em"}}>
+              <Typography style={{color:"BLACK"}} component="h5" variant="h5">
+              Map N°  {id} - Robot {this.state.idRobot}
+              </Typography> 
+            </div>
+          </CardContent>
+        </Card>  
+      </Grid>
     </Grid>
-    </div>
+    <Grid container spacing={2}>    
+      <Grid item xs={12} md={4} lg={3} >
+        <Card>
+          <CardContent>
+          <ImageMapper 
+                            src={ `data:image/jpeg;base64,`+blob}
+                            map={this.state.mp}
+                            width={500}
+                            onLoad={() => this.load()}
+                            onClick={area => this.clicked(area)}
+                            onMouseEnter={area => this.enterArea(area)}
+                            onMouseLeave={area => this.leaveArea(area)}
+                            onMouseMove={(area, _, evt) => this.moveOnArea(area, evt)}
+                            onImageClick={evt => this.clickedOutside(evt)}
+                            onImageMouseMove={evt => this.moveOnImage(evt)}
+                            lineWidth={4}
+                            strokeColor={"white"}
+                          />
+          </CardContent>
+        </Card>      
+      </Grid> 
+      <Grid item xs={12} md={4} lg={3} >
+        <Card>
+          <CardContent>
+          <span>&nbsp;</span>
+                            <div align="center" >
+                              <h1 style={{color:'blue', fontWeight: 'bold'}}> {this.state.nbpts ? <b> {this.state.nbpts}  {this.state.destination} </b>: <b>&nbsp;</b>}</h1> 
+                          
+                              <h3 className="message">
+                                {this.state.msg ? <b >{this.state.msg}</b> : <b>&nbsp;</b>}</h3>
+                              <h3 style={{color:'green', fontWeight: 'bold'}}> {this.state.status ? this.state.status : <b>&nbsp;</b>}</h3>
+                            </div>
+                                <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => this.deplacerRobot(this.state.xCoord,this.state.yCoord) }
+                                  variant="contained"
+                                    color="primary"
+                                    size="medium"
+                                  >
+                                    1-Ajouter une destination
+                                </Button> <span>&nbsp;</span>
+                                  <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => this.provideCoordinates() }
+                                  variant="contained"
+                                    color="primary"
+                                    size="large"
+                                  >
+                                    Rafraichir Map
+                                  </Button><span>&nbsp;</span>
+                                  <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => this.deleteOnePoint(this.state.actualPk) }
+                                  variant="contained"
+                                    color="primary"
+                                    size="large"
+                                  >
+                                    2-Effacer une destination
+                                  </Button><span>&nbsp;</span>
+                                  <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => {if(window.confirm(' Voulez-vous vraiment supprimer toutes les destinations ?')){ this.deletePoints(this.state.actualID)};} }
+                                  variant="contained"
+                                    color="primary"
+                                    size="large"
+                                  >
+                                    3-Effacer destinations (Tous les points)
+                                  </Button><span>&nbsp;</span>
+                                  <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => {}}
+                                  variant="contained"
+                                    color="default"
+                                    size="large"
+                                  >
+                                    Envoyer les données au robot
+                                  </Button><span>&nbsp;</span>
+                                  <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => this.addAction() }
+                                  variant="contained"
+                                    color="primary"
+                                    size="large"
+                                  >
+                                    4-Démarrage immédiat
+                                  </Button><span>&nbsp;</span>
+                                  <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => {} }
+                                  variant="contained"
+                                    color="default"
+                                    size="large"
+                                  >
+                                    Démarrage planifié
+                                  </Button><span>&nbsp;</span>
+                                  <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => {} }
+                                  variant="contained"
+                                    color="default"
+                                    size="large"
+                                  >
+                                    Démarrage répetitif
+                                  </Button><span>&nbsp;</span>
+                                  <Button
+                                  fullWidth={true}
+                                  width="2em"
+                                  onClick={() => {if(window.confirm(' Voulez-vous vraiment supprimer la Map ?')){ this.deleteMap(this.state.actualID)};}} 
+                                  variant="contained"
+                                    color="primary"
+                                    size="large"
+                                  >
+                                    5-Effacer la Map
+                                  </Button>            
+          </CardContent>
+        </Card>      
+      </Grid> 
+     
+      <Grid item xs={12} md={4} lg={3} >
+          <Card><span>&nbsp;</span>
+            <CardHeader
+              avatar={
+                <TuneOutlinedIcon fontSize="large"/>
+              }
+              title="Informations"
+            />
+              <CardContent>
+              <span>&nbsp;</span>
+              <div align="center" style={{backgroundColor: "#FFFFCC"}}>
+              <h3> 1-Ajout d'une destination, cliquez sur une position de l'image puis cliquez "Ajouter une destination"; </h3> 
+              <h3> 2-Supprimer une destination, cliquez sur un point existant de l'image puis cliquez sur "Effacer une destination"; </h3> 
+              <h3> 3-Supprimer toutes les destination, cliquez juste sur "Effacer destinations"; </h3> 
+              <h3> 4-Démarrage Immédiat, Envoie une action avec le nombre de points au robot; </h3> 
+              <h3> 5-Effacer la Map, Effacera la Map et toutes les destinations affiliées cliquez juste sur "Effacer la Map" ; </h3> 
+              </div>
+              </CardContent>
+          </Card>
+      </Grid>
+    </Grid>
+  </div>
   )}
 }
 
