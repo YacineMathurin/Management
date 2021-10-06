@@ -13,8 +13,12 @@ import TuneOutlinedIcon from '@material-ui/icons/TuneOutlined';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import CardHeader from '@material-ui/core/CardHeader';
+import Button from '@material-ui/core/Button';
 
 class PageMaps extends React.Component {
+
+
+
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +31,7 @@ class PageMaps extends React.Component {
     }
   }
 
-  classes = makeStyles((Theme) =>
+    classes = makeStyles((Theme) =>
     createStyles({
     }),
   );
@@ -117,6 +121,8 @@ class PageMaps extends React.Component {
     </Card>
     
     </Grid>
+
+
     <Grid item xs={12} md={4} lg={3} >
         <Card>
           <CardHeader
@@ -148,10 +154,39 @@ class PageMaps extends React.Component {
             }}
           />
         </FormControl>
-
-     
-            </CardContent>
+</CardContent>
           </Card>
+
+
+          <Card>
+          <CardHeader
+          
+            avatar={
+              <TuneOutlinedIcon fontSize="large"/>
+            }
+            
+            title="Nouvelle carte"
+            subheader="Supprimer toutes les cartes et lancer une nouvelle exploration"
+          />
+          
+            <CardContent>
+
+                  <FormControl size="small" fullWidth variant="outlined">
+                  
+                  <Button
+                      fullWidth={false}
+                      width="2em"
+                      //onClick={() => this.handleCallbackOpenDetails(ID_ROBOT) }
+                      variant="outlined" color="error" size="small">
+                        refaire la cartographie
+                      </Button>
+
+
+        </FormControl>
+</CardContent>
+          </Card>
+
+
         </Grid>
     </Grid>
     </div>
