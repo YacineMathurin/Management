@@ -8,48 +8,91 @@ import * as Const from './Constant';
 import { TableRow, TableCell } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TuneOutlinedIcon from '@material-ui/icons/TuneOutlined';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import CardHeader from '@material-ui/core/CardHeader';
+import Button from '@material-ui/core/Button';
 
 class PageMaps extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      apiKey : props.apiKey,
-      maps : null,
-      map : this.props.showDetailsMaps,
-      hoveredArea: null, msg: null, 
-      moveMsg: null, 
-      search:'',default:null,
+      apiKey: props.apiKey,
+      maps: null,
+      map: this.props.showDetailsMaps,
+      hoveredArea: null,
+      msg: null,
+      moveMsg: null,
+      search: '',
+      default: null,
+      mapsErased: false,
+      actionAdded: false
     }
   }
+  classes = makeStyles((Theme) => createStyles({}),);
 
-  classes = makeStyles((Theme) =>
-    createStyles({
-    }),
-  );
 
-  provideMaps(){
-    fetch(Const.URL_WS_ALL_MAPS + `?robot=${this.state.map}`, { retry: 3, retryDelay: 1000 })
-    .then(res => res.json())
-    .then((data) => {
-      if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
-        this.props.callbackNeedToLogin()
-      } else {
-        this.setState({ maps: data,
-                        default: data})
-      }
-    })
-    .catch((error) => {
-      console.log('Request failed', error)
-    })
+  addActionNewMapping() {
+
+    // TODO reorganize this 4 variable in good way
+    let command = 2;// let suppose that 2 is to do mapping
+    let var_id_client = 0;// FIX ASAP id client is not in the variable
+    // this.state.map is in current context id_robot stupid
+    // additional for the moment in not used for future
+
+    fetch(Const.URL_WS_ADD_ACTION + `?id_client=${var_id_client}` + `&id_robot=${this.state.map}` + `&command=${command}` + `&additional=${command}`, { retry: 3, retryDelay: 1000 })
+      .then(res => res.json())
+      .then((data) => {
+        if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
+          this.props.callbackNeedToLogin()
+        } else {
+          this.setState({ actionAdded: true })
+        }
+      })
+      .catch((error) => {
+        console.log('Request addActionNewMapping failed', error)
+      })
   }
-  
-  
-  handleCallbackOpenMapGestion= (idMap) =>{
+
+  deleteAllMaps(){
+    console.log(Const.URL_WS_DEL_ALL_MAPS + `?robot=${this.state.map}`);
+    fetch(Const.URL_WS_DEL_ALL_MAPS + `?robot=${this.state.map}`, { retry: 3, retryDelay: 1000 })
+      .then(res => res.json())
+      .then((data) => {
+        if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
+          this.props.callbackNeedToLogin()
+        } else {
+          this.setState({ mapsErased: true })
+        }
+      })
+      .catch((error) => {
+        console.log('Request addActionNewMapping failed', error)
+      })
+  }
+
+
+  provideMaps() {
+    fetch(Const.URL_WS_ALL_MAPS + `?robot=${this.state.map}`, { retry: 3, retryDelay: 1000 })
+      .then(res => res.json())
+      .then((data) => {
+        if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
+          this.props.callbackNeedToLogin()
+        } else {
+          this.setState({
+            maps: data,
+            default: data
+          })
+        }
+      })
+      .catch((error) => {
+        console.log('Request failed', error)
+      })
+  }
+
+
+  handleCallbackOpenMapGestion = (idMap) => {
     console.log("send robot id to MapGestion" + idMap)
     this.props.callbackOpenMapGestion(idMap)
   }
@@ -70,92 +113,139 @@ class PageMaps extends React.Component {
   };
 
   render() {
-  return (
-    <div className={this.classes.root}>
-    <Grid container spacing={2}>
-       
-    <Grid item  xs={12} md={8} lg={9}>
-    <Card>
-    
-    <CardContent >
-    
-        <div>
-        <img style={{float:"left", marginTop:"0.5em"}} width="40" src="./images/carrier.svg"/>
-        <img style={{float:"right", marginTop:"0.5em"}} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourTableauDeBord() }/>
-        </div>
-                    
-        <div style={{marginLeft:"3.5em"}}>
-        <Typography style={{color:"BLACK"}} component="h5" variant="h5">
-        robot  {this.state.map}
-        </Typography>
-        </div>
-        <span >&nbsp;</span>
-        <h1 > Selectionne une Map </h1>
-      <Table>
-        <TableBody >
-      { (this.state.maps != null) && (  this.state.maps.map((s) => { 
-                
-                return ( 
-                  <TableRow key={s.pk} >
-                     <TableCell align="center">
-                     <h3 > Map {s.pk}</h3>
-                    <figure >
-                        <img key={s.pk} style={{paddingBottom:10}}  width="250"  src={ `data:image/jpeg;base64,`+s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk+"blob"+s.blob) }/>
-                    </figure>
-                     </TableCell>
-                    </TableRow >
-                )
-          }))
-          
-          }
-       </TableBody>
-     </Table>
-     
-       
-       
-    </CardContent>
-    </Card>
-    
-    </Grid>
-    <Grid item xs={12} md={4} lg={3} >
-        <Card>
-          <CardHeader
-            avatar={
-              <TuneOutlinedIcon fontSize="large"/>
-            }
+    return (
+      <div className={this.classes.root}>
+        <Grid container spacing={3}>
+
+          <Grid item xs={12} md={8} lg={9}>
+            <Card>
+
+              <CardContent >
+
+                <div>
+                  <img style={{ float: "left", marginTop: "0.5em" }} width="40" src="./images/carrier.svg" />
+                  <img style={{ float: "right", marginTop: "0.5em" }} width="50" src="./images/back.png" onClick={() => this.props.callBackRetourTableauDeBord()} />
+                </div>
+
+                <div style={{ marginLeft: "3.5em" }}>
+                  <Typography style={{ color: "BLACK" }} component="h5" variant="h5">
+                    robot  {this.state.map}
+                  </Typography>
+                </div>
+                <span >&nbsp;</span>
+                <h1 > Selectionne une Map </h1>
+                <Table>
+                  <TableBody >
+                    {(this.state.maps != null) && (this.state.maps.map((s) => {
+
+                      return (
+                        <TableRow key={s.pk} >
+                          <TableCell align="center">
+                            <h3 > Map {s.pk}</h3>
+                            <figure >
+                              <img key={s.pk} style={{ paddingBottom: 10 }} width="250" src={`data:image/jpeg;base64,` + s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk + "blob" + s.blob)} />
+                            </figure>
+                          </TableCell>
+                        </TableRow >
+                      )
+                    }))
+
+                    }
+                  </TableBody>
+                </Table>
+
+
+
+              </CardContent>
+            </Card>
+
+          </Grid>
+
+
+          <Grid item xs={12} md={4} lg={3} >
+
+            <Card>
+              <CardHeader
+                avatar={<TuneOutlinedIcon fontSize="large"/>}
+                title="Filtrage"
+                subheader="Filtrer par cartes"
+              />
+              <CardContent>
+                <FormControl size="small" fullWidth variant="outlined">
+
+                  <TextField
+                    size="small"
+                    placeholder="Rechercher la carte"
+                    value={this.state.search}
+                    onChange={event => {
+                      const { value } = event.target;
+                      this.setState({ search: value });
+                      if (value !== "") {
+                        this.searchFilterFunction(value);
+                      } else {
+                        this.setState({
+                          maps: this.state.default,
+                        });
+                      }
+                    }}
+                  />
+                </FormControl>
+
+              </CardContent>
+            </Card>
+
+
+            <Card>
+              <CardHeader
+                avatar={<TuneOutlinedIcon fontSize="large"/>}
+                title="Cartografier à nouveau"
+                subheader="Envoyer une commande à robot pour lancer une nouvelle exploration"
+              />
+              <CardContent>
+                <FormControl size="small" fullWidth variant="outlined">
+                  <Button
+                    fullWidth={false}
+                    width="2em"
+                    onClick={() => this.addActionNewMapping()}
+                    variant="outlined" color="error" size="small">
+                    refaire la cartographie
+                  </Button>
+                </FormControl>
+              </CardContent>
+            </Card>
+
+
+
+
+            <Card>
+              <CardHeader
+                avatar={<TuneOutlinedIcon fontSize="large"/>}
+                title="Supprimer toutes les cartes"
+                subheader="Vider la contenu de la base des donnees pour ce robot"
+              />
+              <CardContent>
+                <FormControl size="small" fullWidth variant="outlined">
+                  <Button
+                    fullWidth={false}
+                    width="2em"
+                    onClick={() => this.deleteAllMaps()}
+                    variant="outlined" outline color="red" size="small">
+                    Supprimer toutes cartes
+                  </Button>
+                </FormControl>
+              </CardContent>
+            </Card>
             
-            title="Filtrage"
-            subheader="Filtrez sur les Map"
-          />
-          
-            <CardContent>
 
-                  <FormControl size="small" fullWidth variant="outlined">
-          
-          <TextField
-            size="small"
-            placeholder="Rechercher un ID Map"
-            value={this.state.search}
-            onChange={event => {
-              const { value } = event.target;
-              this.setState({ search: value });
-              if (value !== "") {
-                this.searchFilterFunction(value);
-              } else {
-                this.setState({ maps: this.state.default,
-                 });
-              }
-            }}
-          />
-        </FormControl>
 
-     
-            </CardContent>
-          </Card>
+
+
+
+          </Grid>
         </Grid>
-    </Grid>
-    </div>
-  )}
+      </div>
+    )
+  }
 }
 
 export default PageMaps;
