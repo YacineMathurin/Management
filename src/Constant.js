@@ -15,10 +15,12 @@ export const URL_WS_DEL_DEF = "http://193.70.86.40:8081/DeleteMsgDefItineWS"
 export const URL_WS_DEL_ALL_DEF = "http://193.70.86.40:8081/DeleteAllMsgDefItineWS"
 
 export const URL_WS_DEL_ONE_MAP     = "http://193.70.86.40:8081/DeleteMapWS"
-export const URL_WS_DEL_ALL_MAPS    = "http://193.70.86.40:8081/DeleteAllMapWS"
+export const URL_WS_DEL_ALL_MAPS    = "http://193.70.86.40:8081/DeleteAllMapsWS"
 
 export const URL_WS_ROBOT_INFO = "http://193.70.86.40:8081/GetRobotByMapWS"
 export const URL_WS_ROBOT_HEARTS = "http://193.70.86.40:8081/GetAllHeartBeatWs"
+
+export const URL_WS_ADD_ACTION = "http://193.70.86.40:8081/AddCommandeWS"
 
 
 export const URL_WS_SYNTHESE = "http://localhost:8080/syntheseSelectionWS";

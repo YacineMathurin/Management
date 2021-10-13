@@ -160,7 +160,9 @@ class MapGestion extends React.Component {
   }
   deleteMap(pk) {
     console.log("Delete MAp    " + pk);
-
+    console.log("To be called:");
+    console.log(Const.URL_WS_DEL_ONE_MAP + "?pk=" + pk);
+    
     fetch(Const.URL_WS_DEL_ONE_MAP + "?pk=" + pk, { retry: 3, retryDelay: 1000 })
       .then(response => response.json())
       .catch((error) => {

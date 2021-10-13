@@ -28,12 +28,36 @@ class PageMaps extends React.Component {
       search: '',
       default: null,
       mapsErased: false,
+      actionAdded: false
     }
   }
   classes = makeStyles((Theme) => createStyles({}),);
 
 
   addActionNewMapping() {
+
+    // TODO reorganize this 4 variable in good way
+    let command = 2;// let suppose that 2 is to do mapping
+    let var_id_client = 0;// FIX ASAP id client is not in the variable
+    // this.state.map is in current context id_robot stupid
+    // additional for the moment in not used for future
+
+    fetch(Const.URL_WS_ADD_ACTION + `?id_client=${var_id_client}` + `&id_robot=${this.state.map}` + `&command=${command}` + `&additional=${command}`, { retry: 3, retryDelay: 1000 })
+      .then(res => res.json())
+      .then((data) => {
+        if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
+          this.props.callbackNeedToLogin()
+        } else {
+          this.setState({ actionAdded: true })
+        }
+      })
+      .catch((error) => {
+        console.log('Request addActionNewMapping failed', error)
+      })
+  }
+
+  deleteAllMaps(){
+    console.log(Const.URL_WS_DEL_ALL_MAPS + `?robot=${this.state.map}`);
     fetch(Const.URL_WS_DEL_ALL_MAPS + `?robot=${this.state.map}`, { retry: 3, retryDelay: 1000 })
       .then(res => res.json())
       .then((data) => {
@@ -47,6 +71,7 @@ class PageMaps extends React.Component {
         console.log('Request addActionNewMapping failed', error)
       })
   }
+
 
   provideMaps() {
     fetch(Const.URL_WS_ALL_MAPS + `?robot=${this.state.map}`, { retry: 3, retryDelay: 1000 })
@@ -90,7 +115,7 @@ class PageMaps extends React.Component {
   render() {
     return (
       <div className={this.classes.root}>
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
 
           <Grid item xs={12} md={8} lg={9}>
             <Card>
@@ -141,16 +166,16 @@ class PageMaps extends React.Component {
 
             <Card>
               <CardHeader
-                avatar={<TuneOutlinedIcon fontSize="large" />}
+                avatar={<TuneOutlinedIcon fontSize="large"/>}
                 title="Filtrage"
-                subheader="Filtrez sur les Map"
+                subheader="Filtrer par cartes"
               />
               <CardContent>
                 <FormControl size="small" fullWidth variant="outlined">
 
                   <TextField
                     size="small"
-                    placeholder="Rechercher un ID Map+"
+                    placeholder="Rechercher la carte"
                     value={this.state.search}
                     onChange={event => {
                       const { value } = event.target;
@@ -172,11 +197,9 @@ class PageMaps extends React.Component {
 
             <Card>
               <CardHeader
-
                 avatar={<TuneOutlinedIcon fontSize="large"/>}
-
-                title="Nouvelle carte"
-                subheader="Supprimer toutes les cartes et lancer une nouvelle exploration"
+                title="Cartografier à nouveau"
+                subheader="Envoyer une commande à robot pour lancer une nouvelle exploration"
               />
               <CardContent>
                 <FormControl size="small" fullWidth variant="outlined">
@@ -190,6 +213,32 @@ class PageMaps extends React.Component {
                 </FormControl>
               </CardContent>
             </Card>
+
+
+
+
+            <Card>
+              <CardHeader
+                avatar={<TuneOutlinedIcon fontSize="large"/>}
+                title="Supprimer toutes les cartes"
+                subheader="Vider la contenu de la base des donnees pour ce robot"
+              />
+              <CardContent>
+                <FormControl size="small" fullWidth variant="outlined">
+                  <Button
+                    fullWidth={false}
+                    width="2em"
+                    onClick={() => this.deleteAllMaps()}
+                    variant="outlined" outline color="red" size="small">
+                    Supprimer toutes cartes
+                  </Button>
+                </FormControl>
+              </CardContent>
+            </Card>
+            
+
+
+
 
 
           </Grid>
