@@ -14,6 +14,9 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import CardHeader from '@material-ui/core/CardHeader';
 import Button from '@material-ui/core/Button';
+import { Modal } from '@material-ui/core';
+import "./PageMaps.css";
+
 
 class PageMaps extends React.Component {
   constructor(props) {
@@ -28,21 +31,22 @@ class PageMaps extends React.Component {
       search: '',
       default: null,
       mapsErased: false,
-      actionAdded: false
+      actionAdded: false,
+      mapName: ''
     }
   }
   classes = makeStyles((Theme) => createStyles({}),);
 
 
   addActionNewMapping() {
-
+    this.handleClose();
     // TODO reorganize this 4 variable in good way
     let command = 2;// let suppose that 2 is to do mapping
     let var_id_client = 0;// FIX ASAP id client is not in the variable
     // this.state.map is in current context id_robot stupid
     // additional for the moment in not used for future
 
-    fetch(Const.URL_WS_ADD_ACTION + `?id_client=${var_id_client}` + `&id_robot=${this.state.map}` + `&command=${command}` + `&additional=${command}`, { retry: 3, retryDelay: 1000 })
+    fetch(Const.URL_WS_ADD_ACTION + `?id_client=${var_id_client}` + `&id_robot=${this.state.map}` + `&command=${command}` + `&additional=${command}` + `&map_name=${this.state.mapName}`, { retry: 3, retryDelay: 1000 })
       .then(res => res.json())
       .then((data) => {
         if (data.hasOwnProperty('message') && data.message.includes('TOKEN_NON_VALIDE')) {
@@ -56,7 +60,7 @@ class PageMaps extends React.Component {
       })
   }
 
-  deleteAllMaps(){
+  deleteAllMaps() {
     console.log(Const.URL_WS_DEL_ALL_MAPS + `?robot=${this.state.map}`);
     fetch(Const.URL_WS_DEL_ALL_MAPS + `?robot=${this.state.map}`, { retry: 3, retryDelay: 1000 })
       .then(res => res.json())
@@ -111,10 +115,41 @@ class PageMaps extends React.Component {
       maps: newData,
     });
   };
-
+  ModalDisplay = () => this.setState({ open: true })
+  handleClose = () => this.setState({ open: false })
+  setTempMapName = (event) => {
+    const mapName = event.target.value;
+    console.log(mapName);
+    this.setState({ mapName })
+  }
   render() {
+    const { open } = this.state;
     return (
       <div className={this.classes.root}>
+        <Modal
+          open={open}
+          onClose={() => this.handleClose()}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <div id="modal-body" style={{
+            color: "white",
+            position: "absolute",
+            top: "10%",
+            left: "50%",
+            border: "2px solid",
+            borderRadius: "5px",
+            padding: "20px",
+            transform: "translateX(-50%)"
+          }}>
+            <h3 style={{ marginTop: "0", borderBottom: "2px solid white" }}>Nommer votre carte</h3>
+            <TextField id="standard-basic" label="Nomenclature:" autoFocus onChange={(event) => this.setTempMapName(event)} />
+            <Button variant="contained" color="primary" style={{ margin: "12px" }} onClick={() => this.addActionNewMapping()}>
+              Enregistrer
+            </Button>
+          </div>
+        </Modal>
+
         <Grid container spacing={3}>
 
           <Grid item xs={12} md={8} lg={9}>
@@ -166,7 +201,7 @@ class PageMaps extends React.Component {
 
             <Card>
               <CardHeader
-                avatar={<TuneOutlinedIcon fontSize="large"/>}
+                avatar={<TuneOutlinedIcon fontSize="large" />}
                 title="Filtrage"
                 subheader="Filtrer par cartes"
               />
@@ -197,7 +232,7 @@ class PageMaps extends React.Component {
 
             <Card>
               <CardHeader
-                avatar={<TuneOutlinedIcon fontSize="large"/>}
+                avatar={<TuneOutlinedIcon fontSize="large" />}
                 title="Cartografier à nouveau"
                 subheader="Envoyer une commande à robot pour lancer une nouvelle exploration"
               />
@@ -206,7 +241,8 @@ class PageMaps extends React.Component {
                   <Button
                     fullWidth={false}
                     width="2em"
-                    onClick={() => this.addActionNewMapping()}
+                    // onClick={() => this.addActionNewMapping()}
+                    onClick={() => this.ModalDisplay()}
                     variant="outlined" color="error" size="small">
                     refaire la cartographie
                   </Button>
@@ -219,7 +255,7 @@ class PageMaps extends React.Component {
 
             <Card>
               <CardHeader
-                avatar={<TuneOutlinedIcon fontSize="large"/>}
+                avatar={<TuneOutlinedIcon fontSize="large" />}
                 title="Supprimer toutes les cartes"
                 subheader="Vider la contenu de la base des donnees pour ce robot"
               />
@@ -235,7 +271,7 @@ class PageMaps extends React.Component {
                 </FormControl>
               </CardContent>
             </Card>
-            
+
 
 
 
