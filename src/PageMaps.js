@@ -115,38 +115,57 @@ class PageMaps extends React.Component {
       maps: newData,
     });
   };
-  ModalDisplay = () => this.setState({ open: true })
-  handleClose = () => this.setState({ open: false })
+  renamingModalDisplay = () => this.setState({ open: true })
+  deletionModalDisplay = () => this.setState({ openDeleteModal: true })
+  handleClose = () => this.setState({ open: false, openDeleteModal: false })
   setTempMapName = (event) => {
     const mapName = event.target.value;
     console.log(mapName);
     this.setState({ mapName })
   }
   render() {
-    const { open } = this.state;
+    const { open, openDeleteModal } = this.state;
     return (
       <div className={this.classes.root}>
+        {/* Renaming Maps */}
         <Modal
           open={open}
           onClose={() => this.handleClose()}
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-          <div id="modal-body" style={{
-            color: "white",
-            position: "absolute",
-            top: "10%",
-            left: "50%",
-            border: "2px solid",
-            borderRadius: "5px",
-            padding: "20px",
-            transform: "translateX(-50%)"
-          }}>
+          <div class="modal-body" >
             <h3 style={{ marginTop: "0", borderBottom: "2px solid white" }}>Nommer votre carte</h3>
-            <TextField id="standard-basic" label="Nomenclature:" autoFocus onChange={(event) => this.setTempMapName(event)} />
-            <Button variant="contained" color="primary" style={{ margin: "12px" }} onClick={() => this.addActionNewMapping()}>
-              Enregistrer
+            <TextField id="standard-basic" placeholder="Entrepot 1" autoFocus onChange={(event) => this.setTempMapName(event)} />
+            <div style={{ margin: "22px 0" }}>
+              <Button variant="contained" style={{ margin: "0px" }} onClick={() => this.handleClose()}>
+                Annuler
             </Button>
+              <Button variant="contained" disabled={!this.state.mapName} color="primary" style={{ marginLeft: "100px" }} onClick={() => this.addActionNewMapping()}>
+                Enregistrer
+            </Button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Confirm Maps deletion */}
+        <Modal
+          open={openDeleteModal}
+          onClose={() => this.handleClose()}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <div class="modal-body" >
+            <h3 style={{ marginTop: "0", borderBottom: "2px solid white" }}>Supprimer les cartes</h3>
+            <p>Etes vous sûre de vouloir Supprimer vos cartes ?</p>
+            <div style={{ margin: "22px 0" }}>
+              <Button variant="contained" style={{ margin: "0px" }} onClick={() => this.handleClose()}>
+                Annuler
+            </Button>
+              <Button variant="contained" color="secondary" style={{ marginLeft: "100px" }} onClick={() => { }}>
+                Confirmer
+            </Button>
+            </div>
           </div>
         </Modal>
 
@@ -177,9 +196,25 @@ class PageMaps extends React.Component {
                         <TableRow key={s.pk} >
                           <TableCell align="center">
                             <h3 > Map {s.pk}</h3>
-                            <figure >
-                              <img key={s.pk} style={{ paddingBottom: 10 }} width="250" src={`data:image/jpeg;base64,` + s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk + "blob" + s.blob)} />
-                            </figure>
+                            <div>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                  <figure >
+                                    <img key={s.pk} style={{ paddingBottom: 10 }} width="250" src={`data:image/jpeg;base64,` + s.blob} onClick={() => this.handleCallbackOpenMapGestion(s.pk + "blob" + s.blob)} />
+                                  </figure>
+                                </Grid>
+                                <Grid style={{ padding: "25px" }}>
+                                  <TextField
+                                    id="outlined-multiline-static"
+                                    label="Commentaire"
+                                    multiline
+                                    rows={4}
+                                    // defaultValue="Default Value"
+                                    variant="outlined"
+                                  />
+                                </Grid>
+                              </Grid>
+                            </div>
                           </TableCell>
                         </TableRow >
                       )
@@ -242,7 +277,7 @@ class PageMaps extends React.Component {
                     fullWidth={false}
                     width="2em"
                     // onClick={() => this.addActionNewMapping()}
-                    onClick={() => this.ModalDisplay()}
+                    onClick={() => this.renamingModalDisplay()}
                     variant="outlined" color="error" size="small">
                     refaire la cartographie
                   </Button>
@@ -264,7 +299,7 @@ class PageMaps extends React.Component {
                   <Button
                     fullWidth={false}
                     width="2em"
-                    onClick={() => this.deleteAllMaps()}
+                    onClick={() => this.deletionModalDisplay()}
                     variant="outlined" outline color="red" size="small">
                     Supprimer toutes cartes
                   </Button>
@@ -279,7 +314,7 @@ class PageMaps extends React.Component {
 
           </Grid>
         </Grid>
-      </div>
+      </div >
     )
   }
 }
