@@ -1,21 +1,30 @@
-.modal-body{
-    color: white;
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    border: 2px solid;
-    border-radius: 5px;
-    padding: 20px;
-    transform: translateX(-50%)
+.modal-body {
+  color: white;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  border: 2px solid;
+  border-radius: 5px;
+  padding: 20px;
+  transform: translateX(-50%);
 }
-#modal-body::before{
-width: 100%;
-height: 20%;
-color: red;
-z-index: 1;
-top: 0;
-left: 0;
+.showIconMapDetails {
+  transition: 1s;
+  opacity: 1;
 }
-#standard-basic{
-    color: white;
+.hideIconMapDetails {
+  transition: 1s;
+  opacity: 0;
+}
+
+#modal-body::before {
+  width: 100%;
+  height: 20%;
+  color: red;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+#standard-basic {
+  color: white;
 }
