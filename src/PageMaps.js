@@ -125,6 +125,33 @@ class PageMaps extends React.Component {
         console.log("Request failed", error);
       });
   }
+  saveComment = (pk, index) => {
+    let { maps } = this.state;
+    this.closeEditingMapArea(index);
+    fetch(
+      `http://193.70.86.40:8081/SetUserCommentByPkWS?pk=${pk}&user_comment=${
+        this.state["userComment" + pk]
+      }`,
+      {
+        retry: 3,
+        retryDelay: 1000,
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(
+          "request pk and comment",
+          pk,
+          this.state["userComment" + pk]
+        );
+        maps[index]["user_comment"] = this.state["userComment" + pk];
+        this.setState({ maps });
+        console.log("Save comment response: ", data);
+      })
+      .catch((error) => {
+        console.error("Request failed", error);
+      });
+  };
 
   handleCallbackOpenMapGestion = (idMap) => {
     console.log("send robot id to MapGestion" + idMap);
@@ -145,8 +172,11 @@ class PageMaps extends React.Component {
       maps: newData,
     });
   };
-  openEditingMapArea = (index) =>
-    this.setState({ ["editingMapDetails" + index]: true });
+  openEditingMapArea = (index, pk, comment) =>
+    this.setState({
+      ["editingMapDetails" + index]: true,
+      ["userComment" + pk]: comment,
+    });
   closeEditingMapArea = (index) =>
     this.setState({ ["editingMapDetails" + index]: false });
   renamingModalDisplay = () => this.setState({ open: true });
@@ -163,8 +193,13 @@ class PageMaps extends React.Component {
   handleFigureHoveringOff = (index) => {
     this.setState({ ["showIconMapDetails" + index]: false });
   };
+  handleComment = (comment, pk) => {
+    console.log(comment);
+    this.setState({ ["userComment" + pk]: comment });
+  };
+
   render() {
-    //console.log("State", this.state);
+    console.log("State", this.state);
     const { open, openDeleteModal, editingMapDetails } = this.state;
     return (
       <div className={this.classes.root}>
@@ -266,7 +301,7 @@ class PageMaps extends React.Component {
                   </Typography>
                 </div>
                 <span>&nbsp;</span>
-                <h1> Selectionne une Map </h1>
+                <h1> Cliquer pour Selectionner une Cartographie </h1>
                 <Table>
                   <TableBody>
                     {this.state.maps != null &&
@@ -328,7 +363,11 @@ class PageMaps extends React.Component {
                                           justifyContent: "center",
                                         }}
                                         onClick={() =>
-                                          this.openEditingMapArea(index)
+                                          this.openEditingMapArea(
+                                            index,
+                                            s.pk,
+                                            s.user_comment
+                                          )
                                         }
                                       >
                                         <Tooltip title="Ajouter un détail">
@@ -383,7 +422,13 @@ class PageMaps extends React.Component {
                                         </div>
                                       )}
                                   </Grid>
-                                  <Grid style={{ padding: "17px" }}>
+                                  <Grid
+                                    style={{
+                                      padding: "17px",
+                                      position: "relative",
+                                      right: "28px",
+                                    }}
+                                  >
                                     {this.state[
                                       "editingMapDetails" + index
                                     ] && (
@@ -403,13 +448,21 @@ class PageMaps extends React.Component {
                                           rows={4}
                                           defaultValue={s["user_comment"]}
                                           variant="outlined"
-                                          helperText="Ce détail s'affichera juste en dessous de votre carte une fois enregisté"
+                                          helperText="Votre descriptif s'affichera juste en dessous de votre carte une fois enregisté"
+                                          onChange={(event) =>
+                                            this.handleComment(
+                                              event.target.value,
+                                              s.pk
+                                            )
+                                          }
                                         />
                                         <div
                                           style={{
                                             marginTop: "1em",
                                             display: "flex",
                                             justifyContent: "flex-end",
+                                            position: "relative",
+                                            right: "28px",
                                           }}
                                         >
                                           <Button
@@ -424,6 +477,9 @@ class PageMaps extends React.Component {
                                             variant="contained"
                                             color="primary"
                                             style={{ marginLeft: "1em" }}
+                                            onClick={() =>
+                                              this.saveComment(s.pk, index)
+                                            }
                                           >
                                             Enregistrer
                                           </Button>
