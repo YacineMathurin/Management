@@ -12,6 +12,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TuneOutlinedIcon from "@material-ui/icons/TuneOutlined";
 import MapIcon from "@material-ui/icons/Map";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
+import MoreVertSharpIcon from "@material-ui/icons/MoreVertSharp";
 import Tooltip from "@material-ui/core/Tooltip";
 import Edit from "@material-ui/icons/Edit";
 import SpeakerNotesIcon from "@material-ui/icons/SpeakerNotes";
@@ -125,7 +126,7 @@ class PageMaps extends React.Component {
         console.log("Request failed", error);
       });
   }
-  saveComment = (pk, index) => {
+  saveChanges = (pk, index) => {
     let { maps } = this.state;
     this.closeEditingMapArea(index);
     fetch(
@@ -151,6 +152,26 @@ class PageMaps extends React.Component {
       .catch((error) => {
         console.error("Request failed", error);
       });
+
+    fetch(
+      `http://193.70.86.40:8081/SetMapNameByPkWS?pk=${pk}&map_name=${
+        this.state["mapName" + pk]
+      }`,
+      {
+        retry: 3,
+        retryDelay: 1000,
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("request pk and mapName", pk, this.state["mapName" + pk]);
+        maps[index]["map_name"] = this.state["mapName" + pk];
+        this.setState({ maps });
+        console.log("Save mapName response: ", data);
+      })
+      .catch((error) => {
+        console.error("Request failed", error);
+      });
   };
 
   handleCallbackOpenMapGestion = (idMap) => {
@@ -172,10 +193,11 @@ class PageMaps extends React.Component {
       maps: newData,
     });
   };
-  openEditingMapArea = (index, pk, comment) =>
+  openEditingMapArea = (index, pk, comment, mapName) =>
     this.setState({
       ["editingMapDetails" + index]: true,
       ["userComment" + pk]: comment,
+      ["mapName" + pk]: mapName,
     });
   closeEditingMapArea = (index) =>
     this.setState({ ["editingMapDetails" + index]: false });
@@ -197,9 +219,13 @@ class PageMaps extends React.Component {
     console.log(comment);
     this.setState({ ["userComment" + pk]: comment });
   };
+  handleMapRenamaing = (mapName, pk) => {
+    console.log(mapName);
+    this.setState({ ["mapName" + pk]: mapName });
+  };
 
   render() {
-    console.log("State", this.state);
+    // console.log("State", this.state);
     const { open, openDeleteModal, editingMapDetails } = this.state;
     return (
       <div className={this.classes.root}>
@@ -212,7 +238,7 @@ class PageMaps extends React.Component {
         >
           <div class="modal-body">
             <h3 style={{ marginTop: "0", borderBottom: "2px solid white" }}>
-              Nommer votre carte
+              <Typography variant="overline">Nommer votre cartes</Typography>
             </h3>
             <TextField
               id="standard-basic"
@@ -226,7 +252,9 @@ class PageMaps extends React.Component {
                 style={{ margin: "0px" }}
                 onClick={() => this.handleClose()}
               >
-                Annuler
+                <Typography variant="button" display="block" gutterBottom>
+                  Annuler
+                </Typography>
               </Button>
               <Button
                 variant="contained"
@@ -301,7 +329,11 @@ class PageMaps extends React.Component {
                   </Typography>
                 </div>
                 <span>&nbsp;</span>
-                <h1> Cliquer pour Selectionner une Cartographie </h1>
+                <h1>
+                  <Typography variant="h5">
+                    Cliquer pour Selectionner une Cartographie
+                  </Typography>{" "}
+                </h1>
                 <Table>
                   <TableBody>
                     {this.state.maps != null &&
@@ -309,7 +341,36 @@ class PageMaps extends React.Component {
                         return (
                           <TableRow key={s.pk}>
                             <TableCell align="center">
-                              <h3 style={{ textAlign: "left" }}> Map {s.pk}</h3>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <h3 style={{ textAlign: "left" }}>
+                                  {" "}
+                                  <Typography variant="overline">
+                                    Map: <span>{s.map_name}</span>
+                                  </Typography>
+                                </h3>
+                                <Button
+                                  style={{ height: "30px" }}
+                                  variant="outlined"
+                                  color="primary"
+                                  size="small"
+                                  startIcon={<MoreVertSharpIcon />}
+                                  onClick={() =>
+                                    this.openEditingMapArea(
+                                      index,
+                                      s.pk,
+                                      s.user_comment,
+                                      s.map_name
+                                    )
+                                  }
+                                >
+                                  Editer
+                                </Button>
+                              </div>
                               <div>
                                 <Grid
                                   container
@@ -340,45 +401,6 @@ class PageMaps extends React.Component {
                                           )
                                         }
                                       />
-                                      <p
-                                        className={
-                                          this.state[
-                                            "showIconMapDetails" + index
-                                          ]
-                                            ? "showIconMapDetails"
-                                            : "hideIconMapDetails"
-                                        }
-                                        style={{
-                                          backgroundColor: "rgba(0,0,0,0.1)",
-                                          width: "2em",
-                                          height: "2em",
-                                          margin: "0 1em",
-                                          // marginLeft: "1em",
-                                          // position: "relative",
-                                          // bottom: "0.5em",
-                                          borderRadius: "5px",
-                                          cursor: "pointer",
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "center",
-                                        }}
-                                        onClick={() =>
-                                          this.openEditingMapArea(
-                                            index,
-                                            s.pk,
-                                            s.user_comment
-                                          )
-                                        }
-                                      >
-                                        <Tooltip title="Ajouter un détail">
-                                          <SpeakerNotesIcon
-                                            style={{
-                                              fontSize: 20,
-                                              color: "#4aaac2",
-                                            }}
-                                          ></SpeakerNotesIcon>
-                                        </Tooltip>
-                                      </p>
                                     </figure>
                                     {!this.state["editingMapDetails" + index] &&
                                       s["user_comment"] !== "" && (
@@ -386,38 +408,12 @@ class PageMaps extends React.Component {
                                           style={{
                                             display: "flex",
                                             justifyContent: "center",
-                                            position: "relative",
-                                            right: "28px",
                                           }}
                                         >
-                                          <p>{s["user_comment"]}</p>
-                                          <p
-                                            style={{
-                                              backgroundColor:
-                                                "rgba(0,0,0,0.1)",
-                                              width: "2em",
-                                              height: "2em",
-                                              marginLeft: "1em",
-                                              position: "relative",
-                                              bottom: "0.5em",
-                                              borderRadius: "5px",
-                                              cursor: "pointer",
-                                              display: "flex",
-                                              alignItems: "center",
-                                              justifyContent: "center",
-                                            }}
-                                            onClick={() =>
-                                              this.openEditingMapArea(index)
-                                            }
-                                          >
-                                            <Tooltip title="Editer ce détail">
-                                              <Edit
-                                                style={{
-                                                  fontSize: 20,
-                                                  color: "#4aaac2",
-                                                }}
-                                              ></Edit>
-                                            </Tooltip>
+                                          <p>
+                                            <Typography variant="overline">
+                                              {s["user_comment"]}
+                                            </Typography>
                                           </p>
                                         </div>
                                       )}
@@ -425,8 +421,6 @@ class PageMaps extends React.Component {
                                   <Grid
                                     style={{
                                       padding: "17px",
-                                      position: "relative",
-                                      right: "28px",
                                     }}
                                   >
                                     {this.state[
@@ -439,6 +433,22 @@ class PageMaps extends React.Component {
                                       >
                                         <TextField
                                           autoFocus
+                                          style={{
+                                            width: "100%",
+                                            marginBottom: "20px",
+                                          }}
+                                          label="Nom de la carte"
+                                          defaultValue={s["map_name"]}
+                                          variant="outlined"
+                                          onChange={(event) =>
+                                            this.handleMapRenamaing(
+                                              event.target.value,
+                                              s.pk
+                                            )
+                                          }
+                                        />
+                                        <TextField
+                                          // autoFocus
                                           style={{
                                             width: "100%",
                                           }}
@@ -461,8 +471,6 @@ class PageMaps extends React.Component {
                                             marginTop: "1em",
                                             display: "flex",
                                             justifyContent: "flex-end",
-                                            position: "relative",
-                                            right: "28px",
                                           }}
                                         >
                                           <Button
@@ -478,7 +486,7 @@ class PageMaps extends React.Component {
                                             color="primary"
                                             style={{ marginLeft: "1em" }}
                                             onClick={() =>
-                                              this.saveComment(s.pk, index)
+                                              this.saveChanges(s.pk, index)
                                             }
                                           >
                                             Enregistrer
@@ -500,7 +508,7 @@ class PageMaps extends React.Component {
           </Grid>
 
           <Grid item xs={12} md={4} lg={3}>
-            <Card>
+            <Card className="sidebarCards">
               <CardHeader
                 avatar={<TuneOutlinedIcon fontSize="large" />}
                 title="Filtrage"
@@ -528,7 +536,7 @@ class PageMaps extends React.Component {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="sidebarCards">
               <CardHeader
                 avatar={<MapIcon fontSize="large" />}
                 title="Cartografier à nouveau"
