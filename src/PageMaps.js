@@ -174,9 +174,9 @@ class PageMaps extends React.Component {
       });
   };
 
-  handleCallbackOpenMapGestion = (idMap) => {
-    console.log("send robot id to MapGestion" + idMap);
-    this.props.callbackOpenMapGestion(idMap);
+  handleCallbackOpenMapGestion = (mapName, idMap) => {
+    console.log("send robot id to MapGestion" + idMap, mapName);
+    this.props.callbackOpenMapGestion(mapName, idMap);
   };
 
   componentDidMount() {
@@ -229,7 +229,7 @@ class PageMaps extends React.Component {
     const { open, openDeleteModal, editingMapDetails } = this.state;
     return (
       <div className={this.classes.root}>
-        {/* Renaming Maps */}
+        {/* Rebuild Maps */}
         <Modal
           open={open}
           onClose={() => this.handleClose()}
@@ -238,7 +238,9 @@ class PageMaps extends React.Component {
         >
           <div class="modal-body">
             <h3 style={{ marginTop: "0", borderBottom: "2px solid white" }}>
-              <Typography variant="overline">Nommer votre cartes</Typography>
+              <Typography variant="overline">
+                Nom de votre nouvelle carte
+              </Typography>
             </h3>
             <TextField
               id="standard-basic"
@@ -263,7 +265,7 @@ class PageMaps extends React.Component {
                 style={{ marginLeft: "100px" }}
                 onClick={() => this.addActionNewMapping()}
               >
-                Enregistrer
+                Allons-y
               </Button>
             </div>
           </div>
@@ -397,6 +399,7 @@ class PageMaps extends React.Component {
                                         src={`data:image/jpeg;base64,` + s.blob}
                                         onClick={() =>
                                           this.handleCallbackOpenMapGestion(
+                                            s.map_name,
                                             s.pk + "blob" + s.blob
                                           )
                                         }
