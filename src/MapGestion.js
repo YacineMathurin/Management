@@ -398,12 +398,12 @@ class MapGestion extends React.Component {
 
                   {this.state.msg && (
                     <h3 className="message">
-                      <b>{this.state.msg}</b> : <b>&nbsp;</b>
+                      <b>{this.state.msg}</b>
                     </h3>
                   )}
                   {this.state.status && (
                     <h3 style={{ color: "green", fontWeight: "bold" }}>
-                      ? this.state.status : <b>&nbsp;</b>
+                      {this.state.status}
                     </h3>
                   )}
                 </div>
@@ -413,18 +413,18 @@ class MapGestion extends React.Component {
                   onClick={() =>
                     this.deplacerRobot(this.state.xCoord, this.state.yCoord)
                   }
-                  variant="contained"
-                  color="primary"
+                  variant="outlined"
+                  // color="primary"
                   size="medium"
                 >
-                  1-Ajouter une destination
+                  Ajouter une destination
                 </Button>{" "}
                 <span>&nbsp;</span>
                 <Button
                   fullWidth={true}
                   width="2em"
                   onClick={() => this.provideCoordinates()}
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                   size="large"
                 >
@@ -435,11 +435,11 @@ class MapGestion extends React.Component {
                   fullWidth={true}
                   width="2em"
                   onClick={() => this.deleteOnePoint(this.state.actualPk)}
-                  variant="contained"
-                  color="primary"
+                  variant="outlined"
+                  color="secondary"
                   size="large"
                 >
-                  2-Effacer une destination
+                  Effacer une destination
                 </Button>
                 <span>&nbsp;</span>
                 <Button
@@ -454,19 +454,19 @@ class MapGestion extends React.Component {
                       this.deletePoints(this.state.actualID);
                     }
                   }}
-                  variant="contained"
-                  color="primary"
+                  variant="outlined"
+                  color="secondary"
                   size="large"
                 >
-                  3-Effacer destinations (Tous les points)
+                  Effacer destinations (Tous les points)
                 </Button>
                 <span>&nbsp;</span>
                 <Button
                   fullWidth={true}
                   width="2em"
                   onClick={() => {}}
-                  variant="contained"
-                  color="default"
+                  variant="outlined"
+                  color="primary"
                   size="large"
                 >
                   Envoyer les données au robot
@@ -476,19 +476,30 @@ class MapGestion extends React.Component {
                   fullWidth={true}
                   width="2em"
                   onClick={() => this.addAction()}
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                   size="large"
                 >
-                  4-Démarrage immédiat
+                  Démarrage immédiat
                 </Button>
                 <span>&nbsp;</span>
                 <Button
                   fullWidth={true}
                   width="2em"
                   onClick={() => {}}
-                  variant="contained"
-                  color="default"
+                  variant="outlined"
+                  // color="primary"
+                  size="large"
+                >
+                  Prochaine destination
+                </Button>
+                <span>&nbsp;</span>
+                <Button
+                  fullWidth={true}
+                  width="2em"
+                  onClick={() => {}}
+                  variant="outlined"
+                  color="primary"
                   size="large"
                 >
                   Démarrage planifié
@@ -498,8 +509,8 @@ class MapGestion extends React.Component {
                   fullWidth={true}
                   width="2em"
                   onClick={() => {}}
-                  variant="contained"
-                  color="default"
+                  variant="outlined"
+                  color="primary"
                   size="large"
                 >
                   Démarrage répetitif
@@ -515,11 +526,11 @@ class MapGestion extends React.Component {
                       this.deleteMap(this.state.actualID);
                     }
                   }}
-                  variant="contained"
-                  color="primary"
+                  variant="outlined"
+                  color="secondary"
                   size="large"
                 >
-                  5-Effacer la Map
+                  Effacer la Map
                 </Button>
               </CardContent>
             </Card>
