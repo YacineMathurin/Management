@@ -15,6 +15,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Button from "@material-ui/core/Button";
 import ImageMapper from "react-image-mapper";
 import TuneOutlinedIcon from "@material-ui/icons/TuneOutlined";
+import { PathLine } from "react-svg-pathline";
 
 class MapGestion extends React.Component {
   constructor(props) {
@@ -37,6 +38,7 @@ class MapGestion extends React.Component {
       idClient: null,
       idRobot: null,
       destination: "destination",
+      targetx: 30,
     };
   }
 
@@ -266,6 +268,7 @@ class MapGestion extends React.Component {
   getLines() {
     let canvas = document.getElementsByTagName("canvas")[0];
     console.log(canvas);
+
     const ctx = canvas.getContext("2d");
 
     ctx.beginPath();
@@ -282,7 +285,10 @@ class MapGestion extends React.Component {
 
     // set line color
     ctx.strokeStyle = "red";
+    ctx.lineWidth = 10;
     ctx.stroke();
+
+    this.setState({ imageHeight: canvas.height });
   }
   enterArea(area) {
     //Pas Besoin
@@ -321,8 +327,20 @@ class MapGestion extends React.Component {
     this.provideRobotInfos();
   }
 
+  handleMove = () => {
+    var timeInterval = 0;
+    timeInterval = setInterval(() => {
+      this.setState({ targetx: this.state.targetx + 5, moving: true }, () => {
+        if (this.state.targetx >= 125) {
+          clearInterval(timeInterval);
+        }
+      });
+    }, 1000);
+  };
+
   render() {
-    console.log("this.props.showDetailsMapGestion", this.props);
+    const { imageHeight, moving, targetx, coordinatesForSvg } = this.state;
+    console.log("this.state", this.state);
     const mapName = this.props.showDetailsMapGestion.mapName;
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
@@ -381,31 +399,100 @@ class MapGestion extends React.Component {
                 />
               </CardContent>
             </Card>
+            {imageHeight && (
+              <div
+                style={{
+                  position: "relative",
+                  bottom: imageHeight + 24,
+                  left: "16px",
+                  zIndex: 1,
+                }}
+              >
+                <svg>
+                  <circle
+                    cx={targetx}
+                    cy="30"
+                    r="10"
+                    stroke="black"
+                    stroke-width="3"
+                    fill="red"
+                  />
+                  <circle
+                    cx={135}
+                    cy={30}
+                    r="10"
+                    // stroke="black"
+                    // stroke-width="3"
+                    fill="gold"
+                  />
+                  {moving && (
+                    <PathLine
+                      points={[
+                        { x: 30, y: 30 },
+                        { x: targetx, y: 30 },
+                        { x: 125, y: 125 },
+                        { x: 250, y: 125 },
+                      ]}
+                      stroke="#f5a9a4"
+                      strokeWidth="10"
+                      fill="none"
+                      r={10}
+                    />
+                  )}
+
+                  <PathLine
+                    points={[
+                      { x: targetx, y: 30 },
+                      { x: 125, y: 30 },
+                      { x: 125, y: 125 },
+                      { x: 250, y: 125 },
+                    ]}
+                    stroke="red"
+                    strokeWidth="10"
+                    fill="none"
+                    r={10}
+                  />
+                  {/* <PathLine
+                    points={[
+                      // { x: 0, y: 0 },
+                      // { x: 125, y: 0 },
+                      { x: 125, y: 125 },
+                      { x: 250, y: 125 },
+                    ]}
+                    stroke="gold"
+                    strokeWidth="10"
+                    fill="none"
+                    r={10}
+                  /> */}
+                </svg>
+              </div>
+            )}
           </Grid>
 
           <Grid item xs={12} md={12} lg={4}>
             <Card>
               <CardContent>
-                {/* <span>&nbsp;</span> */}
+                <span>&nbsp;</span>
                 <div align="center">
-                  {this.state.nbpts && (
-                    <h1 style={{ color: "blue", fontWeight: "bold" }}>
+                  <h1 style={{ color: "blue", fontWeight: "bold" }}>
+                    {" "}
+                    {this.state.nbpts ? (
                       <b>
+                        {" "}
                         {this.state.nbpts} {this.state.destination}{" "}
                       </b>
-                    </h1>
-                  )}
+                    ) : (
+                      <b>&nbsp;</b>
+                    )}
+                  </h1>
 
-                  {this.state.msg && (
-                    <h3 className="message">
-                      <b>{this.state.msg}</b>
-                    </h3>
-                  )}
-                  {this.state.status && (
-                    <h3 style={{ color: "green", fontWeight: "bold" }}>
-                      {this.state.status}
-                    </h3>
-                  )}
+                  <h3 className="message">
+                    {this.state.msg ? <b>{this.state.msg}</b> : <b>&nbsp;</b>}
+                  </h3>
+                  <h3 style={{ color: "green", fontWeight: "bold" }}>
+                    {" "}
+                    {this.state.status ? this.state.status : <b>&nbsp;</b>}
+                  </h3>
                 </div>
                 <Button
                   fullWidth={true}
@@ -475,7 +562,8 @@ class MapGestion extends React.Component {
                 <Button
                   fullWidth={true}
                   width="2em"
-                  onClick={() => this.addAction()}
+                  // onClick={() => this.addAction()}
+                  onClick={() => this.handleMove()}
                   variant="outlined"
                   color="primary"
                   size="large"

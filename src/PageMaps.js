@@ -175,7 +175,7 @@ class PageMaps extends React.Component {
   };
 
   handleCallbackOpenMapGestion = (mapName, idMap) => {
-    console.log("send robot id to MapGestion" + idMap, mapName);
+    // console.log("send robot id to MapGestion" + idMap, mapName);
     this.props.callbackOpenMapGestion(mapName, idMap);
   };
 
