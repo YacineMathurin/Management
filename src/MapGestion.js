@@ -265,7 +265,11 @@ class MapGestion extends React.Component {
     });
     */
   }
-  getLines() {
+  addRobotPosition = (index, robotPosition, coordinatesClone) => {
+    coordinatesClone[index] = robotPosition;
+    return coordinatesClone;
+  };
+  getLines(coords = this.state.coodinates, pathIndex = 0) {
     let canvas = document.getElementsByTagName("canvas")[0];
     console.log(canvas);
 
@@ -274,22 +278,64 @@ class MapGestion extends React.Component {
     ctx.beginPath();
 
     let prev = null;
-    this.state.coodinates.map((s, i, e) => {
+    var distance = 100;
+    coords.map((s, i, e) => {
       console.log("s " + s.x_pixel + " " + s.y_pixel);
       if (i + 1 < e.length) {
         ctx.moveTo(s.x_pixel, s.y_pixel);
         ctx.lineTo(e[i + 1].x_pixel, e[i + 1].y_pixel);
       }
       prev = s.x_pixel;
+      // If i < pathIndex: lightweight strokeStyle color
+      ctx.strokeStyle = i < pathIndex ? " #deeafc" : "#5293fa";
+      distance = Math.sqrt(
+        Math.pow(e[i + 1].x_pixel - e[i + 2].x_pixel, 2) +
+          Math.pow(e[i + 1].y_pixel - e[i + 2].y_pixel, 2)
+      );
     });
 
     // set line color
-    ctx.strokeStyle = "#5293fa";
     ctx.lineWidth = 10;
     ctx.stroke();
-
-    this.setState({ imageHeight: canvas.height });
+    console.log("Distance is: ", distance);
+    return distance;
   }
+
+  handleMove = () => {
+    // #deeafc #5293fa
+    const coodinates = this.state.coodinates;
+    var coordinatesClone = coodinates.splice(0);
+    var pathIndex = 1;
+    // define robotPosition
+    // coordinates[pathIndex] = realtime_robot_coordinates
+    this.setState({
+      target_x: coordinatesClone[0]["x_pixel"],
+      target_y: coordinatesClone[0]["y_pixel"],
+    });
+    var robotPosition = {
+      x_pixel: this.state.target_x,
+      y_pixel: this.state.target_y,
+    };
+    coordinatesClone = this.addRobotPosition(
+      pathIndex,
+      robotPosition,
+      coordinatesClone
+    );
+    // Draw lines
+    // If i < pathIndex: lightweight strokeStyle color
+    const distance = this.getLines(coordinatesClone, pathIndex);
+
+    // var distance = Math.sqrt(Math.pow(e[i + 1].x_pixel - e[i + 2].x_pixel,2) + Math.pow(e[i + 1].y_pixel - e[i + 2].y_pixel,2))
+    // If distance < 5, pathIndex++ and coordinatesClone[pathIndex] = realtime_robot_coordinates
+
+    var timeInterval = setInterval(() => {
+      this.setState({ targetx: this.state.targetx + 5, moving: true }, () => {
+        if (this.state.targetx >= 125) {
+          clearInterval(timeInterval);
+        }
+      });
+    }, 1000);
+  };
   enterArea(area) {
     //Pas Besoin
     /*
@@ -326,17 +372,6 @@ class MapGestion extends React.Component {
     this.provideCoordinates();
     this.provideRobotInfos();
   }
-
-  handleMove = () => {
-    var timeInterval = 0;
-    timeInterval = setInterval(() => {
-      this.setState({ targetx: this.state.targetx + 5, moving: true }, () => {
-        if (this.state.targetx >= 125) {
-          clearInterval(timeInterval);
-        }
-      });
-    }, 1000);
-  };
 
   render() {
     const { imageHeight, moving, targetx, coordinatesForSvg } = this.state;
