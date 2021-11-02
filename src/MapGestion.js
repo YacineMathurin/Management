@@ -284,7 +284,7 @@ class MapGestion extends React.Component {
     });
 
     // set line color
-    ctx.strokeStyle = "red";
+    ctx.strokeStyle = "#5293fa";
     ctx.lineWidth = 10;
     ctx.stroke();
 
@@ -399,74 +399,6 @@ class MapGestion extends React.Component {
                 />
               </CardContent>
             </Card>
-            {imageHeight && (
-              <div
-                style={{
-                  position: "relative",
-                  bottom: imageHeight + 24,
-                  left: "16px",
-                  zIndex: 1,
-                }}
-              >
-                <svg>
-                  <circle
-                    cx={targetx}
-                    cy="30"
-                    r="10"
-                    stroke="black"
-                    stroke-width="3"
-                    fill="red"
-                  />
-                  <circle
-                    cx={135}
-                    cy={30}
-                    r="10"
-                    // stroke="black"
-                    // stroke-width="3"
-                    fill="gold"
-                  />
-                  {moving && (
-                    <PathLine
-                      points={[
-                        { x: 30, y: 30 },
-                        { x: targetx, y: 30 },
-                        { x: 125, y: 125 },
-                        { x: 250, y: 125 },
-                      ]}
-                      stroke="#f5a9a4"
-                      strokeWidth="10"
-                      fill="none"
-                      r={10}
-                    />
-                  )}
-
-                  <PathLine
-                    points={[
-                      { x: targetx, y: 30 },
-                      { x: 125, y: 30 },
-                      { x: 125, y: 125 },
-                      { x: 250, y: 125 },
-                    ]}
-                    stroke="red"
-                    strokeWidth="10"
-                    fill="none"
-                    r={10}
-                  />
-                  {/* <PathLine
-                    points={[
-                      // { x: 0, y: 0 },
-                      // { x: 125, y: 0 },
-                      { x: 125, y: 125 },
-                      { x: 250, y: 125 },
-                    ]}
-                    stroke="gold"
-                    strokeWidth="10"
-                    fill="none"
-                    r={10}
-                  /> */}
-                </svg>
-              </div>
-            )}
           </Grid>
 
           <Grid item xs={12} md={12} lg={4}>
