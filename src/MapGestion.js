@@ -38,7 +38,6 @@ class MapGestion extends React.Component {
       idClient: null,
       idRobot: null,
       destination: "destination",
-      targetx: 30,
     };
   }
 
@@ -231,6 +230,11 @@ class MapGestion extends React.Component {
   }
 
   load() {
+    let canvas = document.getElementsByTagName("canvas")[0];
+    console.log(canvas);
+
+    const context = canvas.getContext("2d");
+    console.log("Image's Height", context.height);
     this.setState({ msg: "" });
   }
 
@@ -265,77 +269,144 @@ class MapGestion extends React.Component {
     });
     */
   }
+
   addRobotPosition = (index, robotPosition, coordinatesClone) => {
-    coordinatesClone[index] = robotPosition;
+    coordinatesClone.splice(index, 0, robotPosition);
     return coordinatesClone;
   };
-  getLines(coords = this.state.coodinates, pathIndex = 0) {
+
+  getLines = (coords = this.state.coodinates, pathIndex = 0) => {
     let canvas = document.getElementsByTagName("canvas")[0];
     console.log(canvas);
+    console.log("Canvas Height", canvas.height);
 
-    const ctx = canvas.getContext("2d");
+    const ctx1 = canvas.getContext("2d");
+    const ctx2 = canvas.getContext("2d");
 
-    ctx.beginPath();
+    ctx2.font = "10px Arial";
+
+    // ctx1.beginPath();
+    // ctx2.beginPath();
 
     let prev = null;
-    var distance = 100;
     coords.map((s, i, e) => {
+      // this.state.coodinates.map((s, i, e) => {
       console.log("s " + s.x_pixel + " " + s.y_pixel);
-      if (i + 1 < e.length) {
-        ctx.moveTo(s.x_pixel, s.y_pixel);
-        ctx.lineTo(e[i + 1].x_pixel, e[i + 1].y_pixel);
+      // if (this.state.moving && i > pathIndex) {
+      //   ctx2.fillText(i - 1, s.x_pixel - 3, s.y_pixel + 3);
+      // } else {
+      //   ctx2.fillText(i, s.x_pixel - 3, s.y_pixel + 3);
+      // }
+
+      if (i < pathIndex) {
+        console.log("Elapsed");
+        ctx1.moveTo(s.x_pixel, s.y_pixel);
+        ctx1.lineTo(e[i + 1].x_pixel, e[i + 1].y_pixel);
+        ctx1.strokeStyle = "#95cf9c"; // set line color
+        ctx1.lineWidth = 10;
       }
+      // else {
+      //   console.log("Left");
+      //   if (i + 1 < e.length) {
+      //     ctx2.moveTo(s.x_pixel, s.y_pixel);
+      //     ctx2.lineTo(e[i + 1].x_pixel, e[i + 1].y_pixel);
+      //   }
+      //   ctx2.strokeStyle = "red"; // set line color
+      //   ctx1.lineWidth = 10;
+      //   ctx1.stroke();
+      // }
+
       prev = s.x_pixel;
-      // If i < pathIndex: lightweight strokeStyle color
-      ctx.strokeStyle = i < pathIndex ? " #deeafc" : "#5293fa";
-      distance = Math.sqrt(
-        Math.pow(e[i + 1].x_pixel - e[i + 2].x_pixel, 2) +
-          Math.pow(e[i + 1].y_pixel - e[i + 2].y_pixel, 2)
-      );
+
+      console.log("i & pathIndex & i < pathIndex", i, pathIndex, i < pathIndex);
     });
+    ctx1.stroke();
+    this.setState({ imageHeight: canvas.height });
+  };
 
-    // set line color
-    ctx.lineWidth = 10;
-    ctx.stroke();
-    console.log("Distance is: ", distance);
-    return distance;
-  }
-
-  handleMove = () => {
+  StartMove = () => {
     // #deeafc #5293fa
+    this.setState({ moving: true });
     const coodinates = this.state.coodinates;
-    var coordinatesClone = coodinates.splice(0);
+    var coordinatesClone = coodinates;
     var pathIndex = 1;
+    console.log(
+      "coordinatesClone",
+      coordinatesClone,
+      coordinatesClone[pathIndex - 1]["x_pixel"],
+      coordinatesClone[pathIndex - 1]["y_pixel"]
+    );
     // define robotPosition
     // coordinates[pathIndex] = realtime_robot_coordinates
-    this.setState({
-      target_x: coordinatesClone[0]["x_pixel"],
-      target_y: coordinatesClone[0]["y_pixel"],
-    });
     var robotPosition = {
-      x_pixel: this.state.target_x,
-      y_pixel: this.state.target_y,
+      x_pixel: coordinatesClone[pathIndex - 1]["x_pixel"],
+      y_pixel: coordinatesClone[pathIndex - 1]["y_pixel"],
     };
-    coordinatesClone = this.addRobotPosition(
-      pathIndex,
-      robotPosition,
-      coordinatesClone
-    );
+    console.log("robotPosition", robotPosition);
+
     // Draw lines
     // If i < pathIndex: lightweight strokeStyle color
-    const distance = this.getLines(coordinatesClone, pathIndex);
+    // const distance = this.getLines(coordinatesClone, pathIndex);
 
     // var distance = Math.sqrt(Math.pow(e[i + 1].x_pixel - e[i + 2].x_pixel,2) + Math.pow(e[i + 1].y_pixel - e[i + 2].y_pixel,2))
     // If distance < 5, pathIndex++ and coordinatesClone[pathIndex] = realtime_robot_coordinates
 
     var timeInterval = setInterval(() => {
-      this.setState({ targetx: this.state.targetx + 5, moving: true }, () => {
-        if (this.state.targetx >= 125) {
-          clearInterval(timeInterval);
-        }
-      });
+      // console.log("Evolving coordinatesClone", coordinatesClone);
+      coordinatesClone = this.addRobotPosition(
+        pathIndex,
+        robotPosition,
+        coordinatesClone
+      );
+      console.log("New coordinatesClone", coordinatesClone);
+      robotPosition.x_pixel = robotPosition.x_pixel + 5;
+      this.getLines(coordinatesClone, pathIndex);
+      coordinatesClone.splice(1, 1);
+      if (robotPosition.x_pixel >= 313 - 10) {
+        // This 313 is temporal, further we'll use a flag from robot heartbeat
+        clearInterval(timeInterval);
+        this.setState({ moving: false, pathIndex: 2 });
+      }
     }, 1000);
   };
+
+  nextDestination = () => {
+    const pathIndex = this.state.pathIndex;
+    const { coodinates } = this.state;
+    if (!pathIndex) {
+      return this.StartMove();
+    }
+    var coordinatesClone = coodinates;
+    console.log(
+      "coodinates & nextDestination coordinatesClone",
+      coodinates,
+      coordinatesClone
+    );
+    var robotPosition = {
+      x_pixel: coordinatesClone[pathIndex - 1]["x_pixel"],
+      y_pixel: coordinatesClone[pathIndex - 1]["y_pixel"],
+    };
+    console.log("robotPosition", robotPosition);
+    var timeInterval = setInterval(() => {
+      coordinatesClone = this.addRobotPosition(
+        pathIndex,
+        robotPosition,
+        coordinatesClone
+      );
+      console.log("New coordinatesClone", coordinatesClone);
+
+      robotPosition.y_pixel = robotPosition.y_pixel + 5;
+      this.getLines(coordinatesClone, pathIndex);
+      coordinatesClone.splice(1, 1);
+
+      if (robotPosition.y_pixel >= 249 - 10) {
+        // This 313 is temporal, further we'll use a flag from robot heartbeat
+        clearInterval(timeInterval);
+        this.setState({ moving: false, pathIndex: pathIndex + 1 });
+      }
+    }, 1000);
+  };
+
   enterArea(area) {
     //Pas Besoin
     /*
@@ -372,6 +443,17 @@ class MapGestion extends React.Component {
     this.provideCoordinates();
     this.provideRobotInfos();
   }
+
+  // StartMove = () => {
+  //   var timeInterval = 0;
+  //   timeInterval = setInterval(() => {
+  //     this.setState({ targetx: this.state.targetx + 5, moving: true }, () => {
+  //       if (this.state.targetx >= 125) {
+  //         clearInterval(timeInterval);
+  //       }
+  //     });
+  //   }, 1000);
+  // };
 
   render() {
     const { imageHeight, moving, targetx, coordinatesForSvg } = this.state;
@@ -434,6 +516,62 @@ class MapGestion extends React.Component {
                 />
               </CardContent>
             </Card>
+            {imageHeight && (
+              <div
+                style={{
+                  position: "relative",
+                  bottom: imageHeight + 24,
+                  left: "16px",
+                  zIndex: 1,
+                }}
+              >
+                <svg>
+                  <circle
+                    cx={30}
+                    cy="30"
+                    r="10"
+                    stroke="black"
+                    stroke-width="3"
+                    fill="red"
+                  />
+                  <circle
+                    cx={135}
+                    cy={30}
+                    r="10"
+                    // stroke="black"
+                    // stroke-width="3"
+                    fill="gold"
+                  />
+                  {moving && (
+                    <PathLine
+                      points={[
+                        { x: 30, y: 30 },
+                        { x: targetx, y: 30 },
+                        // { x: 125, y: 125 },
+                        // { x: 250, y: 125 },
+                      ]}
+                      stroke="#f5a9a4"
+                      strokeWidth="10"
+                      fill="none"
+                      r={10}
+                    />
+                  )}
+
+                  <PathLine
+                    points={[
+                      { x: 30, y: 30 },
+                      { x: 125, y: 30 },
+                      // { x: 125, y: 125 },
+                      // { x: 250, y: 125 },
+                    ]}
+                    stroke="red"
+                    strokeWidth="10"
+                    fill="none"
+                    r={10}
+                  />
+                </svg>
+              </div>
+            )}
           </Grid>
 
           <Grid item xs={12} md={12} lg={4}>
@@ -530,7 +668,7 @@ class MapGestion extends React.Component {
                   fullWidth={true}
                   width="2em"
                   // onClick={() => this.addAction()}
-                  onClick={() => this.handleMove()}
+                  onClick={() => this.StartMove()}
                   variant="outlined"
                   color="primary"
                   size="large"
@@ -541,7 +679,9 @@ class MapGestion extends React.Component {
                 <Button
                   fullWidth={true}
                   width="2em"
-                  onClick={() => {}}
+                  onClick={() => {
+                    this.nextDestination();
+                  }}
                   variant="outlined"
                   // color="primary"
                   size="large"
