@@ -122,7 +122,7 @@ class MapGestion extends React.Component {
 
         console.log("co", MAP);
         console.log("nbpts", this.state.nbpts);
-        this.setState({ mp: MAP });
+        // this.setState({ mp: MAP });
         //this.setState({co:arra})
 
         console.log("co", this.state.co);
@@ -272,7 +272,8 @@ class MapGestion extends React.Component {
 
   addRobotPosition = (index, robotPosition, coordinatesClone) => {
     coordinatesClone.splice(index, 0, robotPosition);
-    return coordinatesClone;
+    console.log("coordinatesClone", coordinatesClone);
+    this.setState({ coodinates: coordinatesClone, pathIndex: index });
   };
 
   getLines = (coords = this.state.coodinates, pathIndex = 0) => {
@@ -324,89 +325,6 @@ class MapGestion extends React.Component {
     this.setState({ imageHeight: canvas.height });
   };
 
-  StartMove = () => {
-    // #deeafc #5293fa
-    this.setState({ moving: true });
-    const coodinates = this.state.coodinates;
-    var coordinatesClone = coodinates;
-    var pathIndex = 1;
-    console.log(
-      "coordinatesClone",
-      coordinatesClone,
-      coordinatesClone[pathIndex - 1]["x_pixel"],
-      coordinatesClone[pathIndex - 1]["y_pixel"]
-    );
-    // define robotPosition
-    // coordinates[pathIndex] = realtime_robot_coordinates
-    var robotPosition = {
-      x_pixel: coordinatesClone[pathIndex - 1]["x_pixel"],
-      y_pixel: coordinatesClone[pathIndex - 1]["y_pixel"],
-    };
-    console.log("robotPosition", robotPosition);
-
-    // Draw lines
-    // If i < pathIndex: lightweight strokeStyle color
-    // const distance = this.getLines(coordinatesClone, pathIndex);
-
-    // var distance = Math.sqrt(Math.pow(e[i + 1].x_pixel - e[i + 2].x_pixel,2) + Math.pow(e[i + 1].y_pixel - e[i + 2].y_pixel,2))
-    // If distance < 5, pathIndex++ and coordinatesClone[pathIndex] = realtime_robot_coordinates
-
-    var timeInterval = setInterval(() => {
-      // console.log("Evolving coordinatesClone", coordinatesClone);
-      coordinatesClone = this.addRobotPosition(
-        pathIndex,
-        robotPosition,
-        coordinatesClone
-      );
-      console.log("New coordinatesClone", coordinatesClone);
-      robotPosition.x_pixel = robotPosition.x_pixel + 5;
-      this.getLines(coordinatesClone, pathIndex);
-      coordinatesClone.splice(1, 1);
-      if (robotPosition.x_pixel >= 313 - 10) {
-        // This 313 is temporal, further we'll use a flag from robot heartbeat
-        clearInterval(timeInterval);
-        this.setState({ moving: false, pathIndex: 2 });
-      }
-    }, 1000);
-  };
-
-  nextDestination = () => {
-    const pathIndex = this.state.pathIndex;
-    const { coodinates } = this.state;
-    if (!pathIndex) {
-      return this.StartMove();
-    }
-    var coordinatesClone = coodinates;
-    console.log(
-      "coodinates & nextDestination coordinatesClone",
-      coodinates,
-      coordinatesClone
-    );
-    var robotPosition = {
-      x_pixel: coordinatesClone[pathIndex - 1]["x_pixel"],
-      y_pixel: coordinatesClone[pathIndex - 1]["y_pixel"],
-    };
-    console.log("robotPosition", robotPosition);
-    var timeInterval = setInterval(() => {
-      coordinatesClone = this.addRobotPosition(
-        pathIndex,
-        robotPosition,
-        coordinatesClone
-      );
-      console.log("New coordinatesClone", coordinatesClone);
-
-      robotPosition.y_pixel = robotPosition.y_pixel + 5;
-      this.getLines(coordinatesClone, pathIndex);
-      coordinatesClone.splice(1, 1);
-
-      if (robotPosition.y_pixel >= 249 - 10) {
-        // This 313 is temporal, further we'll use a flag from robot heartbeat
-        clearInterval(timeInterval);
-        this.setState({ moving: false, pathIndex: pathIndex + 1 });
-      }
-    }, 1000);
-  };
-
   enterArea(area) {
     //Pas Besoin
     /*
@@ -444,20 +362,96 @@ class MapGestion extends React.Component {
     this.provideRobotInfos();
   }
 
-  // StartMove = () => {
-  //   var timeInterval = 0;
-  //   timeInterval = setInterval(() => {
-  //     this.setState({ targetx: this.state.targetx + 5, moving: true }, () => {
-  //       if (this.state.targetx >= 125) {
-  //         clearInterval(timeInterval);
-  //       }
-  //     });
-  //   }, 1000);
-  // };
+  StartMove = () => {
+    // #deeafc #5293fa
+    this.setState({ moving: true, moved: true });
+    const coodinates = this.state.coodinates;
+    var coordinatesClone = coodinates;
+    var pathIndex = 1;
+    console.log(
+      "coordinatesClone",
+      coordinatesClone,
+      coordinatesClone[pathIndex - 1]["x_pixel"],
+      coordinatesClone[pathIndex - 1]["y_pixel"]
+    );
+    // define robotPosition
+    // coordinates[pathIndex] = realtime_robot_coordinates
+    var robotPosition = {
+      x_pixel: coordinatesClone[pathIndex - 1]["x_pixel"],
+      y_pixel: coordinatesClone[pathIndex - 1]["y_pixel"],
+    };
+    console.log("robotPosition", robotPosition);
+    // Goal: fetch the robot position each interval and insert it in the coordinates,
+    // When we get an arrived flag, we stop the interval
+    var timeInterval = setInterval(() => {
+      robotPosition.x_pixel = robotPosition.x_pixel + 3;
+      this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
+
+      coordinatesClone.splice(pathIndex, 1);
+
+      if (robotPosition.x_pixel >= 313 - 10) {
+        // This 313 is temporal, further we'll use a flag from robot heartbeat
+        clearInterval(timeInterval);
+        this.setState({ moving: false, pathIndex: pathIndex + 1 });
+      }
+    }, 100);
+  };
+
+  nextDestination = () => {
+    const pathIndex = this.state.pathIndex;
+    if (!pathIndex) {
+      return this.StartMove();
+    }
+    this.setState({ moving: true });
+    const { coodinates } = this.state;
+    var coordinatesClone = coodinates;
+    console.log(
+      "coodinates & nextDestination coordinatesClone",
+      coodinates,
+      coordinatesClone
+    );
+    var robotPosition = {
+      x_pixel: coordinatesClone[pathIndex - 1]["x_pixel"],
+      y_pixel: coordinatesClone[pathIndex - 1]["y_pixel"],
+    };
+    console.log("robotPosition & pathIndex", robotPosition, pathIndex);
+    var timeInterval = setInterval(() => {
+      robotPosition.y_pixel = robotPosition.y_pixel + 3;
+      this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
+
+      coordinatesClone.splice(pathIndex, 1);
+
+      if (robotPosition.y_pixel >= coodinates[pathIndex]["y_pixel"] - 10) {
+        // This 313 is temporal, further we'll use a flag from robot heartbeat
+        clearInterval(timeInterval);
+        this.setState({ moving: false, pathIndex: pathIndex + 1 });
+      }
+    }, 100);
+  };
+
+  handleStrokeColor = (index) => {
+    var color = "";
+    const { moving, moved, pathIndex } = this.state;
+    console.log("index & pathIndex", index, pathIndex);
+    if (moving) {
+      console.log("index < pathIndex", index < pathIndex);
+      color = index < pathIndex ? "#bfe0f2" : "#6d95ab";
+    } else {
+      color = index < pathIndex - 1 ? "#bfe0f2" : "#6d95ab";
+    }
+    return color;
+  };
 
   render() {
-    const { imageHeight, moving, targetx, coordinatesForSvg } = this.state;
-    console.log("this.state", this.state);
+    const {
+      imageHeight,
+      moving,
+      moved,
+      targetx,
+      coodinates,
+      pathIndex,
+    } = this.state;
+    console.log("this.state & coodinates", this.state, coodinates);
     const mapName = this.props.showDetailsMapGestion.mapName;
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
@@ -520,28 +514,46 @@ class MapGestion extends React.Component {
               <div
                 style={{
                   position: "relative",
+                  height: imageHeight,
                   bottom: imageHeight + 24,
                   left: "16px",
                   zIndex: 1,
                 }}
               >
-                <svg>
-                  <circle
-                    cx={30}
-                    cy="30"
-                    r="10"
-                    stroke="black"
-                    stroke-width="3"
-                    fill="red"
-                  />
-                  <circle
-                    cx={135}
-                    cy={30}
-                    r="10"
-                    // stroke="black"
-                    // stroke-width="3"
-                    fill="gold"
-                  />
+                <svg style={{ height: "100%", width: "100%" }}>
+                  {coodinates.map((item, index, array) => {
+                    if (index + 1 < array.length) {
+                      return (
+                        <PathLine
+                          points={[
+                            {
+                              x: item["x_pixel"],
+                              y: item["y_pixel"],
+                            },
+                            {
+                              x: array[index + 1]["x_pixel"],
+                              y: array[index + 1]["y_pixel"],
+                            },
+                          ]}
+                          // index < pathIndex
+                          stroke={this.handleStrokeColor(index)}
+                          strokeWidth="10"
+                          fill="none"
+                          r={10}
+                        />
+                      );
+                    }
+                  })}
+                  {coodinates.map((item, index, array) => (
+                    <circle
+                      cx={item.x_pixel}
+                      cy={item.y_pixel}
+                      r="12"
+                      stroke="bisque"
+                      stroke-width="3"
+                      fill="#2e7aa3"
+                    />
+                  ))}
                   {moving && (
                     <PathLine
                       points={[
@@ -556,19 +568,6 @@ class MapGestion extends React.Component {
                       r={10}
                     />
                   )}
-
-                  <PathLine
-                    points={[
-                      { x: 30, y: 30 },
-                      { x: 125, y: 30 },
-                      // { x: 125, y: 125 },
-                      // { x: 250, y: 125 },
-                    ]}
-                    stroke="red"
-                    strokeWidth="10"
-                    fill="none"
-                    r={10}
-                  />
                 </svg>
               </div>
             )}
