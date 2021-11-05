@@ -362,9 +362,23 @@ class MapGestion extends React.Component {
     this.provideRobotInfos();
   }
 
+  fetchHeartbeat = (pk) => {
+    fetch(`http://193.70.86.40:8081/getHeartbeat?pk=${pk}`, {
+      retry: 3,
+      retryDelay: 1000,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({ pk: pk + 1, robotPosition: {} });
+      })
+      .catch((error) => {
+        console.error("Request failed", error);
+      });
+  };
+
   StartMove = () => {
     // #deeafc #5293fa
-    this.setState({ moving: true, moved: true });
+    this.setState({ moving: true, pk: 1 });
     const coodinates = this.state.coodinates;
     var coordinatesClone = coodinates;
     var pathIndex = 1;
@@ -382,9 +396,12 @@ class MapGestion extends React.Component {
     };
     console.log("robotPosition", robotPosition);
     // Goal: fetch the robot position each interval and insert it in the coordinates,
-    // When we get an arrived flag, we stop the interval
+    // When we get an arrived flag, we stop/delete the interval
     var timeInterval = setInterval(() => {
       robotPosition.x_pixel = robotPosition.x_pixel + 3;
+      /**
+       * this.fetchHeartbeat(this.state.pk);
+       */
       this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
 
       coordinatesClone.splice(pathIndex, 1);
@@ -442,7 +459,15 @@ class MapGestion extends React.Component {
     return color;
   };
 
-  handleSVGMask = () => this.setState({ imageHeight: 0 });
+  handleSVGMask = () => this.setState({ imageHeight: null });
+
+  /* Populate the MSG_HEARTBEAT database to suite our path
+(coodinate[1]["x_pixel"] - coodinate[0]["x_pixel"]) / 3 ~= 35
+UPDATE `MSG_HEARTBEAT` SET X_COORD = `X_COORD` + (`PK` - 1) * 3 WHERE  PK < '35';
+UPDATE `MSG_HEARTBEAT` SET Y_COORD = `Y_COORD` + (`PK` - 35) * 3 WHERE  PK > '35';
+
+Need /getHeartbeat() to retreive heartbeat 
+*/
 
   render() {
     const {
