@@ -122,7 +122,7 @@ class MapGestion extends React.Component {
 
         console.log("co", MAP);
         console.log("nbpts", this.state.nbpts);
-        // this.setState({ mp: MAP });
+        this.setState({ mp: MAP });
         //this.setState({co:arra})
 
         console.log("co", this.state.co);
@@ -442,6 +442,8 @@ class MapGestion extends React.Component {
     return color;
   };
 
+  handleSVGMask = () => this.setState({ imageHeight: 0 });
+
   render() {
     const {
       imageHeight,
@@ -519,6 +521,7 @@ class MapGestion extends React.Component {
                   left: "16px",
                   zIndex: 1,
                 }}
+                onMouseEnter={() => this.handleSVGMask()}
               >
                 <svg style={{ height: "100%", width: "100%" }}>
                   {coodinates.map((item, index, array) => {
@@ -551,7 +554,13 @@ class MapGestion extends React.Component {
                       r="12"
                       stroke="bisque"
                       stroke-width="3"
-                      fill="#2e7aa3"
+                      fill={
+                        moving
+                          ? index === pathIndex
+                            ? "#8f1b36"
+                            : "#2e7aa3"
+                          : "#2e7aa3"
+                      }
                     />
                   ))}
                   {moving && (
