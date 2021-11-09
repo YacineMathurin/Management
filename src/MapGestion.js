@@ -16,6 +16,8 @@ import Button from "@material-ui/core/Button";
 import ImageMapper from "react-image-mapper";
 import TuneOutlinedIcon from "@material-ui/icons/TuneOutlined";
 import { PathLine } from "react-svg-pathline";
+import { Modal } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 
 class MapGestion extends React.Component {
   constructor(props) {
@@ -496,6 +498,12 @@ class MapGestion extends React.Component {
 
   Need /getHeartbeat() to retreive heartbeat 
 */
+  handleOpenModal = () => {
+    this.setState({ openModal: true });
+  };
+  handleClose = () => {
+    this.setState({ openModal: false });
+  };
 
   render() {
     const {
@@ -506,6 +514,7 @@ class MapGestion extends React.Component {
       coodinates,
       pathIndex,
       mp,
+      openModal,
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
     const mapName = this.props.showDetailsMapGestion.mapName;
@@ -515,6 +524,68 @@ class MapGestion extends React.Component {
 
     return (
       <div className={this.classes.root}>
+        {/* Old Scenario */}
+        <Modal
+          open={openModal}
+          onClose={() => this.handleClose()}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <div class="modal-body" style={{ backgroundColor: "white" }}>
+            <form noValidate>
+              <TextField
+                id="datetime-local-from"
+                label="Départ"
+                type="datetime-local"
+                defaultValue="2017-05-24T10:30"
+                // className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                id="datetime-local-to"
+                label="Arrivé"
+                type="datetime-local"
+                defaultValue="2017-05-24T10:30"
+                // className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{ marginLeft: "2em" }}
+              />
+            </form>
+            <div
+              style={{
+                margin: "50px 0 30px",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Button
+                variant="outlined"
+                style={{ margin: "0px" }}
+                onClick={() => this.handleClose()}
+                size="small"
+              >
+                <Typography variant="button" display="block" gutterBottom>
+                  Annuler
+                </Typography>
+              </Button>
+              <Button
+                variant="outlined"
+                // disabled={!this.state.mapName}
+                size="small"
+                color="primary"
+                style={{ marginLeft: "10px" }}
+                onClick={() => this.handleClose()}
+              >
+                Allons-y
+              </Button>
+            </div>
+          </div>
+        </Modal>
+
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} lg={9}>
             <Card>
@@ -681,7 +752,7 @@ class MapGestion extends React.Component {
                     this.deplacerRobot(this.state.xCoord, this.state.yCoord)
                   }
                   variant="outlined"
-                  // color="primary"
+                  color="primary"
                   size="medium"
                 >
                   Ajouter une destination
@@ -743,6 +814,20 @@ class MapGestion extends React.Component {
                   fullWidth={true}
                   width="2em"
                   // onClick={() => this.addAction()}
+                  onClick={() => {
+                    this.handleOpenModal();
+                  }}
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                >
+                  Parcours passés
+                </Button>
+                <span>&nbsp;</span>
+                <Button
+                  fullWidth={true}
+                  width="2em"
+                  // onClick={() => this.addAction()}
                   onClick={() => this.StartMove()}
                   variant="outlined"
                   color="primary"
@@ -758,7 +843,7 @@ class MapGestion extends React.Component {
                     this.nextDestination();
                   }}
                   variant="outlined"
-                  // color="primary"
+                  color="primary"
                   size="large"
                 >
                   Prochaine destination
