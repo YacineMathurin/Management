@@ -16,10 +16,13 @@ import Button from "@material-ui/core/Button";
 import ImageMapper from "react-image-mapper";
 import TuneOutlinedIcon from "@material-ui/icons/TuneOutlined";
 import { PathLine } from "react-svg-pathline";
+import { Modal } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 
 class MapGestion extends React.Component {
   constructor(props) {
     super(props);
+    this.timer = null;
     this.state = {
       apiKey: props.apiKey,
       coodinates: null,
@@ -41,7 +44,19 @@ class MapGestion extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const coodinates = [
+      { x_pixel: 210, y_pixel: 146 },
+      { x_pixel: 313, y_pixel: 146 },
+      { x_pixel: 313, y_pixel: 250 },
+    ];
+    this.provideCoordinates();
+    this.provideRobotInfos();
+    this.setState({ coodinates });
+  }
+
   classes = makeStyles((Theme) => createStyles({}));
+
   deleteOnePoint(pk) {
     console.log("vous voulez effacer  le point de pk=" + pk);
     fetch(Const.URL_WS_DEL_DEF + "?pk=" + pk, { retry: 3, retryDelay: 1000 })
@@ -56,6 +71,7 @@ class MapGestion extends React.Component {
         console.log("Request failed", error);
       });
   }
+
   deletePoints(id) {
     //console.log("vous voulez effacer toutes les destinations de id="+ id)
     fetch(Const.URL_WS_DEL_ALL_DEF + "?id=" + id, {
@@ -87,7 +103,7 @@ class MapGestion extends React.Component {
     fetch(Const.URL_WS_ALL_DEF + "?id=" + id, { retry: 3, retryDelay: 1000 })
       .then((res) => res.json())
       .then((data) => {
-        this.setState({ coodinates: data });
+        // this.setState({ coodinates: data });
         console.log("coordinate", this.state.coodinates);
         var MAP = {
           name: "my-map",
@@ -134,6 +150,39 @@ class MapGestion extends React.Component {
         console.log("Request failed", error);
       });
   }
+
+  deplacerRobot(x, y) {
+    var fields = this.props.showDetailsMapGestion.data.split("blob");
+    var id = fields[0];
+    console.log("id deplacerRobot", id);
+    fetch(
+      Const.URL_WS_INS_DEF +
+        "?idClient=" +
+        this.state.idClient +
+        "&idRobot=" +
+        this.state.idRobot +
+        "&id=" +
+        id +
+        "&speed=6&x=" +
+        x +
+        "&y=" +
+        y +
+        "&breakTime=30",
+      { retry: 3, retryDelay: 1000 }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Vous avez ajouté une destination x=" + x + "  y=" + y);
+        console.log(data);
+        this.setState({
+          status: "Vous avez une nouvelle destination, Veuillez Rafraichir",
+        });
+      })
+      .catch((error) => {
+        console.log("Request failed", error);
+      });
+  }
+
   provideRobotInfos() {
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
@@ -158,6 +207,7 @@ class MapGestion extends React.Component {
         console.log("Request failed", error);
       });
   }
+
   deleteMap(pk) {
     console.log("Delete MAp    " + pk);
     console.log("To be called:");
@@ -196,37 +246,6 @@ class MapGestion extends React.Component {
         console.log("Request failed", error);
       });
     //this.props.callBackRetourMaps()
-  }
-
-  deplacerRobot(x, y) {
-    var fields = this.props.showDetailsMapGestion.data.split("blob");
-    var id = fields[0];
-    fetch(
-      Const.URL_WS_INS_DEF +
-        "?idClient=" +
-        this.state.idClient +
-        "&idRobot=" +
-        this.state.idRobot +
-        "&id=" +
-        id +
-        "&speed=6&x=" +
-        x +
-        "&y=" +
-        y +
-        "&breakTime=30",
-      { retry: 3, retryDelay: 1000 }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Vous avez ajouté une destination x=" + x + "  y=" + y);
-        console.log(data);
-        this.setState({
-          status: "Vous avez une nouvelle destination, Veuillez Rafraichir",
-        });
-      })
-      .catch((error) => {
-        console.log("Request failed", error);
-      });
   }
 
   load() {
@@ -269,12 +288,6 @@ class MapGestion extends React.Component {
     });
     */
   }
-
-  addRobotPosition = (index, robotPosition, coordinatesClone) => {
-    coordinatesClone.splice(index, 0, robotPosition);
-    console.log("coordinatesClone", coordinatesClone);
-    this.setState({ coodinates: coordinatesClone, pathIndex: index });
-  };
 
   getLines = (coords = this.state.coodinates, pathIndex = 0) => {
     let canvas = document.getElementsByTagName("canvas")[0];
@@ -325,25 +338,6 @@ class MapGestion extends React.Component {
     this.setState({ imageHeight: canvas.height });
   };
 
-  enterArea(area) {
-    //Pas Besoin
-    /*
-    this.setState({
-      hoveredArea: area,
-      msg: `Vous êtes rentré sur ${area.shape} ${area.name} `
-    });
-    */
-  }
-
-  leaveArea(area) {
-    //Pas Besoin
-    /*
-    this.setState({
-      hoveredArea: null,
-      msg: `Vous avez quitté ${area.shape} ${area.name}`
-    });*/
-  }
-
   moveOnArea(area, evt) {
     const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
     this.setState({
@@ -357,19 +351,48 @@ class MapGestion extends React.Component {
     return { top: `${area.center[1]}px`, left: `${area.center[0]}px` };
   }
 
-  componentDidMount() {
-    this.provideCoordinates();
-    this.provideRobotInfos();
-  }
+  addRobotPosition = (index, robotPosition, coordinatesClone) => {
+    console.log("moving", this.state.moving);
+    if (!this.state.moving) {
+      // coordinatesClone.splice(index, 1);
+      return 0;
+    }
+    if (this.state.pk > 1) {
+      coordinatesClone.splice(index, 1);
+    }
+    coordinatesClone.splice(index, 0, robotPosition);
+    // console.log("coordinatesClone", coordinatesClone);
+    this.setState({ coodinates: coordinatesClone, pathIndex: index });
+  };
 
-  fetchHeartbeat = (pk) => {
-    fetch(`http://193.70.86.40:8081/getHeartbeat?pk=${pk}`, {
-      retry: 3,
-      retryDelay: 1000,
-    })
+  fetchHeartbeat = (pathIndex, coordinatesClone) => {
+    const { idClient, idRobot, pk, moving } = this.state;
+
+    console.log("idClient, idRobot, pk", idClient, idRobot, pk, moving);
+    fetch(
+      `http://193.70.86.40:8081/GetAllMetricsByClientAndRobotAndPKWS?idclient=${idClient}&idrobot=${idRobot}&pk=${pk}`,
+      {
+        retry: 3,
+        retryDelay: 1000,
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
-        this.setState({ pk: pk + 1, robotPosition: {} });
+        // console.log("fetchHeartbeat", data, {
+        //   x_pixel: data[0]["X_COORD"],
+        //   y_pixel: data[0]["Y_COORD"],
+        // });
+        this.addRobotPosition(
+          pathIndex,
+          {
+            x_pixel: data[0]["X_COORD"],
+            y_pixel: data[0]["Y_COORD"],
+          },
+          coordinatesClone
+        );
+        this.setState({
+          pk: pk + 1,
+        });
       })
       .catch((error) => {
         console.error("Request failed", error);
@@ -397,61 +420,68 @@ class MapGestion extends React.Component {
     console.log("robotPosition", robotPosition);
     // Goal: fetch the robot position each interval and insert it in the coordinates,
     // When we get an arrived flag, we stop/delete the interval
-    var timeInterval = setInterval(() => {
-      robotPosition.x_pixel = robotPosition.x_pixel + 3;
-      /**
-       * this.fetchHeartbeat(this.state.pk);
+    var timeInterval = setInterval(async () => {
+      /** Either database mock
+       * this.fetchHeartbeat();
+       * this.addRobotPosition(pathIndex, this.state.robotPosition, coordinatesClone);
+       * Either
        */
-      this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
+      this.fetchHeartbeat(pathIndex, coordinatesClone);
 
-      coordinatesClone.splice(pathIndex, 1);
+      // Or JS mock
+      // robotPosition.x_pixel = robotPosition.x_pixel + 3;
+      // this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
+      // Or
+      // coordinatesClone.splice(pathIndex, 1);
 
-      if (robotPosition.x_pixel >= 313 - 10) {
+      // if (this.state.robotPosition.x_pixel >= 313 - 10) {
+      if (this.state.pk >= 35) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
-        clearInterval(timeInterval);
+        console.log("Clearing StartMove");
         this.setState({ moving: false, pathIndex: pathIndex + 1 });
+        clearInterval(timeInterval);
+        // timeInterval = null;
       }
-    }, 100);
+    }, 1000);
   };
 
   nextDestination = () => {
-    const pathIndex = this.state.pathIndex;
+    var pathIndex = this.state.pathIndex;
     if (!pathIndex) {
       return this.StartMove();
     }
+    // pathIndex = pathIndex + 1;
     this.setState({ moving: true });
     const { coodinates } = this.state;
     var coordinatesClone = coodinates;
     console.log(
-      "coodinates & nextDestination coordinatesClone",
+      "coodinates & nextDestination coordinatesClone & pathIndex",
       coodinates,
-      coordinatesClone
+      coordinatesClone,
+      pathIndex
     );
     var robotPosition = {
       x_pixel: coordinatesClone[pathIndex - 1]["x_pixel"],
       y_pixel: coordinatesClone[pathIndex - 1]["y_pixel"],
     };
     console.log("robotPosition & pathIndex", robotPosition, pathIndex);
-    var timeInterval = setInterval(() => {
-      robotPosition.y_pixel = robotPosition.y_pixel + 3;
-      this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
+    var timeInterval = setInterval(async () => {
+      await this.fetchHeartbeat(pathIndex, coordinatesClone);
 
-      coordinatesClone.splice(pathIndex, 1);
-
-      if (robotPosition.y_pixel >= coodinates[pathIndex]["y_pixel"] - 10) {
+      if (this.state.pk >= 70) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
         clearInterval(timeInterval);
         this.setState({ moving: false, pathIndex: pathIndex + 1 });
       }
-    }, 100);
+    }, 1000);
   };
 
   handleStrokeColor = (index) => {
     var color = "";
-    const { moving, moved, pathIndex } = this.state;
-    console.log("index & pathIndex", index, pathIndex);
+    const { moving, pathIndex } = this.state;
+    // console.log("index & pathIndex", index, pathIndex);
     if (moving) {
-      console.log("index < pathIndex", index < pathIndex);
+      // console.log("index < pathIndex", index < pathIndex);
       color = index < pathIndex ? "#bfe0f2" : "#6d95ab";
     } else {
       color = index < pathIndex - 1 ? "#bfe0f2" : "#6d95ab";
@@ -462,12 +492,18 @@ class MapGestion extends React.Component {
   handleSVGMask = () => this.setState({ imageHeight: null });
 
   /* Populate the MSG_HEARTBEAT database to suite our path
-(coodinate[1]["x_pixel"] - coodinate[0]["x_pixel"]) / 3 ~= 35
-UPDATE `MSG_HEARTBEAT` SET X_COORD = `X_COORD` + (`PK` - 1) * 3 WHERE  PK < '35';
-UPDATE `MSG_HEARTBEAT` SET Y_COORD = `Y_COORD` + (`PK` - 35) * 3 WHERE  PK > '35';
+  (coodinate[1]["x_pixel"] - coodinate[0]["x_pixel"]) / 3 ~= 35
+  UPDATE `MSG_HEARTBEAT` SET X_COORD = `X_COORD` + (`PK` - 1) * 3 WHERE  PK < '35';
+  UPDATE `MSG_HEARTBEAT` SET Y_COORD = `Y_COORD` + (`PK` - 35) * 3 WHERE  PK > '35';
 
-Need /getHeartbeat() to retreive heartbeat 
+  Need /getHeartbeat() to retreive heartbeat 
 */
+  handleOpenModal = () => {
+    this.setState({ openModal: true });
+  };
+  handleClose = () => {
+    this.setState({ openModal: false });
+  };
 
   render() {
     const {
@@ -477,8 +513,10 @@ Need /getHeartbeat() to retreive heartbeat
       targetx,
       coodinates,
       pathIndex,
+      mp,
+      openModal,
     } = this.state;
-    console.log("this.state & coodinates", this.state, coodinates);
+    console.log("this.state & coodinates & map", this.state, coodinates, mp);
     const mapName = this.props.showDetailsMapGestion.mapName;
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
@@ -486,6 +524,68 @@ Need /getHeartbeat() to retreive heartbeat
 
     return (
       <div className={this.classes.root}>
+        {/* Old Scenario */}
+        <Modal
+          open={openModal}
+          onClose={() => this.handleClose()}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <div class="modal-body" style={{ backgroundColor: "white" }}>
+            <form noValidate>
+              <TextField
+                id="datetime-local-from"
+                label="Départ"
+                type="datetime-local"
+                defaultValue="2017-05-24T10:30"
+                // className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                id="datetime-local-to"
+                label="Arrivé"
+                type="datetime-local"
+                defaultValue="2017-05-24T10:30"
+                // className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{ marginLeft: "2em" }}
+              />
+            </form>
+            <div
+              style={{
+                margin: "50px 0 30px",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Button
+                variant="outlined"
+                style={{ margin: "0px" }}
+                onClick={() => this.handleClose()}
+                size="small"
+              >
+                <Typography variant="button" display="block" gutterBottom>
+                  Annuler
+                </Typography>
+              </Button>
+              <Button
+                variant="outlined"
+                // disabled={!this.state.mapName}
+                size="small"
+                color="primary"
+                style={{ marginLeft: "10px" }}
+                onClick={() => this.handleClose()}
+              >
+                Allons-y
+              </Button>
+            </div>
+          </div>
+        </Modal>
+
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} lg={9}>
             <Card>
@@ -523,7 +623,20 @@ Need /getHeartbeat() to retreive heartbeat
               <CardContent>
                 <ImageMapper
                   src={`data:image/jpeg;base64,` + blob}
-                  map={this.state.mp}
+                  // map={mp}
+                  // map={[
+                  //   areas:{
+                  //     name: "s.pk",
+                  //     shape: "circle",
+                  //     coords: [210, 146, 9],
+                  //     preFillColor: "#0099ff",
+                  //     fillColor: "red",
+                  //   },
+                  // ]}
+                  // map={{
+                  //   name: "my-map",
+                  //   areas: [],
+                  // }}
                   width={500}
                   onLoad={() => this.load()}
                   onClick={(area) => this.clicked(area)}
@@ -639,7 +752,7 @@ Need /getHeartbeat() to retreive heartbeat
                     this.deplacerRobot(this.state.xCoord, this.state.yCoord)
                   }
                   variant="outlined"
-                  // color="primary"
+                  color="primary"
                   size="medium"
                 >
                   Ajouter une destination
@@ -701,6 +814,20 @@ Need /getHeartbeat() to retreive heartbeat
                   fullWidth={true}
                   width="2em"
                   // onClick={() => this.addAction()}
+                  onClick={() => {
+                    this.handleOpenModal();
+                  }}
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                >
+                  Parcours passés
+                </Button>
+                <span>&nbsp;</span>
+                <Button
+                  fullWidth={true}
+                  width="2em"
+                  // onClick={() => this.addAction()}
                   onClick={() => this.StartMove()}
                   variant="outlined"
                   color="primary"
@@ -716,7 +843,7 @@ Need /getHeartbeat() to retreive heartbeat
                     this.nextDestination();
                   }}
                   variant="outlined"
-                  // color="primary"
+                  color="primary"
                   size="large"
                 >
                   Prochaine destination
