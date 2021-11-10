@@ -18,6 +18,7 @@ import TuneOutlinedIcon from "@material-ui/icons/TuneOutlined";
 import { PathLine } from "react-svg-pathline";
 import { Modal } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
+import Tooltip from "@material-ui/core/Tooltip";
 
 class MapGestion extends React.Component {
   constructor(props) {
@@ -41,6 +42,7 @@ class MapGestion extends React.Component {
       idClient: null,
       idRobot: null,
       destination: "destination",
+      modalErrorMsg: "",
     };
   }
 
@@ -504,6 +506,62 @@ class MapGestion extends React.Component {
   handleClose = () => {
     this.setState({ openModal: false });
   };
+  handleScenarioStartTime = (startTime) => {
+    console.log(
+      "handleScenarioStartTime: Date.parse(this.state.endTime) < Date.parse(startTime) & startTime",
+      this.state.endTime < Date.parse(startTime),
+      startTime
+    );
+    if (this.state.endTime < Date.parse(startTime)) {
+      return this.setState({
+        modalErrorMsg:
+          "* La date d'arrivé doit être après la date de départ et ne pas être une date du futur",
+      });
+    }
+    this.setState({ startTime: Date.parse(startTime), modalErrorMsg: null });
+  };
+  handleScenarioEndTime = (endTime) => {
+    console.log(
+      "Date.parse(endTime) < Date.parse(this.state.startTime)",
+      Date.parse(endTime) < this.state.startTime
+    );
+    if (
+      Date.parse(endTime) > Date.now() ||
+      Date.parse(endTime) < this.state.startTime
+    ) {
+      return this.setState({
+        modalErrorMsg:
+          "* La date d'arrivé doit être après la date de départ et ne pas être une date du futur",
+      });
+    }
+    this.setState({ endTime: Date.parse(endTime), modalErrorMsg: null });
+  };
+  playScenario = () => {
+    const { startTime, endTime } = this.state;
+    this.setState({ openModal: false });
+    /**
+     * We'll need to add pathIndex when storing destination points in database
+     * Fetch the whole info (using startTime, endTime) in an array called scenario as we could
+     * Increment pathIndex when needed
+     */
+    // var timeInterval = setInterval(async () => {
+    //   // await this.fetchHeartbeat(pathIndex, coordinatesClone);
+    //   // Fetch next scenario line
+    //   this.addRobotPosition(
+    //     pathIndex,
+    //     {
+    //       x_pixel: scenario[0]["X_COORD"],
+    //       y_pixel: scenario[0]["Y_COORD"],
+    //     },
+    //     coordinatesClone
+    //   );
+    //   if (this.state.pk >= endTime) {
+    //     // This 313 is temporal, further we'll use a flag from robot heartbeat
+    //     clearInterval(timeInterval);
+    //     this.setState({ moving: false });
+    //   }
+    // }, 1000);
+  };
 
   render() {
     const {
@@ -515,6 +573,7 @@ class MapGestion extends React.Component {
       pathIndex,
       mp,
       openModal,
+      modalErrorMsg,
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
     const mapName = this.props.showDetailsMapGestion.mapName;
@@ -532,32 +591,55 @@ class MapGestion extends React.Component {
           aria-describedby="simple-modal-description"
         >
           <div class="modal-body" style={{ backgroundColor: "white" }}>
+            <p
+              style={{
+                color: "black",
+                margin: " 0 0 2em",
+                textAlign: "right",
+                borderBottom: " 1px solid cornflowerblue",
+                fontFamily: "system-ui",
+              }}
+            >
+              Retracer un ancien parcour
+            </p>
             <form noValidate>
-              <TextField
-                id="datetime-local-from"
-                label="Départ"
-                type="datetime-local"
-                defaultValue="2017-05-24T10:30"
-                // className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <TextField
-                id="datetime-local-to"
-                label="Arrivé"
-                type="datetime-local"
-                defaultValue="2017-05-24T10:30"
-                // className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                style={{ marginLeft: "2em" }}
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12} lg={6}>
+                  <TextField
+                    id="datetime-local-from"
+                    label="Départ"
+                    type="datetime-local"
+                    defaultValue="2017-05-24T10:30"
+                    // className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={(event) =>
+                      this.handleScenarioStartTime(event.target.value)
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                  <TextField
+                    id="datetime-local-to"
+                    label="Arrivé"
+                    type="datetime-local"
+                    defaultValue="2017-05-24T10:30"
+                    // className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={(event) =>
+                      this.handleScenarioEndTime(event.target.value)
+                    }
+                  />
+                </Grid>
+              </Grid>
             </form>
+            {modalErrorMsg && <p style={{ color: "red" }}>{modalErrorMsg}</p>}
             <div
               style={{
-                margin: "50px 0 30px",
+                margin: "70px 0 0px",
                 display: "flex",
                 justifyContent: "flex-end",
               }}
@@ -574,7 +656,7 @@ class MapGestion extends React.Component {
               </Button>
               <Button
                 variant="outlined"
-                // disabled={!this.state.mapName}
+                disabled={!this.state.endTime || modalErrorMsg}
                 size="small"
                 color="primary"
                 style={{ marginLeft: "10px" }}
@@ -772,36 +854,6 @@ class MapGestion extends React.Component {
                 <Button
                   fullWidth={true}
                   width="2em"
-                  onClick={() => this.deleteOnePoint(this.state.actualPk)}
-                  variant="outlined"
-                  color="secondary"
-                  size="large"
-                >
-                  Effacer une destination
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  fullWidth={true}
-                  width="2em"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        " Voulez-vous vraiment supprimer toutes les destinations ?"
-                      )
-                    ) {
-                      this.deletePoints(this.state.actualID);
-                    }
-                  }}
-                  variant="outlined"
-                  color="secondary"
-                  size="large"
-                >
-                  Effacer destinations (Tous les points)
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  fullWidth={true}
-                  width="2em"
                   onClick={() => {}}
                   variant="outlined"
                   color="primary"
@@ -869,6 +921,36 @@ class MapGestion extends React.Component {
                   size="large"
                 >
                   Démarrage répetitif
+                </Button>
+                <span>&nbsp;</span>
+                <Button
+                  fullWidth={true}
+                  width="2em"
+                  onClick={() => this.deleteOnePoint(this.state.actualPk)}
+                  variant="outlined"
+                  color="secondary"
+                  size="large"
+                >
+                  Effacer une destination
+                </Button>
+                <span>&nbsp;</span>
+                <Button
+                  fullWidth={true}
+                  width="2em"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        " Voulez-vous vraiment supprimer toutes les destinations ?"
+                      )
+                    ) {
+                      this.deletePoints(this.state.actualID);
+                    }
+                  }}
+                  variant="outlined"
+                  color="secondary"
+                  size="large"
+                >
+                  Effacer destinations (Tous les points)
                 </Button>
                 <span>&nbsp;</span>
                 <Button
