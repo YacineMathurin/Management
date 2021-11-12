@@ -130,7 +130,7 @@ class PageMaps extends React.Component {
     let { maps } = this.state;
     this.closeEditingMapArea(index);
     fetch(
-      `http://193.70.86.40:8081/SetUserCommentByPkWS?pk=${pk}&user_comment=${
+      `${Const.URL_WS_SET_USER_COMMENT}?pk=${pk}&user_comment=${
         this.state["userComment" + pk]
       }`,
       {
@@ -154,7 +154,7 @@ class PageMaps extends React.Component {
       });
 
     fetch(
-      `http://193.70.86.40:8081/SetMapNameByPkWS?pk=${pk}&map_name=${
+      `${Const.URL_WS_SET_MAP_NAME}?pk=${pk}&map_name=${
         this.state["mapName" + pk]
       }`,
       {

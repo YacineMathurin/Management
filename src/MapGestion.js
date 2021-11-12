@@ -157,6 +157,9 @@ class MapGestion extends React.Component {
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
     console.log("id deplacerRobot", id);
+    const { coordinate } = this.state;
+    // This pathIndex will be useful when playing scenarios
+    const pathIndex = coodinates.length < 2 ? 1 : coordinate.length - 1;
     fetch(
       Const.URL_WS_INS_DEF +
         "?idClient=" +
@@ -372,7 +375,7 @@ class MapGestion extends React.Component {
 
     console.log("idClient, idRobot, pk", idClient, idRobot, pk, moving);
     fetch(
-      `http://193.70.86.40:8081/GetAllMetricsByClientAndRobotAndPKWS?idclient=${idClient}&idrobot=${idRobot}&pk=${pk}`,
+      `${Const.URL_WS_FETCH_HEARTBEAT}?idclient=${idClient}&idrobot=${idRobot}&pk=${pk}`,
       {
         retry: 3,
         retryDelay: 1000,
@@ -538,6 +541,11 @@ class MapGestion extends React.Component {
   };
   playScenario = () => {
     const { startTime, endTime } = this.state;
+    // coordinatesClone = SELECT * FROM `MSG_DEF_ITINE` WHERE (TIMESTAMP >=startTime AND TIMESTAMP <=endTime)
+    // Path index for starting is simply: const pathIndex = coordinatesClone[0]["pathindex"];
+    // SELECT X_COORD,Y_COORD FROM `MSG_HEARTBEAT` WHERE (TIMESTAMP >=startTime AND TIMESTAMP <=endTime)
+    // Increment pathIndex when you receive an arrived flag / For demo increment manually
+
     this.setState({ openModal: false });
     /**
      * We'll need to add pathIndex when storing destination points in database
@@ -545,7 +553,6 @@ class MapGestion extends React.Component {
      * Increment pathIndex when needed
      */
     // var timeInterval = setInterval(async () => {
-    //   // await this.fetchHeartbeat(pathIndex, coordinatesClone);
     //   // Fetch next scenario line
     //   this.addRobotPosition(
     //     pathIndex,
