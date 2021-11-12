@@ -159,7 +159,7 @@ class MapGestion extends React.Component {
     console.log("id deplacerRobot", id);
     const { coordinate } = this.state;
     // This pathIndex will be useful when playing scenarios
-    const pathIndex = coodinates.length < 2 ? 1 : coordinate.length - 1;
+    // const pathIndex = coodinates.length < 2 ? 1 : coordinate.length - 1;
     fetch(
       Const.URL_WS_INS_DEF +
         "?idClient=" +
@@ -680,7 +680,7 @@ class MapGestion extends React.Component {
         </Modal>
 
         <Grid container spacing={2}>
-          <Grid item xs={12} md={8} lg={9}>
+          <Grid item xs={12} md={12} lg={12}>
             <Card>
               <CardContent>
                 <div>

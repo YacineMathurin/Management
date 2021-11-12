@@ -180,6 +180,8 @@ class PageMaps extends React.Component {
   };
 
   componentDidMount() {
+    // Change zoom level on mount
+    document.body.style.zoom = "100%";
     this.provideMaps();
   }
   searchFilterFunction = (text) => {
