@@ -98,6 +98,8 @@ class MapGestion extends React.Component {
     var id = fields[0];
     this.setState({
       actualID: id,
+      msg: null,
+      status: null,
     });
     var lgg = 0;
     console.log("Wait Please !!!!!");
@@ -157,9 +159,9 @@ class MapGestion extends React.Component {
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
     console.log("id deplacerRobot", id);
-    const { coordinate } = this.state;
+    const { coodinates } = this.state;
     // This pathIndex will be useful when playing scenarios
-    // const pathIndex = coodinates.length < 2 ? 1 : coordinate.length - 1;
+    const pathIndex = coodinates.length < 2 ? 1 : coodinates.length - 1;
     fetch(
       Const.URL_WS_INS_DEF +
         "?idClient=" +
@@ -172,7 +174,9 @@ class MapGestion extends React.Component {
         x +
         "&y=" +
         y +
-        "&breakTime=30",
+        "&breakTime=30" +
+        "&pathIndex=" +
+        pathIndex,
       { retry: 3, retryDelay: 1000 }
     )
       .then((res) => res.json())
@@ -406,7 +410,7 @@ class MapGestion extends React.Component {
 
   StartMove = () => {
     // #deeafc #5293fa
-    this.setState({ moving: true, pk: 1 });
+    this.setState({ moving: true, pk: 1, msg: "En mouvement ..." });
     const coodinates = this.state.coodinates;
     var coordinatesClone = coodinates;
     var pathIndex = 1;
@@ -443,7 +447,11 @@ class MapGestion extends React.Component {
       if (this.state.pk >= 35) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
         console.log("Clearing StartMove");
-        this.setState({ moving: false, pathIndex: pathIndex + 1 });
+        this.setState({
+          moving: false,
+          pathIndex: pathIndex + 1,
+          msg: "Arrivée à destination !",
+        });
         clearInterval(timeInterval);
         // timeInterval = null;
       }
@@ -456,7 +464,7 @@ class MapGestion extends React.Component {
       return this.StartMove();
     }
     // pathIndex = pathIndex + 1;
-    this.setState({ moving: true });
+    this.setState({ moving: true, msg: "En mouvement ..." });
     const { coodinates } = this.state;
     var coordinatesClone = coodinates;
     console.log(
@@ -476,7 +484,11 @@ class MapGestion extends React.Component {
       if (this.state.pk >= 70) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
         clearInterval(timeInterval);
-        this.setState({ moving: false, pathIndex: pathIndex + 1 });
+        this.setState({
+          moving: false,
+          pathIndex: pathIndex + 1,
+          msg: "Arrivée à destination !",
+        });
       }
     }, 1000);
   };
@@ -816,27 +828,26 @@ class MapGestion extends React.Component {
           <Grid item xs={12} md={12} lg={4}>
             <Card>
               <CardContent>
-                <span>&nbsp;</span>
                 <div align="center">
-                  <h1 style={{ color: "blue", fontWeight: "bold" }}>
-                    {" "}
-                    {this.state.nbpts ? (
+                  {this.state.nbpts && (
+                    <h1 style={{ color: "blue", fontWeight: "bold" }}>
                       <b>
-                        {" "}
-                        {this.state.nbpts} {this.state.destination}{" "}
+                        {this.state.nbpts} {this.state.destination}
                       </b>
-                    ) : (
-                      <b>&nbsp;</b>
-                    )}
-                  </h1>
+                    </h1>
+                  )}
 
-                  <h3 className="message">
-                    {this.state.msg ? <b>{this.state.msg}</b> : <b>&nbsp;</b>}
-                  </h3>
-                  <h3 style={{ color: "green", fontWeight: "bold" }}>
-                    {" "}
-                    {this.state.status ? this.state.status : <b>&nbsp;</b>}
-                  </h3>
+                  {this.state.msg && (
+                    <h3 className="message">
+                      <b>{this.state.msg}</b>
+                    </h3>
+                  )}
+
+                  {this.state.status && (
+                    <h3 style={{ color: "green", fontWeight: "bold" }}>
+                      {this.state.status}
+                    </h3>
+                  )}
                 </div>
                 <Button
                   fullWidth={true}
@@ -993,7 +1004,10 @@ class MapGestion extends React.Component {
               />
               <CardContent>
                 <span>&nbsp;</span>
-                <div align="center" style={{ backgroundColor: "#FFFFCC" }}>
+                <div
+                  align="center"
+                  style={{ padding: "2em", backgroundColor: "#FFFFCC" }}
+                >
                   <h3>
                     {" "}
                     1-Ajout d'une destination, cliquez sur une position de

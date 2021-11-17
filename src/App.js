@@ -457,6 +457,7 @@ export default function MiniDrawer() {
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
+        style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
       >
         <Toolbar>
           {apiKey != null && ( // if login page no drawer
@@ -472,14 +473,29 @@ export default function MiniDrawer() {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography style={{ color: "WHITE" }} component="h1" variant="h5">
+          <Typography
+            style={{
+              color: "WHITE",
+              fontFamily: "Black Ops One, cursive",
+            }}
+            component="h1"
+            variant="h5"
+          >
             QENVI ROBOTICS
           </Typography>
 
           {/* Text  */}
           {apiKey != null && (
             <div className={clsx(classes.contentRight)}>
-              <Typography variant="h6" noWrap>
+              <Typography
+                variant="h6"
+                noWrap
+                style={{
+                  color: "WHITE",
+                  fontFamily: "Black Ops One, cursive",
+                  fontSize: "1em",
+                }}
+              >
                 {localStorage.getItem("username")
                   ? localStorage.getItem("username").split("@")[0]
                   : ""}
