@@ -836,7 +836,7 @@ class MapGestion extends React.Component {
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={4}>
-            <Card style={{ height: "700px" }}>
+            <Card>
               <CardContent>
                 <ImageMapper
                   src={`data:image/jpeg;base64,` + blob}
