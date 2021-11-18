@@ -323,18 +323,29 @@ class PageMaps extends React.Component {
                   />
                 </div>
 
-                <div style={{ marginLeft: "3.5em" }}>
+                <div
+                  style={{
+                    marginLeft: "3.5em",
+                  }}
+                >
                   <Typography
-                    style={{ color: "BLACK" }}
+                    style={{
+                      color: "BLACK",
+                      fontFamily: "Black Ops One, cursive",
+                      transform: "translateY(10px)",
+                    }}
                     component="h5"
                     variant="h5"
                   >
-                    robot {this.state.map}
+                    Robot {this.state.map}
                   </Typography>
                 </div>
                 <span>&nbsp;</span>
                 <h1>
-                  <Typography variant="h5">
+                  <Typography
+                    variant="h5"
+                    style={{ fontFamily: "Josefin Slab, serif" }}
+                  >
                     Cliquer pour Selectionner une Cartographie
                   </Typography>{" "}
                 </h1>

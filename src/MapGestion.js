@@ -19,6 +19,9 @@ import { PathLine } from "react-svg-pathline";
 import { Modal } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
+import Hidden from "@material-ui/core/Hidden";
+import LiveHelpIcon from "@material-ui/icons/LiveHelp";
+import "./MapGestion.css";
 
 class MapGestion extends React.Component {
   constructor(props) {
@@ -519,7 +522,7 @@ class MapGestion extends React.Component {
     this.setState({ openModal: true });
   };
   handleClose = () => {
-    this.setState({ openModal: false });
+    this.setState({ openModal: false, openModalInfo: false });
   };
   handleScenarioStartTime = (startTime) => {
     console.log(
@@ -582,6 +585,83 @@ class MapGestion extends React.Component {
     // }, 1000);
   };
 
+  returnInfo = () => (
+    <Card style={{ height: "700px" }}>
+      {/* <span>&nbsp;</span> */}
+      <CardHeader
+        avatar={<TuneOutlinedIcon fontSize="large" />}
+        title="Informations"
+      />
+      <CardContent>
+        {/* <span>&nbsp;</span> */}
+        <div
+          align="center"
+          style={{
+            // padding: "2em",
+            // backgroundColor: "#FFFFCC",
+            // fontFamily: "Josefin Slab, serif",
+            fontFamily: "EB Garamond, serif",
+          }}
+        >
+          <div className="line1">
+            <div className="child1">
+              1-Ajout d'une destination, cliquez sur une position de l'image
+              puis cliquez "Ajouter une destination";
+            </div>
+            <div className="child2">
+              2-Supprimer une destination, cliquez sur un point existant de
+              l'image puis cliquez sur "Effacer une destination"
+            </div>
+          </div>
+          <div className="line2">
+            <div className="child1">
+              3-Supprimer toutes les destination, cliquez juste sur "Effacer
+              destinations"
+            </div>
+            <div className="child2">
+              4-Démarrage Immédiat, Envoie une action avec le nombre de points
+              au robot
+            </div>
+          </div>
+          <div className="line3">
+            <div>
+              Effacer la Map, Effacera la Map et toutes les destinations
+              affiliées cliquez juste sur "Effacer la Map"
+            </div>
+          </div>
+          {/* <h3>
+            {" "}
+            1-Ajout d'une destination, cliquez sur une position de l'image puis
+            cliquez "Ajouter une destination";{" "}
+          </h3>
+          <h3>
+            {" "}
+            2-Supprimer une destination, cliquez sur un point existant de
+            l'image puis cliquez sur "Effacer une destination";{" "}
+          </h3>
+          <h3>
+            {" "}
+            3-Supprimer toutes les destination, cliquez juste sur "Effacer
+            destinations";{" "}
+          </h3>
+          <h3>
+            {" "}
+            4-Démarrage Immédiat, Envoie une action avec le nombre de points au
+            robot;{" "}
+          </h3>
+          <h3>
+            {" "}
+            5-Effacer la Map, Effacera la Map et toutes les destinations
+            affiliées cliquez juste sur "Effacer la Map" ;{" "}
+          </h3> */}
+        </div>
+      </CardContent>
+    </Card>
+  );
+  showInfoMobile = () => {
+    this.setState({ openModalInfo: true });
+  };
+
   render() {
     const {
       imageHeight,
@@ -593,6 +673,7 @@ class MapGestion extends React.Component {
       mp,
       openModal,
       modalErrorMsg,
+      openModalInfo,
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
     const mapName = this.props.showDetailsMapGestion.mapName;
@@ -609,7 +690,7 @@ class MapGestion extends React.Component {
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-          <div class="modal-body" style={{ backgroundColor: "white" }}>
+          <div className="modal-body" style={{ backgroundColor: "white" }}>
             <p
               style={{
                 color: "black",
@@ -691,6 +772,27 @@ class MapGestion extends React.Component {
           </div>
         </Modal>
 
+        {/* Help on Mobile */}
+        <Modal
+          open={openModalInfo}
+          onClose={() => this.handleClose()}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <div className="modal-body" style={{ backgroundColor: "white" }}>
+            {this.returnInfo()}
+            <Button
+              variant="outlined"
+              size="small"
+              // color="primary"
+              style={{ float: "right", margin: "1em 0" }}
+              onClick={() => this.handleClose()}
+            >
+              Fermer
+            </Button>
+          </div>
+        </Modal>
+
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={12}>
             <Card>
@@ -702,16 +804,26 @@ class MapGestion extends React.Component {
                     src="./images/carrier.svg"
                   />
                   <img
-                    style={{ float: "right", marginTop: "0.5em" }}
+                    style={{
+                      float: "right",
+                      marginTop: "0.5em",
+                      position: "relative",
+                      bottom: "0.5em",
+                    }}
                     width="50"
-                    src="./images/back.png"
+                    src="./images/go_back.png"
                     onClick={() => this.props.callBackRetourMaps()}
                   />
                 </div>
 
                 <div style={{ marginLeft: "3.5em" }}>
                   <Typography
-                    style={{ color: "BLACK" }}
+                    style={{
+                      color: "BLACK",
+                      fontFamily: "Black Ops One, cursive",
+                      transform: "translateY(10px)",
+                      display: "flex",
+                    }}
                     component="h5"
                     variant="h5"
                   >
@@ -724,7 +836,7 @@ class MapGestion extends React.Component {
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={4}>
-            <Card>
+            <Card style={{ height: "700px" }}>
               <CardContent>
                 <ImageMapper
                   src={`data:image/jpeg;base64,` + blob}
@@ -826,11 +938,31 @@ class MapGestion extends React.Component {
           </Grid>
 
           <Grid item xs={12} md={12} lg={4}>
-            <Card>
+            <Card style={{ height: "700px" }} id="secion2">
+              <Hidden mdUp>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <img
+                    style={{ margin: "1em", padding: "1em" }}
+                    width="70"
+                    src="./images/question.png"
+                    onClick={() => {
+                      this.showInfoMobile();
+                    }}
+                  />
+                </div>
+              </Hidden>
               <CardContent>
                 <div align="center">
                   {this.state.nbpts && (
-                    <h1 style={{ color: "blue", fontWeight: "bold" }}>
+                    <h1
+                      style={{
+                        color: "blue",
+                        fontWeight: "bold",
+                        // position: "relative",
+                        // left: "1em",
+                        fontFamily: "Josefin Slab, serif",
+                      }}
+                    >
                       <b>
                         {this.state.nbpts} {this.state.destination}
                       </b>
@@ -838,7 +970,10 @@ class MapGestion extends React.Component {
                   )}
 
                   {this.state.msg && (
-                    <h3 className="message">
+                    <h3
+                      className="message"
+                      style={{ fontFamily: "Josefin Slab, serif" }}
+                    >
                       <b>{this.state.msg}</b>
                     </h3>
                   )}
@@ -850,7 +985,8 @@ class MapGestion extends React.Component {
                   )}
                 </div>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   onClick={() =>
                     this.deplacerRobot(this.state.xCoord, this.state.yCoord)
@@ -863,7 +999,8 @@ class MapGestion extends React.Component {
                 </Button>{" "}
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   onClick={() => this.provideCoordinates()}
                   variant="outlined"
@@ -874,7 +1011,8 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   onClick={() => {}}
                   variant="outlined"
@@ -885,7 +1023,8 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   // onClick={() => this.addAction()}
                   onClick={() => {
@@ -899,7 +1038,8 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   // onClick={() => this.addAction()}
                   onClick={() => this.StartMove()}
@@ -911,7 +1051,8 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   onClick={() => {
                     this.nextDestination();
@@ -924,7 +1065,8 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   onClick={() => {}}
                   variant="outlined"
@@ -935,7 +1077,8 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   onClick={() => {}}
                   variant="outlined"
@@ -946,7 +1089,8 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   onClick={() => this.deleteOnePoint(this.state.actualPk)}
                   variant="outlined"
@@ -957,7 +1101,8 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
+                  className="_button"
+                  // fullWidth={true}
                   width="2em"
                   onClick={() => {
                     if (
@@ -976,8 +1121,9 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
-                  fullWidth={true}
-                  width="2em"
+                  className="_button"
+                  // fullWidth={true}
+                  // width="2em"
                   onClick={() => {
                     if (
                       window.confirm(" Voulez-vous vraiment supprimer la Map ?")
@@ -991,52 +1137,27 @@ class MapGestion extends React.Component {
                 >
                   Effacer la Map
                 </Button>
+                <span>&nbsp;</span>
+                <Button
+                  className="_button"
+                  // fullWidth={true}
+                  // width="2em"
+
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                >
+                  stop
+                </Button>
               </CardContent>
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={12} lg={4}>
-            <Card>
-              {/* <span>&nbsp;</span> */}
-              <CardHeader
-                avatar={<TuneOutlinedIcon fontSize="large" />}
-                title="Informations"
-              />
-              <CardContent>
-                <span>&nbsp;</span>
-                <div
-                  align="center"
-                  style={{ padding: "2em", backgroundColor: "#FFFFCC" }}
-                >
-                  <h3>
-                    {" "}
-                    1-Ajout d'une destination, cliquez sur une position de
-                    l'image puis cliquez "Ajouter une destination";{" "}
-                  </h3>
-                  <h3>
-                    {" "}
-                    2-Supprimer une destination, cliquez sur un point existant
-                    de l'image puis cliquez sur "Effacer une destination";{" "}
-                  </h3>
-                  <h3>
-                    {" "}
-                    3-Supprimer toutes les destination, cliquez juste sur
-                    "Effacer destinations";{" "}
-                  </h3>
-                  <h3>
-                    {" "}
-                    4-Démarrage Immédiat, Envoie une action avec le nombre de
-                    points au robot;{" "}
-                  </h3>
-                  <h3>
-                    {" "}
-                    5-Effacer la Map, Effacera la Map et toutes les destinations
-                    affiliées cliquez juste sur "Effacer la Map" ;{" "}
-                  </h3>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
+          <Hidden only="sm">
+            <Grid item xs={12} md={12} lg={4}>
+              {this.returnInfo()}
+            </Grid>
+          </Hidden>
         </Grid>
       </div>
     );
