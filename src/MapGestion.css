@@ -52,14 +52,18 @@
   align-items: center;
   padding: 0 10px;
 }
-#section1,
+/* #section1,
 #section2,
 #section3 {
   height: 700px;
+} */
+.section2,
+.section3 {
   height: 100%;
 }
+
 @media only screen and (max-width: 600px) {
-  #section2 {
-    height: 820px;
+  .section2 {
+    height: 120% !important;
   }
 }

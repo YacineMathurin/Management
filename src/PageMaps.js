@@ -316,9 +316,14 @@ class PageMaps extends React.Component {
                     src="./images/carrier.svg"
                   />
                   <img
-                    style={{ float: "right", marginTop: "0.5em" }}
+                    style={{
+                      float: "right",
+                      marginTop: "0.5em",
+                      position: "relative",
+                      bottom: "0.5em",
+                    }}
                     width="50"
-                    src="./images/back.png"
+                    src="./images/go_back.png"
                     onClick={() => this.props.callBackRetourTableauDeBord()}
                   />
                 </div>
@@ -333,6 +338,7 @@ class PageMaps extends React.Component {
                       color: "BLACK",
                       fontFamily: "Black Ops One, cursive",
                       transform: "translateY(10px)",
+                      display: "flex",
                     }}
                     component="h5"
                     variant="h5"

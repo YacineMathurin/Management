@@ -103,6 +103,7 @@ class MapGestion extends React.Component {
       actualID: id,
       msg: null,
       status: null,
+      mapChosingMode: false,
     });
     var lgg = 0;
     console.log("Wait Please !!!!!");
@@ -509,8 +510,6 @@ class MapGestion extends React.Component {
     return color;
   };
 
-  handleSVGMask = () => this.setState({ imageHeight: null });
-
   /* Populate the MSG_HEARTBEAT database to suite our path
   (coodinate[1]["x_pixel"] - coodinate[0]["x_pixel"]) / 3 ~= 35
   UPDATE `MSG_HEARTBEAT` SET X_COORD = `X_COORD` + (`PK` - 1) * 3 WHERE  PK < '35';
@@ -586,8 +585,7 @@ class MapGestion extends React.Component {
   };
 
   returnInfo = () => (
-    <Card style={{ height: "700px" }}>
-      {/* <span>&nbsp;</span> */}
+    <Card className="section3">
       <CardHeader
         avatar={<TuneOutlinedIcon fontSize="large" />}
         title="Informations"
@@ -661,6 +659,12 @@ class MapGestion extends React.Component {
   showInfoMobile = () => {
     this.setState({ openModalInfo: true });
   };
+  editDestinations = () => {
+    const { xCoord, yCoord, mapChosingMode } = this.state;
+    mapChosingMode
+      ? this.deplacerRobot(xCoord, yCoord)
+      : this.setState({ imageHeight: null, mapChosingMode: true });
+  };
 
   render() {
     const {
@@ -674,6 +678,7 @@ class MapGestion extends React.Component {
       openModal,
       modalErrorMsg,
       openModalInfo,
+      mapChosingMode,
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
     const mapName = this.props.showDetailsMapGestion.mapName;
@@ -876,7 +881,7 @@ class MapGestion extends React.Component {
                   left: "16px",
                   zIndex: 1,
                 }}
-                onMouseEnter={() => this.handleSVGMask()}
+                // onMouseEnter={() => this.handleSVGMask()}
               >
                 <svg style={{ height: "100%", width: "100%" }}>
                   {coodinates.map((item, index, array) => {
@@ -937,8 +942,8 @@ class MapGestion extends React.Component {
             )}
           </Grid>
 
-          <Grid item xs={12} md={12} lg={4}>
-            <Card style={{ height: "700px" }} id="secion2">
+          <Grid item xs={12} md={12} lg={4} style={{ height: "820px" }}>
+            <Card className="section2" style={{ height: "100%" }}>
               <Hidden mdUp>
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <img
@@ -989,14 +994,15 @@ class MapGestion extends React.Component {
                   // fullWidth={true}
                   width="2em"
                   onClick={() =>
-                    this.deplacerRobot(this.state.xCoord, this.state.yCoord)
+                    // this.deplacerRobot(this.state.xCoord, this.state.yCoord)
+                    this.editDestinations()
                   }
                   variant="outlined"
                   color="primary"
                   size="medium"
                 >
-                  Ajouter une destination
-                </Button>{" "}
+                  {!mapChosingMode ? "Mode Edition" : "Ajouter une destination"}
+                </Button>
                 <span>&nbsp;</span>
                 <Button
                   className="_button"
@@ -1154,7 +1160,7 @@ class MapGestion extends React.Component {
           </Grid>
 
           <Hidden only="sm">
-            <Grid item xs={12} md={12} lg={4}>
+            <Grid item xs={12} md={12} lg={4} style={{ height: "820px" }}>
               {this.returnInfo()}
             </Grid>
           </Hidden>
