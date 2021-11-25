@@ -60,6 +60,21 @@ class MapGestion extends React.Component {
     this.setState({ coodinates });
   }
 
+  componentDidUpdate() {
+    if (window.innerWidth < 1280) {
+      var el = document.getElementById("section2");
+      if (!this.state.choosingDest) {
+        el.style.transition = "1s";
+        el.style.position = "relative";
+        el.style.bottom = "550px";
+      } else {
+        el.style.transition = "1s";
+        el.style.position = "relative";
+        el.style.bottom = "-50px";
+      }
+    }
+  }
+
   classes = makeStyles((Theme) => createStyles({}));
 
   deleteOnePoint(pk) {
@@ -103,7 +118,7 @@ class MapGestion extends React.Component {
       actualID: id,
       msg: null,
       status: null,
-      mapChosingMode: false,
+      choosingDest: false,
     });
     var lgg = 0;
     console.log("Wait Please !!!!!");
@@ -660,10 +675,10 @@ class MapGestion extends React.Component {
     this.setState({ openModalInfo: true });
   };
   editDestinations = () => {
-    const { xCoord, yCoord, mapChosingMode } = this.state;
-    mapChosingMode
+    const { xCoord, yCoord, choosingDest } = this.state;
+    choosingDest
       ? this.deplacerRobot(xCoord, yCoord)
-      : this.setState({ imageHeight: null, mapChosingMode: true });
+      : this.setState({ imageHeight: null, choosingDest: true });
   };
 
   render() {
@@ -678,7 +693,7 @@ class MapGestion extends React.Component {
       openModal,
       modalErrorMsg,
       openModalInfo,
-      mapChosingMode,
+      choosingDest,
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
     const mapName = this.props.showDetailsMapGestion.mapName;
@@ -942,8 +957,18 @@ class MapGestion extends React.Component {
             )}
           </Grid>
 
-          <Grid item xs={12} md={12} lg={4} style={{ height: "820px" }}>
-            <Card className="section2" style={{ height: "100%" }}>
+          <Grid
+            item
+            xs={12}
+            md={12}
+            lg={4}
+            style={{ height: "820px" }}
+            id="section2"
+          >
+            <Card
+              className="section2"
+              style={{ height: "100%", transition: "1s" }}
+            >
               <Hidden mdUp>
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <img
@@ -1001,7 +1026,7 @@ class MapGestion extends React.Component {
                   color="primary"
                   size="medium"
                 >
-                  {!mapChosingMode ? "Mode Edition" : "Ajouter une destination"}
+                  {!choosingDest ? "Mode Edition" : "Ajouter une destination"}
                 </Button>
                 <span>&nbsp;</span>
                 <Button
