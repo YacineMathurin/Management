@@ -55,30 +55,25 @@ class PageTableauDeBord extends React.Component {
         console.log("Request failed", error);
       });
   }
-
   componentDidMount() {
     this.provideMetrics();
   }
-
   handleCallbackOpenDetails = (idRobot) => {
     console.log("send robot id to PageAide");
     this.props.callbackOpenDetails(idRobot);
     console.log(idRobot);
     console.log(this.props.callbackOpenDetails(idRobot));
   };
-
   handleCallbackOpenMaps = (idRobot) => {
     console.log("send robot id to PageMaps");
     this.props.callbackOpenMaps(idRobot);
     console.log(idRobot);
     console.log(this.props.callbackOpenMaps(idRobot));
   };
-
   handlePrintTable = () => {
     this.setState({ printTable: "block" });
     this.setState({ printCard: "none" });
   };
-
   handlePrintCard = () => {
     this.setState({ printTable: "none" });
     this.setState({ printCard: "block" });
@@ -94,8 +89,58 @@ class PageTableauDeBord extends React.Component {
       listeMetrics: newData,
     });
   };
+  setFilteredBatLevel = (batLevel, index) => {
+    // const ["batLevel" + index] = this.state["batLevel" + index] != null ? null : batLevel;
+    this.setState({
+      ["batLevel" + index]:
+        this.state["batLevel" + index] != undefined ? undefined : batLevel,
+    });
+  };
+  setFiltMoving = (value) => {
+    const { moving } = this.state;
+    this.setState({
+      moving: moving == null ? value : null,
+    });
+  };
+  setFiltStoped = () => {
+    const { stoped } = this.state;
+    this.setState({
+      stoped: !stoped ? true : null,
+    });
+  };
+  handleFiltering = () => {
+    const {
+      batLevel0,
+      batLevel1,
+      batLevel2,
+      moving,
+      stoped,
+      default: defaultMetrics,
+    } = this.state;
 
+    var newData = defaultMetrics;
+
+    newData = defaultMetrics.filter(
+      (item) =>
+        item.BAT_LEVEL >= batLevel0 ||
+        (item.BAT_LEVEL > batLevel1 && item.BAT_LEVEL < batLevel2) ||
+        item.BAT_LEVEL > batLevel2
+    );
+    if (moving) {
+      console.log("Moving set !");
+      newData = newData.filter((item) => item.STATUS === moving);
+    }
+    this.setState({
+      listeMetrics: newData,
+    });
+  };
+  resetFilter = () => {
+    const { default: defaultMetrics } = this.state;
+
+    this.setState({ listeMetrics: defaultMetrics });
+  };
   render() {
+    console.log("state", this.state);
     return (
       <div>
         <Grid container spacing={2}>
@@ -203,7 +248,7 @@ class PageTableauDeBord extends React.Component {
                                 onClick={() =>
                                   this.handleCallbackOpenDetails(s.ID_ROBOT)
                                 }
-                                variant="contained"
+                                variant="outlined"
                                 color="primary"
                                 size="small"
                               >
@@ -217,7 +262,7 @@ class PageTableauDeBord extends React.Component {
                                 onClick={() =>
                                   this.handleCallbackOpenMaps(s.ID_ROBOT)
                                 }
-                                variant="contained"
+                                variant="outlined"
                                 color="primary"
                                 size="small"
                               >
@@ -333,7 +378,7 @@ class PageTableauDeBord extends React.Component {
                                   onClick={() =>
                                     this.handleCallbackOpenDetails(s.ID_ROBOT)
                                   }
-                                  variant="contained"
+                                  variant="outlined"
                                   color="primary"
                                   size="small"
                                 >
@@ -345,7 +390,7 @@ class PageTableauDeBord extends React.Component {
                                   onClick={() =>
                                     this.handleCallbackOpenMaps(s.ID_ROBOT)
                                   }
-                                  variant="contained"
+                                  variant="outlined"
                                   color="primary"
                                   size="small"
                                 >
@@ -395,6 +440,10 @@ class PageTableauDeBord extends React.Component {
                         color="primary"
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         name="checkedI"
+                        onChange={() => {
+                          this.setFiltMoving(1, 0);
+                        }}
+                        disabled={this.state.moving === 0 ? true : false}
                       />
                     }
                     label={
@@ -412,6 +461,10 @@ class PageTableauDeBord extends React.Component {
                         color="primary"
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         name="checkedI"
+                        onChange={() => {
+                          this.setFiltMoving(0, 1);
+                        }}
+                        disabled={this.state.moving === 1 ? true : false}
                       />
                     }
                     label={
@@ -436,7 +489,7 @@ class PageTableauDeBord extends React.Component {
                     label={
                       <img
                         style={{ marginTop: "0.5em" }}
-                        width="30"
+                        width="25"
                         src="./images/check.svg"
                       />
                     }
@@ -453,7 +506,7 @@ class PageTableauDeBord extends React.Component {
                     label={
                       <img
                         style={{ marginTop: "0.5em" }}
-                        width="30"
+                        width="25"
                         src="./images/warning.svg"
                       />
                     }
@@ -466,6 +519,9 @@ class PageTableauDeBord extends React.Component {
                       color="primary"
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                       name="checkedI"
+                      onChange={() => {
+                        this.setFilteredBatLevel(0, 0);
+                      }}
                     />
                   }
                   label={
@@ -483,6 +539,9 @@ class PageTableauDeBord extends React.Component {
                       color="primary"
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                       name="checkedI"
+                      onChange={() => {
+                        this.setFilteredBatLevel(50, 1);
+                      }}
                     />
                   }
                   label={
@@ -500,6 +559,9 @@ class PageTableauDeBord extends React.Component {
                       color="primary"
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                       name="checkedI"
+                      onChange={() => {
+                        this.setFilteredBatLevel(100, 2);
+                      }}
                     />
                   }
                   label={
@@ -510,15 +572,27 @@ class PageTableauDeBord extends React.Component {
                     />
                   }
                 />
-
+                <br></br>
                 <Button
                   style={{ marginTop: "1em" }}
-                  fullWidth={false}
-                  variant="contained"
+                  fullWidth={true}
+                  variant="outlined"
                   color="primary"
                   size="small"
+                  onClick={() => this.handleFiltering()}
                 >
                   Filtrer
+                </Button>
+                <br></br>
+                <Button
+                  style={{ marginTop: "1em" }}
+                  fullWidth={true}
+                  variant="outlined"
+                  color="default"
+                  size="small"
+                  onClick={() => this.resetFilter()}
+                >
+                  Reinitialiser les filtres
                 </Button>
               </CardContent>
             </Card>

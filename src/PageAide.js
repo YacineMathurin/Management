@@ -117,7 +117,7 @@ class PageAide extends React.Component {
                 <img
                   style={{ float: "right", marginTop: "0.5em" }}
                   width="50"
-                  src="./images/back.png"
+                  src="./images/go_back.png"
                   onClick={() => this.props.callBackRetourTableauDeBordAide()}
                 />
               </div>

@@ -50,14 +50,14 @@ class MapGestion extends React.Component {
   }
 
   componentDidMount() {
-    const coodinates = [
-      { x_pixel: 210, y_pixel: 146 },
-      { x_pixel: 313, y_pixel: 146 },
-      { x_pixel: 313, y_pixel: 250 },
-    ];
+    // const coodinates = [
+    //   { x_pixel: 210, y_pixel: 146 },
+    //   { x_pixel: 313, y_pixel: 146 },
+    //   { x_pixel: 313, y_pixel: 250 },
+    // ];
     this.provideCoordinates();
     this.provideRobotInfos();
-    this.setState({ coodinates });
+    // this.setState({ coodinates });
   }
 
   componentDidUpdate() {
@@ -126,7 +126,7 @@ class MapGestion extends React.Component {
     fetch(Const.URL_WS_ALL_DEF + "?id=" + id, { retry: 3, retryDelay: 1000 })
       .then((res) => res.json())
       .then((data) => {
-        // this.setState({ coodinates: data });
+        this.setState({ coodinates: data });
         console.log("coordinate", this.state.coodinates);
         var MAP = {
           name: "my-map",
@@ -538,6 +538,7 @@ class MapGestion extends React.Component {
   handleClose = () => {
     this.setState({ openModal: false, openModalInfo: false });
   };
+  /** Scenario */
   handleScenarioStartTime = (startTime) => {
     console.log(
       "handleScenarioStartTime: Date.parse(this.state.endTime) < Date.parse(startTime) & startTime",
@@ -598,6 +599,7 @@ class MapGestion extends React.Component {
     //   }
     // }, 1000);
   };
+  /** */
 
   returnInfo = () => (
     <Card className="section3">
@@ -860,7 +862,7 @@ class MapGestion extends React.Component {
               <CardContent>
                 <ImageMapper
                   src={`data:image/jpeg;base64,` + blob}
-                  // map={mp}
+                  map={mp}
                   // map={[
                   //   areas:{
                   //     name: "s.pk",
