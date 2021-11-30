@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.language1:hover {
+  border-bottom: 3px solid #e03b8b;
+}
+.language2:hover {
+  border-bottom: 3px solid #f1bf00;
+}

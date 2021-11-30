@@ -76,24 +76,28 @@ function Copyright() {
       </Link>{" "}
       <br></br>
       <span>
-        {t("translate_text")}
+        {t("translate_text")}{" "}
         <Link
           to="/"
-          className={classes.language}
+          className="language1"
           onClick={() => changeLanguage(t("first_lng").substring(0, 2))}
+          style={{ textDecoration: "none", cursor: "pointer" }}
         >
-          {" "}
           {t("first_lng")}
         </Link>{" "}
-        · | ·
+        · | ·{" "}
         <Link
           to="/"
-          className={classes.language}
+          className="language2"
           onClick={() => changeLanguage(t("second_lng").substring(0, 2))}
+          style={{
+            textDecoration: "none",
+            cursor: "pointer",
+            color: "#E03B8B",
+          }}
         >
-          {" "}
           {t("second_lng")}
-        </Link>
+        </Link>{" "}
         ·
       </span>
     </Typography>

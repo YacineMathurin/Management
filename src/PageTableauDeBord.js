@@ -37,6 +37,7 @@ function PageTableauDeBord(props) {
   const [printCard, setprintCard] = React.useState("none");
   const [search, setsearch] = React.useState("");
   const [defaultMetrics, setdefaultMetrics] = React.useState(null);
+  const [moving, setMoving] = React.useState(null);
 
   const [batLevels, setBatLevels] = React.useState({
     batLevel0: undefined,
@@ -52,11 +53,10 @@ function PageTableauDeBord(props) {
   //   const [batFilter1, setbatFilter1] = React.useState();
   //   const [batFilter2, setbatFilter2] = React.useState();
 
-  const [moving, setmoving] = React.useState();
   //   constructor(props) {
   //     super(props);
-  //     this.state = {
-  //       apiKey: this.props.apiKey,
+  //     state = {
+  //       apiKey: props.apiKey,
   //       filtreReussite: [0, 100],
   //       filtreRapportMoyen: [0, 100],
   //       filtreEcartMax: [0, 100],
@@ -76,7 +76,7 @@ function PageTableauDeBord(props) {
   }, []);
 
   // componentDidMount() {
-  //     this.provideMetrics();
+  //     provideMetrics();
   //   }
 
   const provideMetrics = () => {
@@ -88,7 +88,7 @@ function PageTableauDeBord(props) {
       .then((data) => {
         setlisteMetrics(data);
         setdefaultMetrics(data);
-        // this.setState({
+        // setState({
         //   listeMetrics: data,
         //   defaultMetrics: data,
         // });
@@ -111,23 +111,31 @@ function PageTableauDeBord(props) {
     console.log(props.callbackOpenMaps(idRobot));
   };
   const handlePrintTable = () => {
-    this.setState({ printTable: "block" });
-    this.setState({ printCard: "none" });
+    // this.setState({ printTable: "block" });
+    setprintTable("block");
+    // this.setState({ printCard: "none" });
+    setprintCard("none");
   };
   const handlePrintCard = () => {
-    this.setState({ printTable: "none" });
-    this.setState({ printCard: "block" });
+    // this.setState({ printTable: "none" });
+    // this.setState({ printCard: "block" });
+    setprintTable("none");
+    setprintCard("block");
   };
   const searchFilterFunction = (text) => {
-    //console.log("recherche robot n° "+text )
+    if (!defaultMetrics) {
+      alert("Votre Flotte est vide !!!");
+      return 0;
+    }
     const newData = defaultMetrics.filter((item) => {
       const itemData = `${item.ID_ROBOT}`;
       return itemData.includes(text);
     });
 
-    this.setState({
-      listeMetrics: newData,
-    });
+    // this.setState({
+    //   listeMetrics: newData,
+    // });
+    setlisteMetrics(newData);
   };
   const setFilteredBatLevel = (event, batLevel, index) => {
     // const ["batLevel" + index] = this.state["batLevel" + index] != null ? null : batLevel;
@@ -145,27 +153,24 @@ function PageTableauDeBord(props) {
     });
   };
   const setFiltMoving = (value) => {
-    const { moving } = this.state;
-    this.setState({
-      moving: moving == null ? value : null,
-    });
+    setMoving(moving == null ? value : null);
   };
 
-  const setFiltStoped = () => {
-    const { stoped } = this.state;
-    this.setState({
-      stoped: !stoped ? true : null,
-    });
-  };
   const handleFiltering = () => {
-    const {
-      batLevel0,
-      batLevel1,
-      batLevel2,
-      moving,
-      stoped,
-      defaultMetrics,
-    } = this.state;
+    // const {
+    //   batLevel0,
+    //   batLevel1,
+    //   batLevel2,
+    //   moving,
+    //   stoped,
+    //   defaultMetrics,
+    // } = state;
+    if (!defaultMetrics) {
+      alert("Votre Flotte est vide !!!");
+      return 0;
+    }
+
+    const { batLevel0, batLevel1, batLevel2 } = batLevels;
 
     var newData = defaultMetrics;
 
@@ -179,22 +184,27 @@ function PageTableauDeBord(props) {
       console.log("Moving set !");
       newData = newData.filter((item) => item.STATUS === moving);
     }
-    this.setState({
-      listeMetrics: newData,
-    });
+    // setState({
+    //   listeMetrics: newData,
+    // });
+    setlisteMetrics(newData);
   };
   const resetFilter = () => {
-    const { defaultMetrics } = this.state;
+    setMoving(null);
+    batFilters.batFilter0 = false;
+    batFilters.batFilter1 = false;
+    batFilters.batFilter2 = false;
+    setlisteMetrics(defaultMetrics);
+    // const { defaultMetrics } = state;
 
-    this.setState({
-      listeMetrics: defaultMetrics,
-      batFilter0: false,
-      batFilter1: false,
-      batFilter2: false,
-    });
+    // setState({
+    //   listeMetrics: defaultMetrics,
+    //   batFilter0: false,
+    //   batFilter1: false,
+    //   batFilter2: false,
+    // });
   };
-  //   render() {
-  // console.log("state", this.state);
+
   return (
     <div>
       <Grid container spacing={2}>
@@ -219,7 +229,7 @@ function PageTableauDeBord(props) {
               <Button
                 style={{ marginTop: "1em", display: printTable }}
                 fullWidth={false}
-                onClick={() => this.handlePrintCard()}
+                onClick={() => handlePrintCard()}
                 variant="outlined"
                 color="primary"
                 size="small"
@@ -230,7 +240,7 @@ function PageTableauDeBord(props) {
               <Button
                 style={{ marginTop: "1em", display: printCard }}
                 fullWidth={false}
-                onClick={() => this.handlePrintTable()}
+                onClick={() => handlePrintTable()}
                 variant="outlined"
                 color="primary"
                 size="small"
@@ -426,9 +436,9 @@ function PageTableauDeBord(props) {
                               <Button
                                 style={{ marginTop: "1em" }}
                                 fullWidth={true}
-                                //onClick={() => this.handleCallbackOpenDetails(s) }
+                                //onClick={() => handleCallbackOpenDetails(s) }
                                 onClick={() =>
-                                  this.handleCallbackOpenDetails(s.ID_ROBOT)
+                                  handleCallbackOpenDetails(s.ID_ROBOT)
                                 }
                                 variant="outlined"
                                 color="primary"
@@ -440,7 +450,7 @@ function PageTableauDeBord(props) {
                                 style={{ marginTop: "1em" }}
                                 fullWidth={true}
                                 onClick={() =>
-                                  this.handleCallbackOpenMaps(s.ID_ROBOT)
+                                  handleCallbackOpenMaps(s.ID_ROBOT)
                                 }
                                 variant="outlined"
                                 color="primary"
@@ -475,13 +485,15 @@ function PageTableauDeBord(props) {
                   value={search}
                   onChange={(event) => {
                     const { value } = event.target;
-                    this.setState({ search: value });
+                    // this.setState({ search: value });
+                    setsearch(value);
                     if (value !== "") {
-                      this.searchFilterFunction(value);
+                      searchFilterFunction(value);
                     } else {
-                      this.setState({
-                        listeMetrics: defaultMetrics,
-                      });
+                      // this.setState({
+                      //   listeMetrics: defaultMetrics,
+                      // });
+                      setlisteMetrics(defaultMetrics);
                     }
                   }}
                 />
@@ -493,12 +505,12 @@ function PageTableauDeBord(props) {
                     <Checkbox
                       color="primary"
                       // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="checkedI"
+                      name="moving"
                       onChange={() => {
-                        this.setFiltMoving(1, 0);
+                        setFiltMoving(1, 0);
                       }}
                       disabled={moving === 0 ? true : false}
-                      checked={!moving}
+                      checked={moving === 1}
                     />
                   }
                   label={
@@ -515,12 +527,12 @@ function PageTableauDeBord(props) {
                     <Checkbox
                       color="primary"
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="checkedI"
+                      name="stoped"
                       onChange={() => {
-                        this.setFiltMoving(0, 1);
+                        setFiltMoving(0, 1);
                       }}
                       disabled={moving === 1 ? true : false}
-                      checked={moving}
+                      checked={moving === 0}
                     />
                   }
                   label={
@@ -641,7 +653,7 @@ function PageTableauDeBord(props) {
                 variant="outlined"
                 color="primary"
                 size="small"
-                onClick={() => this.handleFiltering()}
+                onClick={() => handleFiltering()}
               >
                 Filtrer
               </Button>
@@ -652,7 +664,7 @@ function PageTableauDeBord(props) {
                 variant="outlined"
                 color="default"
                 size="small"
-                onClick={() => this.resetFilter()}
+                onClick={() => resetFilter()}
               >
                 Reinitialiser les filtres
               </Button>
@@ -662,7 +674,6 @@ function PageTableauDeBord(props) {
       </Grid>
     </div>
   );
-  //   }
 }
 
 export default PageTableauDeBord;
