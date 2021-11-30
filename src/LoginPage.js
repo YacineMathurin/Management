@@ -18,49 +18,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import DemandeComptePage from "./DemandeComptePage";
 import Toast from "./Toast";
 import * as Const from "./Constant";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import { useTranslation, withTranslation, Trans } from "react-i18next";
-
-function Copyright() {
-  const { t, i18n } = useTranslation();
-  const classes = useStyles();
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {t("login_page.copyright")}
-      <Link color="inherit" href="http://www.qenvirobotics.com/">
-        {t("login_page.company")}
-      </Link>{" "}
-      <span>
-        {t("login_page.translate")}
-        <Link
-          to="/"
-          className={classes.language}
-          onClick={() => changeLanguage("en")}
-        >
-          {" "}
-          {t("login_page.first_lng")}
-        </Link>{" "}
-        · | ·
-        <Link
-          to="/"
-          className={classes.language}
-          onClick={() => changeLanguage("es")}
-        >
-          {" "}
-          {t("login_page.second_lng")}
-        </Link>
-        ·
-      </span>
-    </Typography>
-  );
-}
+import { useTranslation } from "react-i18next";
+// import i18n from "i18next";
 
 const useStyles = makeStyles((theme) => ({
   language: {
@@ -100,15 +59,49 @@ const loadKeyApi = async ({ user }, { pass }) => {
   return res.json();
 };
 
-// loading component for suspense fallback
-const Loader = () => (
-  <div className="App">
-    {/* <img src={logo} className="App-logo" alt="logo" /> */}
-    <div>loading...</div>
-  </div>
-);
+function Copyright() {
+  const { t, i18n } = useTranslation();
+  const classes = useStyles();
 
-function Main(props) {
+  const changeLanguage = (lng) => {
+    console.log(lng, lng.toLowerCase(), lng.toLowerCase().toString());
+    i18n.changeLanguage(lng.toLowerCase());
+  };
+
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {t("copyright")}
+      <Link color="inherit" href="http://www.qenvirobotics.com/">
+        {t("company")}
+      </Link>{" "}
+      <br></br>
+      <span>
+        {t("translate_text")}
+        <Link
+          to="/"
+          className={classes.language}
+          onClick={() => changeLanguage(t("first_lng"))}
+        >
+          {" "}
+          {t("first_lng")}
+        </Link>{" "}
+        · | ·
+        <Link
+          to="/"
+          className={classes.language}
+          onClick={() => changeLanguage(t("second_lng"))}
+        >
+          {" "}
+          {t("second_lng")}
+        </Link>
+        ·
+      </span>
+    </Typography>
+  );
+}
+
+function SignIn({ callbackFunction }) {
+  // const t = props.t;
   const { t } = useTranslation();
   // start fresh
   localStorage.removeItem("expandedRows");
@@ -140,7 +133,7 @@ function Main(props) {
               component="h1"
               variant="h5"
             >
-              {t("login_page.title")}
+              {t("title")}
             </Typography>
 
             <form
@@ -154,7 +147,7 @@ function Main(props) {
                 fullWidth
                 id="email"
                 placeholder=""
-                label={t("login_page.username")}
+                label={t("username")}
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -173,7 +166,7 @@ function Main(props) {
                 fullWidth
                 placeholder=""
                 name="password"
-                label={t("login_page.password")}
+                label={t("password")}
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -193,7 +186,7 @@ function Main(props) {
               <Router>
                 <div style={{ marginTop: "1em" }}>
                   <center>
-                    <span>{t("login_page.question")}</span>
+                    <span>{t("question")}</span>
                   </center>
 
                   <center>
@@ -203,7 +196,7 @@ function Main(props) {
                         style={{ color: "#3F51B5" }}
                         href="mailto:support@qenvi.fr"
                       >
-                        {t("login_page.contact")}
+                        {t("contact")}
                       </a>
                     </span>
                   </center>
@@ -225,7 +218,7 @@ function Main(props) {
                   wantToCheckPassword();
                 }}
               >
-                {t("login_page.go_button")}
+                {t("go_button")}
               </Button>
               {checkPassword && (
                 <Async promiseFn={loadKeyApi}>
@@ -261,7 +254,7 @@ function Main(props) {
                       setCheckPassword(false);
                       console.log(data.serial);
                       console.log(JSON.stringify(data));
-                      props.callbackFunction(data.serial, data.validite);
+                      callbackFunction(data.serial, data.validite);
                     }
                     return null;
                   }}
@@ -270,16 +263,11 @@ function Main(props) {
             </form>
           </div>
           <Box mt={3}>
-            <Copyright />
+            <Copyright translation={t} />
           </Box>
         </CardContent>
       </Card>
     </Container>
   );
 }
-
-export default function SignIn(props) {
-  <Suspense fallback={<Loader />}>
-    <Main props={props}></Main>
-  </Suspense>;
-}
+export default SignIn;
