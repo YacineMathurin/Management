@@ -80,7 +80,7 @@ function Copyright() {
         <Link
           to="/"
           className={classes.language}
-          onClick={() => changeLanguage(t("first_lng"))}
+          onClick={() => changeLanguage(t("first_lng").substring(0, 2))}
         >
           {" "}
           {t("first_lng")}
@@ -89,7 +89,7 @@ function Copyright() {
         <Link
           to="/"
           className={classes.language}
-          onClick={() => changeLanguage(t("second_lng"))}
+          onClick={() => changeLanguage(t("second_lng").substring(0, 2))}
         >
           {" "}
           {t("second_lng")}
