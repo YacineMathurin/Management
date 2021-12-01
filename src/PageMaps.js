@@ -370,8 +370,26 @@ class PageMaps extends React.Component {
                               >
                                 <h3 style={{ textAlign: "left" }}>
                                   {" "}
-                                  <Typography variant="overline">
+                                  <Typography
+                                    variant="overline"
+                                    style={{
+                                      textTransform: "inherit",
+                                      fontFamily: "Josefin Slab, serif",
+                                      color: "darkblue",
+                                      fontSize: "15px",
+                                    }}
+                                  >
                                     Map: <span>{s.map_name}</span>
+                                    <span
+                                      style={{
+                                        color: "#03C6C7",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {!s.moving
+                                        ? " mouvement detecté ...."
+                                        : ""}
+                                    </span>
                                   </Typography>
                                 </h3>
                                 <Button
@@ -433,7 +451,16 @@ class PageMaps extends React.Component {
                                           }}
                                         >
                                           <p>
-                                            <Typography variant="overline">
+                                            <Typography
+                                              variant="overline"
+                                              style={{
+                                                textTransform: "inherit",
+                                                fontFamily:
+                                                  "Josefin Slab, serif",
+                                                color: "darkblue",
+                                                fontSize: "15px",
+                                              }}
+                                            >
                                               {s["user_comment"]}
                                             </Typography>
                                           </p>

@@ -83,9 +83,20 @@ function Copyright() {
           onClick={() => changeLanguage(t("first_lng").substring(0, 2))}
           style={{ textDecoration: "none", cursor: "pointer" }}
         >
-          {t("first_lng")}
+          {t("first_lng")}{" "}
+          <img
+            style={{
+              width: "25px",
+              height: "15px",
+              position: "relative",
+              top: "3px",
+            }}
+            src={"./images/" + t("first_lng") + ".png"}
+            alt="Flag_of_France"
+          ></img>
         </Link>{" "}
-        · | ·{" "}
+        ·
+        {/* | ·{" "}
         <Link
           to="/"
           className="language2"
@@ -98,7 +109,7 @@ function Copyright() {
         >
           {t("second_lng")}
         </Link>{" "}
-        ·
+        · */}
       </span>
     </Typography>
   );

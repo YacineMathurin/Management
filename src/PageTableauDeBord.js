@@ -49,35 +49,10 @@ function PageTableauDeBord(props) {
     batFilter1: false,
     batFilter2: false,
   });
-  //   const [batFilter0, setbatFilter0] = React.useState();
-  //   const [batFilter1, setbatFilter1] = React.useState();
-  //   const [batFilter2, setbatFilter2] = React.useState();
 
-  //   constructor(props) {
-  //     super(props);
-  //     state = {
-  //       apiKey: props.apiKey,
-  //       filtreReussite: [0, 100],
-  //       filtreRapportMoyen: [0, 100],
-  //       filtreEcartMax: [0, 100],
-  //       filtreIndicateurEcart: [0, 200],
-  //       filtreActivite: [0, 100],
-  //       listeMetrics: null,
-  //       printTable: "block",
-  //       printCard: "none",
-  //       search: "",
-  //       defaultMetrics: null,
-  //     };
-  //   }
-
-  // Similar to componentDidMount and componentDidUpdate:
   React.useEffect(() => {
     provideMetrics();
   }, []);
-
-  // componentDidMount() {
-  //     provideMetrics();
-  //   }
 
   const provideMetrics = () => {
     fetch(
@@ -138,6 +113,7 @@ function PageTableauDeBord(props) {
     setlisteMetrics(newData);
   };
   const setFilteredBatLevel = (event, batLevel, index) => {
+    console.log("batLevel, index", batLevel, index);
     // const ["batLevel" + index] = this.state["batLevel" + index] != null ? null : batLevel;
     // this.setState({
     //   ["batLevel" + index]:
@@ -149,8 +125,9 @@ function PageTableauDeBord(props) {
     setBatLevels({
       ...batLevels,
       ["batLevel" + index]:
-        ["batLevel" + index] != undefined ? undefined : batLevel,
+        batLevels["batLevel" + index] != undefined ? undefined : batLevel,
     });
+    console.log("batLevels", batLevels);
   };
   const setFiltMoving = (value) => {
     setMoving(moving == null ? value : null);
@@ -165,12 +142,19 @@ function PageTableauDeBord(props) {
     //   stoped,
     //   defaultMetrics,
     // } = state;
+
     if (!defaultMetrics) {
       alert("Votre Flotte est vide !!!");
       return 0;
     }
 
     const { batLevel0, batLevel1, batLevel2 } = batLevels;
+    console.log(
+      "Filtering ... batLevel0, batLevel1, batLevel2 ",
+      batLevel0,
+      batLevel1,
+      batLevel2
+    );
 
     var newData = defaultMetrics;
 
@@ -190,6 +174,7 @@ function PageTableauDeBord(props) {
     setlisteMetrics(newData);
   };
   const resetFilter = () => {
+    setsearch("");
     setMoving(null);
     batFilters.batFilter0 = false;
     batFilters.batFilter1 = false;

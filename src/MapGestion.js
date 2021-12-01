@@ -463,7 +463,7 @@ class MapGestion extends React.Component {
       // coordinatesClone.splice(pathIndex, 1);
 
       // if (this.state.robotPosition.x_pixel >= 313 - 10) {
-      if (this.state.pk >= 35) {
+      if (this.state.pk > 35) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
         console.log("Clearing StartMove");
         this.setState({
@@ -525,12 +525,20 @@ class MapGestion extends React.Component {
     return color;
   };
 
-  /* Populate the MSG_HEARTBEAT database to suite our path
+  /*
+
+  1.0
+  Populate the MSG_HEARTBEAT database to suite our path
   (coodinate[1]["x_pixel"] - coodinate[0]["x_pixel"]) / 3 ~= 35
   UPDATE `MSG_HEARTBEAT` SET X_COORD = `X_COORD` + (`PK` - 1) * 3 WHERE  PK < '35';
   UPDATE `MSG_HEARTBEAT` SET Y_COORD = `Y_COORD` + (`PK` - 35) * 3 WHERE  PK > '35';
-
   Need /getHeartbeat() to retreive heartbeat 
+
+  2.0
+  We need a moving flag for each robot and show the cooresponding map on which the move occurs
+  We need an endpoint writting a heartbeat line (moving_status, path_index, timestamp) per second
+  We Fetch the last line of the heartbeat table as a start point, then we increment ...
+
 */
   handleOpenModal = () => {
     this.setState({ openModal: true });
@@ -682,6 +690,24 @@ class MapGestion extends React.Component {
       ? this.deplacerRobot(xCoord, yCoord)
       : this.setState({ imageHeight: null, choosingDest: true });
   };
+  enterArea(area) {
+    //Pas Besoin
+    /*
+    this.setState({
+      hoveredArea: area,
+      msg: `Vous êtes rentré sur ${area.shape} ${area.name} `
+    });
+    */
+  }
+
+  leaveArea(area) {
+    //Pas Besoin
+    /*
+    this.setState({
+      hoveredArea: null,
+      msg: `Vous avez quitté ${area.shape} ${area.name}`
+    });*/
+  }
 
   render() {
     const {
@@ -863,19 +889,6 @@ class MapGestion extends React.Component {
                 <ImageMapper
                   src={`data:image/jpeg;base64,` + blob}
                   map={mp}
-                  // map={[
-                  //   areas:{
-                  //     name: "s.pk",
-                  //     shape: "circle",
-                  //     coords: [210, 146, 9],
-                  //     preFillColor: "#0099ff",
-                  //     fillColor: "red",
-                  //   },
-                  // ]}
-                  // map={{
-                  //   name: "my-map",
-                  //   areas: [],
-                  // }}
                   width={500}
                   onLoad={() => this.load()}
                   onClick={(area) => this.clicked(area)}
@@ -898,7 +911,6 @@ class MapGestion extends React.Component {
                   left: "16px",
                   zIndex: 1,
                 }}
-                // onMouseEnter={() => this.handleSVGMask()}
               >
                 <svg style={{ height: "100%", width: "100%" }}>
                   {coodinates.map((item, index, array) => {
@@ -915,7 +927,6 @@ class MapGestion extends React.Component {
                               y: array[index + 1]["y_pixel"],
                             },
                           ]}
-                          // index < pathIndex
                           stroke={this.handleStrokeColor(index)}
                           strokeWidth="10"
                           fill="none"
@@ -940,7 +951,7 @@ class MapGestion extends React.Component {
                       }
                     />
                   ))}
-                  {moving && (
+                  {/* {moving && (
                     <PathLine
                       points={[
                         { x: 30, y: 30 },
@@ -953,7 +964,7 @@ class MapGestion extends React.Component {
                       fill="none"
                       r={10}
                     />
-                  )}
+                  )} */}
                 </svg>
               </div>
             )}
