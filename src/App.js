@@ -34,6 +34,7 @@ import PageTableauDeBord from "./PageTableauDeBord";
 import PageTopChrono from "./PageTopChrono";
 import PageMaps from "./PageMaps";
 import MapGestion from "./MapGestion";
+import { useTranslation } from "react-i18next";
 
 const drawerWidth = 240;
 
@@ -107,6 +108,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MiniDrawer() {
+  const { t, i18n } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -527,6 +529,23 @@ export default function MiniDrawer() {
               </IconButton>
             </div>
           )}
+          <div
+            onClick={() =>
+              i18n.changeLanguage(t("first_lng").substr(0, 2).toLowerCase())
+            }
+          >
+            <img
+              src={"./images/" + t("first_lng") + ".png"}
+              style={{
+                height: "15px",
+                width: "25px",
+                marginLeft: "15px",
+                position: "relative",
+                top: "3px",
+                cursor: "pointer",
+              }}
+            ></img>
+          </div>
         </Toolbar>
       </AppBar>
       {apiKey != null && (

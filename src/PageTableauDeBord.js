@@ -65,6 +65,27 @@ function PageTableauDeBord(props) {
     )
       .then((res) => res.json())
       .then((data) => {
+        fetch(
+          "http://qenvi.space:8081/GetDashboardReqByClientWS" +
+            "?idclient=" +
+            data[0]["ID_CLIENT"],
+          {
+            retry: 3,
+            retryDelay: 1000,
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            setlisteMetrics(data);
+            setdefaultMetrics(data);
+
+            setTimeout(() => {
+              setLoading(false);
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error("Request failed", error);
+          });
         // data.map((item) => {
         //   fetch(
         //     Const.URL_WS_GET_CLIENT_ROBOT +
@@ -83,9 +104,9 @@ function PageTableauDeBord(props) {
         //       console.error("Request failed", error);
         //     });
         // });
-        result = data;
-        setlisteMetrics(result);
-        setdefaultMetrics(result);
+        // result = data;
+        // setlisteMetrics(result);
+        // setdefaultMetrics(result);
         // setLoading(false);
       })
       .catch((error) => {
@@ -210,246 +231,122 @@ function PageTableauDeBord(props) {
     // });
   };
 
-  // if (loading) {
-  //   return (
-  //     <div>
-  //       <p>Chargement en cours ...</p>
-  //       <LinearBuffer></LinearBuffer>
-  //     </div>
-  //   );
-  // } else
-  return (
-    <div>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8} lg={9}>
-          <Card>
-            <CardHeader
-              avatar={
-                <div>
-                  <img width="32" src="./images/carrier.svg" />
-                </div>
-              }
-              title="Mon Parcs cobotique"
-              subheader="Retrouvez vos robots suiveurs"
-            />
-            <div
-              style={{
-                float: "right",
-                marginTop: "-4em",
-                marginRight: "2em",
-              }}
-            >
-              <Button
-                style={{ marginTop: "1em", display: printTable }}
-                fullWidth={false}
-                onClick={() => handlePrintCard()}
-                variant="outlined"
-                color="primary"
-                size="small"
+  if (loading) {
+    return (
+      <div>
+        <p>Chargement en cours ...</p>
+        <LinearBuffer></LinearBuffer>
+      </div>
+    );
+  } else
+    return (
+      <div>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8} lg={9}>
+            <Card>
+              <CardHeader
+                avatar={
+                  <div>
+                    <img width="32" src="./images/carrier.svg" />
+                  </div>
+                }
+                title="Mon Parcs cobotique"
+                subheader="Retrouvez vos robots suiveurs"
+              />
+              <div
+                style={{
+                  float: "right",
+                  marginTop: "-4em",
+                  marginRight: "2em",
+                }}
               >
-                <DashboardIcon fontSize="large" />
-              </Button>
+                <Button
+                  style={{ marginTop: "1em", display: printTable }}
+                  fullWidth={false}
+                  onClick={() => handlePrintCard()}
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                >
+                  <DashboardIcon fontSize="large" />
+                </Button>
 
-              <Button
-                style={{ marginTop: "1em", display: printCard }}
-                fullWidth={false}
-                onClick={() => handlePrintTable()}
-                variant="outlined"
-                color="primary"
-                size="small"
-              >
-                <ViewStreamIcon fontSize="large" />
-              </Button>
-            </div>
+                <Button
+                  style={{ marginTop: "1em", display: printCard }}
+                  fullWidth={false}
+                  onClick={() => handlePrintTable()}
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                >
+                  <ViewStreamIcon fontSize="large" />
+                </Button>
+              </div>
 
-            <CardContent style={{ display: printTable }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    {/* <TableCell align="center">ID Client </TableCell> */}
-                    <TableCell align="center">ID Robot</TableCell>
-                    <TableCell align="center">En mouvement</TableCell>
-                    <TableCell align="center">Connecté</TableCell>
-                    {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
-                    <TableCell align="center">Autonomie </TableCell>
-                    <TableCell align="center"></TableCell>
-                    <TableCell align="center"></TableCell>
-                  </TableRow>
-                </TableHead>
-                {listeMetrics != null &&
-                  listeMetrics.map((s) => {
-                    var batterie = "./images/b1.png";
+              <CardContent style={{ display: printTable }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      {/* <TableCell align="center">ID Client </TableCell> */}
+                      <TableCell align="center">ID Robot</TableCell>
+                      <TableCell align="center">En mouvement</TableCell>
+                      <TableCell align="center">Connecté</TableCell>
+                      {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
+                      <TableCell align="center">Autonomie </TableCell>
+                      <TableCell align="center"></TableCell>
+                      <TableCell align="center"></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {listeMetrics != null &&
+                    listeMetrics.map((s) => {
+                      var batterie = "./images/b1.png";
 
-                    if (s.BAT_LEVEL <= 55 && s.BAT_LEVEL >= 45) {
-                      batterie = "./images/b50.png";
-                    } else if (s.BAT_LEVEL < 45) {
-                      batterie = "./images/b0.png";
-                    }
+                      if (s.BAT_LEVEL <= 55 && s.BAT_LEVEL >= 45) {
+                        batterie = "./images/b50.png";
+                      } else if (s.BAT_LEVEL < 45) {
+                        batterie = "./images/b0.png";
+                      }
 
-                    var processor = "./images/check.svg";
-                    /* if(s.system.cpu >= 80){
-                  processor = "./images/warning.svg";
-                }*/
+                      var processor = "./images/check.svg";
+                      /* if(s.system.cpu >= 80){
+                      processor = "./images/warning.svg";
+                      }*/
 
-                    var dispo = "./images/switch-on.svg";
-                    var timeS = Date.now() - s.TIMESTAMP;
-                    var dateS = new Date(timeS * 1000);
-                    var minutesS = dateS.getMinutes();
-                    //console.log("robot " +s.ID_ROBOT +" nb minutes="+minutesS);
+                      var dispo = "./images/switch-on.svg";
+                      var timeS = Date.now() - s.TIMESTAMP;
+                      var dateS = new Date(timeS * 1000);
+                      var minutesS = dateS.getMinutes();
+                      //console.log("robot " +s.ID_ROBOT +" nb minutes="+minutesS);
 
-                    if (minutesS >= 15) {
-                      dispo = "./images/switch-off.svg";
-                    }
+                      if (minutesS >= 15) {
+                        dispo = "./images/switch-off.svg";
+                      }
 
-                    return (
-                      <TableBody key={s.ID_ROBOT}>
-                        <TableRow>
-                          {/* <TableCell align="center">{s.ID_CLIENT}</TableCell> */}
-                          <TableCell align="center">{s.ID_ROBOT}</TableCell>
-                          <TableCell align="center">
-                            {" "}
-                            <img
-                              style={{ marginTop: "0.5em" }}
-                              width="34"
-                              src={dispo}
-                            />
-                          </TableCell>
-                          <TableCell align="center"></TableCell>
-                          <TableCell align="center">
-                            <img width="30" src={batterie} />
-                          </TableCell>
-                          <TableCell align="center">
-                            <Button
-                              fullWidth={false}
-                              width="2em"
-                              onClick={() =>
-                                handleCallbackOpenDetails(s.ID_ROBOT)
-                              }
-                              variant="outlined"
-                              color="primary"
-                              size="small"
-                            >
-                              détails
-                            </Button>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Button
-                              fullWidth={false}
-                              width="2em"
-                              onClick={() => handleCallbackOpenMaps(s.ID_ROBOT)}
-                              variant="outlined"
-                              color="primary"
-                              size="small"
-                            >
-                              Maps
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    );
-                  })}
-              </Table>
-            </CardContent>
-
-            <CardContent style={{ display: printCard }}>
-              <Grid container spacing={2}>
-                {listeMetrics != null &&
-                  listeMetrics.map((s) => {
-                    var batterie = "./images/b1.png";
-
-                    if (s.BAT_LEVEL <= 55 && s.BAT_LEVEL >= 45) {
-                      batterie = "./images/b50.png";
-                    } else if (s.BAT_LEVEL < 45) {
-                      batterie = "./images/b0.png";
-                    }
-
-                    var processor = "./images/check.svg";
-                    /* if(s.system.cpu >= 80){
-                processor = "./images/warning.svg";
-              }*/
-
-                    var dispo = "./images/switch-on.svg";
-                    var timeS = Date.now() - s.TIMESTAMP;
-                    var dateS = new Date(timeS * 1000);
-                    var minutesS = dateS.getMinutes();
-                    console.log(minutesS);
-
-                    if (minutesS >= 15) {
-                      dispo = "./images/switch-off.svg";
-                    }
-
-                    return (
-                      <Grid item xs={12} md={4} lg={3} key={s.ID_ROBOT}>
-                        <Card>
-                          <CardContent>
-                            <div>
+                      return (
+                        <TableBody key={s.ID_ROBOT}>
+                          <TableRow>
+                            {/* <TableCell align="center">{s.ID_CLIENT}</TableCell> */}
+                            <TableCell align="center">{s.ID_ROBOT}</TableCell>
+                            <TableCell align="center">
+                              {" "}
                               <img
-                                style={{ float: "left", marginTop: "0.5em" }}
-                                width="24"
-                                src="./images/carrier.svg"
-                              />
-                            </div>
-                            <div>
-                              <img
-                                style={{ float: "right", marginTop: "0.5em" }}
+                                style={{ marginTop: "0.5em" }}
                                 width="34"
-                                src={dispo}
+                                src={
+                                  s.STATUS
+                                    ? "./images/switch-on.svg"
+                                    : "./images/switch-off.svg"
+                                }
                               />
-                            </div>
-                            <div style={{ marginLeft: "2.5em" }}>
-                              <Typography
-                                style={{ color: "BLACK" }}
-                                component="h3"
-                                variant="h3"
-                              >
-                                {s.ID_CLIENT}
-                              </Typography>
-                              <Typography
-                                style={{ color: "BLACK" }}
-                                component="h3"
-                                variant="h3"
-                              >
-                                {s.ID_ROBOT}
-                              </Typography>
-                              <Typography
-                                style={{ fontSize: "14px" }}
-                                color="textSecondary"
-                              >
-                                description
-                              </Typography>
-                            </div>
-                            <Divider style={{ marginTop: "1em" }} />
-                            <div>
-                              <Table>
-                                <TableBody>
-                                  <TableRow>
-                                    <TableCell>
-                                      <img
-                                        width="24"
-                                        src="./images/microchip.svg"
-                                      />
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      <img width="24" src={processor} />
-                                    </TableCell>
-                                  </TableRow>
-                                  <TableRow>
-                                    <TableCell>
-                                      <img
-                                        width="24"
-                                        src="./images/car-battery.svg"
-                                      />
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      <img width="30" src={batterie} />
-                                    </TableCell>
-                                  </TableRow>
-                                </TableBody>
-                              </Table>
+                            </TableCell>
+                            <TableCell align="center"></TableCell>
+                            <TableCell align="center">
+                              <img width="30" src={batterie} />
+                            </TableCell>
+                            <TableCell align="center">
                               <Button
-                                style={{ marginTop: "1em" }}
-                                fullWidth={true}
-                                //onClick={() => handleCallbackOpenDetails(s) }
+                                fullWidth={false}
+                                width="2em"
                                 onClick={() =>
                                   handleCallbackOpenDetails(s.ID_ROBOT)
                                 }
@@ -459,9 +356,11 @@ function PageTableauDeBord(props) {
                               >
                                 détails
                               </Button>
+                            </TableCell>
+                            <TableCell align="center">
                               <Button
-                                style={{ marginTop: "1em" }}
-                                fullWidth={true}
+                                fullWidth={false}
+                                width="2em"
                                 onClick={() =>
                                   handleCallbackOpenMaps(s.ID_ROBOT)
                                 }
@@ -471,94 +370,222 @@ function PageTableauDeBord(props) {
                               >
                                 Maps
                               </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    );
-                  })}
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      );
+                    })}
+                </Table>
+              </CardContent>
 
-        <Grid item xs={12} md={4} lg={3}>
-          <Card>
-            <CardHeader
-              avatar={<TuneOutlinedIcon fontSize="large" />}
-              title="Filtrage"
-              subheader="Filtrez votre parc cobotique"
-            />
+              <CardContent style={{ display: printCard }}>
+                <Grid container spacing={2}>
+                  {listeMetrics != null &&
+                    listeMetrics.map((s) => {
+                      var batterie = "./images/b1.png";
 
-            <CardContent>
-              <FormControl size="small" fullWidth variant="outlined">
-                <TextField
-                  size="small"
-                  placeholder="Rechercher un ID Robot"
-                  value={search}
-                  onChange={(event) => {
-                    const { value } = event.target;
-                    // this.setState({ search: value });
-                    setsearch(value);
-                    if (value !== "") {
-                      searchFilterFunction(value);
-                    } else {
-                      // this.setState({
-                      //   listeMetrics: defaultMetrics,
-                      // });
-                      setlisteMetrics(defaultMetrics);
+                      if (s.BAT_LEVEL <= 55 && s.BAT_LEVEL >= 45) {
+                        batterie = "./images/b50.png";
+                      } else if (s.BAT_LEVEL < 45) {
+                        batterie = "./images/b0.png";
+                      }
+
+                      var processor = "./images/check.svg";
+                      /* if(s.system.cpu >= 80){
+                processor = "./images/warning.svg";
+              }*/
+
+                      var dispo = "./images/switch-on.svg";
+                      var timeS = Date.now() - s.TIMESTAMP;
+                      var dateS = new Date(timeS * 1000);
+                      var minutesS = dateS.getMinutes();
+                      console.log(minutesS);
+
+                      if (minutesS >= 15) {
+                        dispo = "./images/switch-off.svg";
+                      }
+
+                      return (
+                        <Grid item xs={12} md={4} lg={3} key={s.ID_ROBOT}>
+                          <Card>
+                            <CardContent>
+                              <div>
+                                <img
+                                  style={{ float: "left", marginTop: "0.5em" }}
+                                  width="24"
+                                  src="./images/carrier.svg"
+                                />
+                              </div>
+                              <div>
+                                <img
+                                  style={{ float: "right", marginTop: "0.5em" }}
+                                  width="34"
+                                  src={dispo}
+                                />
+                              </div>
+                              <div style={{ marginLeft: "2.5em" }}>
+                                <Typography
+                                  style={{ color: "BLACK" }}
+                                  component="h3"
+                                  variant="h3"
+                                >
+                                  {s.ID_CLIENT}
+                                </Typography>
+                                <Typography
+                                  style={{ color: "BLACK" }}
+                                  component="h3"
+                                  variant="h3"
+                                >
+                                  {s.ID_ROBOT}
+                                </Typography>
+                                <Typography
+                                  style={{ fontSize: "14px" }}
+                                  color="textSecondary"
+                                >
+                                  description
+                                </Typography>
+                              </div>
+                              <Divider style={{ marginTop: "1em" }} />
+                              <div>
+                                <Table>
+                                  <TableBody>
+                                    <TableRow>
+                                      <TableCell>
+                                        <img
+                                          width="24"
+                                          src="./images/microchip.svg"
+                                        />
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        <img width="24" src={processor} />
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>
+                                        <img
+                                          width="24"
+                                          src="./images/car-battery.svg"
+                                        />
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        <img width="30" src={batterie} />
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableBody>
+                                </Table>
+                                <Button
+                                  style={{ marginTop: "1em" }}
+                                  fullWidth={true}
+                                  //onClick={() => handleCallbackOpenDetails(s) }
+                                  onClick={() =>
+                                    handleCallbackOpenDetails(s.ID_ROBOT)
+                                  }
+                                  variant="outlined"
+                                  color="primary"
+                                  size="small"
+                                >
+                                  détails
+                                </Button>
+                                <Button
+                                  style={{ marginTop: "1em" }}
+                                  fullWidth={true}
+                                  onClick={() =>
+                                    handleCallbackOpenMaps(s.ID_ROBOT)
+                                  }
+                                  variant="outlined"
+                                  color="primary"
+                                  size="small"
+                                >
+                                  Maps
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      );
+                    })}
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4} lg={3}>
+            <Card>
+              <CardHeader
+                avatar={<TuneOutlinedIcon fontSize="large" />}
+                title="Filtrage"
+                subheader="Filtrez votre parc cobotique"
+              />
+
+              <CardContent>
+                <FormControl size="small" fullWidth variant="outlined">
+                  <TextField
+                    size="small"
+                    placeholder="Rechercher un ID Robot"
+                    value={search}
+                    onChange={(event) => {
+                      const { value } = event.target;
+                      // this.setState({ search: value });
+                      setsearch(value);
+                      if (value !== "") {
+                        searchFilterFunction(value);
+                      } else {
+                        // this.setState({
+                        //   listeMetrics: defaultMetrics,
+                        // });
+                        setlisteMetrics(defaultMetrics);
+                      }
+                    }}
+                  />
+                </FormControl>
+
+                <div style={{ marginTop: "1.5em" }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        name="moving"
+                        onChange={() => {
+                          setFiltMoving(1, 0);
+                        }}
+                        disabled={moving === 0 ? true : false}
+                        checked={moving === 1}
+                      />
                     }
-                  }}
-                />
-              </FormControl>
+                    label={
+                      <img
+                        style={{ marginTop: "0.5em" }}
+                        width="30"
+                        src="./images/switch-on.svg"
+                      />
+                    }
+                  />
 
-              <div style={{ marginTop: "1.5em" }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="moving"
-                      onChange={() => {
-                        setFiltMoving(1, 0);
-                      }}
-                      disabled={moving === 0 ? true : false}
-                      checked={moving === 1}
-                    />
-                  }
-                  label={
-                    <img
-                      style={{ marginTop: "0.5em" }}
-                      width="30"
-                      src="./images/switch-on.svg"
-                    />
-                  }
-                />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        name="stoped"
+                        onChange={() => {
+                          setFiltMoving(0, 1);
+                        }}
+                        disabled={moving === 1 ? true : false}
+                        checked={moving === 0}
+                      />
+                    }
+                    label={
+                      <img
+                        style={{ marginTop: "0.5em" }}
+                        width="30"
+                        src="./images/switch-off.svg"
+                      />
+                    }
+                  />
+                </div>
 
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="stoped"
-                      onChange={() => {
-                        setFiltMoving(0, 1);
-                      }}
-                      disabled={moving === 1 ? true : false}
-                      checked={moving === 0}
-                    />
-                  }
-                  label={
-                    <img
-                      style={{ marginTop: "0.5em" }}
-                      width="30"
-                      src="./images/switch-off.svg"
-                    />
-                  }
-                />
-              </div>
-
-              {/* <div>
+                {/* <div>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -594,99 +621,99 @@ function PageTableauDeBord(props) {
                 />
               </div>
                    */}
-              <div>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="batFilter0"
-                      onChange={(e) => {
-                        setFilteredBatLevel(e, 0, 0);
-                      }}
-                      inputProps={{ "aria-label": "controlled-checkbox" }}
-                      checked={batFilters.batFilter0}
-                    />
-                  }
-                  label={
-                    <img
-                      style={{ marginTop: "0.5em" }}
-                      width="30"
-                      src="./images/b0.png"
-                    />
-                  }
-                />
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        name="batFilter0"
+                        onChange={(e) => {
+                          setFilteredBatLevel(e, 0, 0);
+                        }}
+                        inputProps={{ "aria-label": "controlled-checkbox" }}
+                        checked={batFilters.batFilter0}
+                      />
+                    }
+                    label={
+                      <img
+                        style={{ marginTop: "0.5em" }}
+                        width="30"
+                        src="./images/b0.png"
+                      />
+                    }
+                  />
 
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="batFilter1"
-                      onChange={(e) => {
-                        setFilteredBatLevel(e, 50, 1);
-                      }}
-                      checked={batFilters.batFilter1}
-                    />
-                  }
-                  label={
-                    <img
-                      style={{ marginTop: "0.5em" }}
-                      width="30"
-                      src="./images/b50.png"
-                    />
-                  }
-                />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        name="batFilter1"
+                        onChange={(e) => {
+                          setFilteredBatLevel(e, 50, 1);
+                        }}
+                        checked={batFilters.batFilter1}
+                      />
+                    }
+                    label={
+                      <img
+                        style={{ marginTop: "0.5em" }}
+                        width="30"
+                        src="./images/b50.png"
+                      />
+                    }
+                  />
 
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="batFilter2"
-                      onChange={(e) => {
-                        setFilteredBatLevel(e, 100, 2);
-                      }}
-                      checked={batFilters.batFilter2}
-                    />
-                  }
-                  label={
-                    <img
-                      style={{ marginTop: "0.5em" }}
-                      width="30"
-                      src="./images/b1.png"
-                    />
-                  }
-                />
-              </div>
-              <br></br>
-              <Button
-                style={{ marginTop: "1em" }}
-                fullWidth={true}
-                variant="outlined"
-                color="primary"
-                size="small"
-                onClick={() => handleFiltering()}
-              >
-                Filtrer
-              </Button>
-              <br></br>
-              <Button
-                style={{ marginTop: "1em" }}
-                fullWidth={true}
-                variant="outlined"
-                color="default"
-                size="small"
-                onClick={() => resetFilter()}
-              >
-                Reinitialiser les filtres
-              </Button>
-            </CardContent>
-          </Card>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        name="batFilter2"
+                        onChange={(e) => {
+                          setFilteredBatLevel(e, 100, 2);
+                        }}
+                        checked={batFilters.batFilter2}
+                      />
+                    }
+                    label={
+                      <img
+                        style={{ marginTop: "0.5em" }}
+                        width="30"
+                        src="./images/b1.png"
+                      />
+                    }
+                  />
+                </div>
+                <br></br>
+                <Button
+                  style={{ marginTop: "1em" }}
+                  fullWidth={true}
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  onClick={() => handleFiltering()}
+                >
+                  Filtrer
+                </Button>
+                <br></br>
+                <Button
+                  style={{ marginTop: "1em" }}
+                  fullWidth={true}
+                  variant="outlined"
+                  color="default"
+                  size="small"
+                  onClick={() => resetFilter()}
+                >
+                  Reinitialiser les filtres
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
-  );
+      </div>
+    );
 }
 
 export default PageTableauDeBord;

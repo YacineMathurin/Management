@@ -539,6 +539,9 @@ class MapGestion extends React.Component {
   We need an endpoint writting a heartbeat line (moving_status, path_index, timestamp) per second
   We Fetch the last line of the heartbeat table as a start point, then we increment ...
 
+  The user should have listed all it's robots (ID_ROBOT) and their oldest timestamp
+  This way, we could fetch the info in the heartbeat when launching the client app
+
 */
   handleOpenModal = () => {
     this.setState({ openModal: true });
