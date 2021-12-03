@@ -23,6 +23,7 @@ import TextField from "@material-ui/core/TextField";
 import Switch from "@material-ui/core/Switch";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import LinearBuffer from "./PageTableauDeBordChargement";
+import CircularProgressWithLabel from "./PageTableauDeBordBattery";
 
 function PageTableauDeBord(props) {
   const [apiKey, setApiKey] = React.useState(props.apiKey);
@@ -155,19 +156,15 @@ function PageTableauDeBord(props) {
   };
   const setFilteredBatLevel = (event, batLevel, index) => {
     console.log("batLevel, index", batLevel, index);
-    // const ["batLevel" + index] = this.state["batLevel" + index] != null ? null : batLevel;
-    // this.setState({
-    //   ["batLevel" + index]:
-    //     this.state["batLevel" + index] != undefined ? undefined : batLevel,
-    //   ["batFilter" + index]: !this.state["batFilter" + index],
-    // });
-
     setBatFilters({ ...batFilters, [event.target.name]: event.target.checked });
-    setBatLevels({
-      ...batLevels,
-      ["batLevel" + index]:
-        batLevels["batLevel" + index] != undefined ? undefined : batLevel,
-    });
+
+    console.log("batLevels", batLevels);
+    var newBatLevels = batLevels;
+    newBatLevels["batLevel" + index] =
+      batLevels["batLevel" + index] != undefined ? undefined : batLevel;
+    console.log("newBatLevels", newBatLevels);
+
+    setBatLevels(newBatLevels);
     console.log("batLevels", batLevels);
   };
   const setFiltMoving = (value) => {
@@ -175,15 +172,6 @@ function PageTableauDeBord(props) {
   };
 
   const handleFiltering = () => {
-    // const {
-    //   batLevel0,
-    //   batLevel1,
-    //   batLevel2,
-    //   moving,
-    //   stoped,
-    //   defaultMetrics,
-    // } = state;
-
     if (!defaultMetrics) {
       alert("Votre Flotte est vide !!!");
       return 0;
@@ -199,27 +187,39 @@ function PageTableauDeBord(props) {
 
     var newData = defaultMetrics;
 
-    newData = defaultMetrics.filter(
-      (item) =>
-        item.BAT_LEVEL >= batLevel0 ||
-        (item.BAT_LEVEL > batLevel1 && item.BAT_LEVEL < batLevel2) ||
-        item.BAT_LEVEL > batLevel2
-    );
-    if (moving) {
+    if (batLevel0 || batLevel1 || batLevel2) {
+      newData = defaultMetrics.filter(
+        (item) =>
+          (batLevel0 && item.BAT_LEVEL >= 0 && item.BAT_LEVEL < 45) ||
+          (batLevel1 && item.BAT_LEVEL > 45 && item.BAT_LEVEL < 55) ||
+          (batLevel2 && item.BAT_LEVEL > 55)
+      );
+    }
+
+    if (moving != null) {
       console.log("Moving set !");
       newData = newData.filter((item) => item.STATUS === moving);
     }
-    // setState({
-    //   listeMetrics: newData,
-    // });
+    console.log("New Data", newData);
     setlisteMetrics(newData);
   };
   const resetFilter = () => {
+    console.log("Reseting ...");
     setsearch("");
     setMoving(null);
-    batFilters.batFilter0 = false;
-    batFilters.batFilter1 = false;
-    batFilters.batFilter2 = false;
+
+    var resetFilters = batFilters;
+    resetFilters.batFilter0 = false;
+    resetFilters.batFilter1 = false;
+    resetFilters.batFilter2 = false;
+    setBatFilters(resetFilters);
+
+    var resetLevels = batLevels;
+    resetLevels.batLevel0 = undefined;
+    resetLevels.batLevel1 = undefined;
+    resetLevels.batLevel2 = undefined;
+    setBatLevels(resetLevels);
+
     setlisteMetrics(defaultMetrics);
     // const { defaultMetrics } = state;
 
@@ -341,7 +341,22 @@ function PageTableauDeBord(props) {
                             </TableCell>
                             <TableCell align="center"></TableCell>
                             <TableCell align="center">
-                              <img width="30" src={batterie} />
+                              <img
+                                src={"./images/car-battery.svg"}
+                                style={{ width: "20px" }}
+                              />
+                              <span sytle={{ margin: "0 1em" }}>
+                                <CircularProgressWithLabel
+                                  value={s.BAT_LEVEL}
+                                  color={
+                                    s.BAT_LEVEL < 20
+                                      ? "#FF6666"
+                                      : s.BAT_LEVEL > 20 && s.BAT_LEVEL < 80
+                                      ? "gold"
+                                      : "#4DD637"
+                                  }
+                                />
+                              </span>
                             </TableCell>
                             <TableCell align="center">
                               <Button
@@ -629,7 +644,7 @@ function PageTableauDeBord(props) {
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         name="batFilter0"
                         onChange={(e) => {
-                          setFilteredBatLevel(e, 0, 0);
+                          setFilteredBatLevel(e, true, 0);
                         }}
                         inputProps={{ "aria-label": "controlled-checkbox" }}
                         checked={batFilters.batFilter0}
@@ -651,7 +666,7 @@ function PageTableauDeBord(props) {
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         name="batFilter1"
                         onChange={(e) => {
-                          setFilteredBatLevel(e, 50, 1);
+                          setFilteredBatLevel(e, true, 1);
                         }}
                         checked={batFilters.batFilter1}
                       />
@@ -672,7 +687,7 @@ function PageTableauDeBord(props) {
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         name="batFilter2"
                         onChange={(e) => {
-                          setFilteredBatLevel(e, 100, 2);
+                          setFilteredBatLevel(e, true, 2);
                         }}
                         checked={batFilters.batFilter2}
                       />
@@ -694,6 +709,12 @@ function PageTableauDeBord(props) {
                   color="primary"
                   size="small"
                   onClick={() => handleFiltering()}
+                  disabled={
+                    !batLevels.batLevel0 &&
+                    !batLevels.batLevel1 &&
+                    !batLevels.batLevel2 &&
+                    moving == null
+                  }
                 >
                   Filtrer
                 </Button>
@@ -705,6 +726,12 @@ function PageTableauDeBord(props) {
                   color="default"
                   size="small"
                   onClick={() => resetFilter()}
+                  disabled={
+                    !batLevels.batLevel0 &&
+                    !batLevels.batLevel1 &&
+                    !batLevels.batLevel2 &&
+                    moving == null
+                  }
                 >
                   Reinitialiser les filtres
                 </Button>
