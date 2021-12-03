@@ -21,6 +21,8 @@ import ViewStreamIcon from "@material-ui/icons/ViewStream";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import TextField from "@material-ui/core/TextField";
 import Switch from "@material-ui/core/Switch";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import LinearBuffer from "./PageTableauDeBordChargement";
 
 function PageTableauDeBord(props) {
   const [apiKey, setApiKey] = React.useState(props.apiKey);
@@ -38,6 +40,7 @@ function PageTableauDeBord(props) {
   const [search, setsearch] = React.useState("");
   const [defaultMetrics, setdefaultMetrics] = React.useState(null);
   const [moving, setMoving] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
 
   const [batLevels, setBatLevels] = React.useState({
     batLevel0: undefined,
@@ -55,21 +58,38 @@ function PageTableauDeBord(props) {
   }, []);
 
   const provideMetrics = () => {
+    var result = [];
     fetch(
       Const.URL_WS_ALL_ROBOTS + "?email=" + localStorage.getItem("username"),
       { retry: 3, retryDelay: 1000 }
     )
       .then((res) => res.json())
       .then((data) => {
-        setlisteMetrics(data);
-        setdefaultMetrics(data);
-        // setState({
-        //   listeMetrics: data,
-        //   defaultMetrics: data,
+        // data.map((item) => {
+        //   fetch(
+        //     Const.URL_WS_GET_CLIENT_ROBOT +
+        //       "?id_client=" +
+        //       item.ID_CLIENT +
+        //       "?id_robot=" +
+        //       item.ID_ROBOT,
+        //     { retry: 3, retryDelay: 1000 }
+        //   )
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //       // returns [{}]
+        //       result.push(data[0]);
+        //     })
+        //     .catch((error) => {
+        //       console.error("Request failed", error);
+        //     });
         // });
+        result = data;
+        setlisteMetrics(result);
+        setdefaultMetrics(result);
+        // setLoading(false);
       })
       .catch((error) => {
-        console.log("Request failed", error);
+        console.error("Request failed", error);
       });
   };
 
@@ -190,6 +210,14 @@ function PageTableauDeBord(props) {
     // });
   };
 
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <p>Chargement en cours ...</p>
+  //       <LinearBuffer></LinearBuffer>
+  //     </div>
+  //   );
+  // } else
   return (
     <div>
       <Grid container spacing={2}>
