@@ -154,6 +154,14 @@ function PageTableauDeBord(props) {
     // });
     setlisteMetrics(newData);
   };
+  const autoReset = (newBatLevels, movingFilter) => {
+    const { batLevel0, batLevel1, batLevel2 } = newBatLevels;
+    console.log("AutoReset", batLevel0, batLevel1, batLevel2, movingFilter);
+    if (movingFilter == null && !batLevel0 && !batLevel1 && !batLevel2) {
+      console.log("Fired !");
+      resetFilter();
+    }
+  };
   const setFilteredBatLevel = (event, batLevel, index) => {
     console.log("batLevel, index", batLevel, index);
     setBatFilters({ ...batFilters, [event.target.name]: event.target.checked });
@@ -165,10 +173,13 @@ function PageTableauDeBord(props) {
     console.log("newBatLevels", newBatLevels);
 
     setBatLevels(newBatLevels);
+    autoReset(newBatLevels, moving);
     console.log("batLevels", batLevels);
   };
   const setFiltMoving = (value) => {
-    setMoving(moving == null ? value : null);
+    const movingFilter = moving == null ? value : null;
+    setMoving(movingFilter);
+    autoReset(batFilters, movingFilter);
   };
 
   const handleFiltering = () => {
