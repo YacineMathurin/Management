@@ -1,4 +1,5 @@
 export const TRANSLATIONS_EN = {
+  /** Login Page */
   title: "Authentification",
   username: "Username",
   password: "Password",
@@ -10,4 +11,9 @@ export const TRANSLATIONS_EN = {
   translate_text: "Translate this site in ·",
   first_lng: "Français",
   second_lng: "Español",
+
+  /** Page de Bord */
+  dashboard_loading: "Loading your content",
+  dashboard_title: "My Cobotic Arsenal",
+  dashboard_subtitle: "Find your robot follower",
 };

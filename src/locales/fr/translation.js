@@ -10,4 +10,9 @@ export const TRANSLATIONS_FR = {
   translate_text: "Traduire le site en ·",
   first_lng: "English",
   second_lng: "Español",
+
+  /** Page de Bord */
+  dashboard_loading: "Chargement en cours ...",
+  dashboard_title: "Mon Parc Cobotic",
+  dashboard_subtitle: "Retrouver vos robots suiveurs",
 };

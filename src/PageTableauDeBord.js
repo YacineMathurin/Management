@@ -24,8 +24,11 @@ import Switch from "@material-ui/core/Switch";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import LinearBuffer from "./PageTableauDeBordChargement";
 import CircularProgressWithLabel from "./PageTableauDeBordBattery";
+import { useTranslation } from "react-i18next";
 
 function PageTableauDeBord(props) {
+  const { t, i18n } = useTranslation();
+
   const [apiKey, setApiKey] = React.useState(props.apiKey);
   const [filtreReussite, setfiltreReussite] = React.useState([0, 100]);
   const [filtreRapportMoyen, setfiltreRapportMoyen] = React.useState([0, 100]);
@@ -245,7 +248,7 @@ function PageTableauDeBord(props) {
   if (loading) {
     return (
       <div>
-        <p>Chargement en cours ...</p>
+        <p>{t("dashboard_loading")}</p>
         <LinearBuffer></LinearBuffer>
       </div>
     );
@@ -261,8 +264,8 @@ function PageTableauDeBord(props) {
                     <img width="32" src="./images/carrier.svg" />
                   </div>
                 }
-                title="Mon Parcs cobotique"
-                subheader="Retrouvez vos robots suiveurs"
+                title={t("dashboard_title")}
+                subheader={t("dashboard_subtitle")}
               />
               <div
                 style={{
