@@ -22,9 +22,12 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import { Modal } from "@material-ui/core";
 import "./PageMaps.css";
+import { useTranslation, withTranslation } from "react-i18next";
 
 class PageMaps extends React.Component {
   constructor(props) {
+    // const { t, i18n } = useTranslation();
+
     super(props);
     this.state = {
       apiKey: props.apiKey,
@@ -40,6 +43,7 @@ class PageMaps extends React.Component {
       mapName: "",
     };
   }
+
   classes = makeStyles((Theme) => createStyles({}));
 
   addActionNewMapping() {
@@ -174,9 +178,9 @@ class PageMaps extends React.Component {
       });
   };
 
-  handleCallbackOpenMapGestion = (mapName, idMap) => {
-    // console.log("send robot id to MapGestion" + idMap, mapName);
-    this.props.callbackOpenMapGestion(mapName, idMap);
+  handleCallbackOpenMapGestion = (mapName, status, idMap) => {
+    console.log("send robot id to MapGestion" + idMap, mapName);
+    this.props.callbackOpenMapGestion(mapName, status, idMap);
   };
 
   componentDidMount() {
@@ -228,6 +232,7 @@ class PageMaps extends React.Component {
 
   render() {
     // console.log("State", this.state);
+    const { t } = this.props;
     const { open, openDeleteModal, editingMapDetails } = this.state;
     return (
       <div className={this.classes.root}>
@@ -241,12 +246,12 @@ class PageMaps extends React.Component {
           <div class="modal-body">
             <h3 style={{ marginTop: "0", borderBottom: "2px solid white" }}>
               <Typography variant="overline">
-                Nom de votre nouvelle carte
+                {t("maps_mapping_modal_title")}
               </Typography>
             </h3>
             <TextField
               id="standard-basic"
-              placeholder="Entrepot 1"
+              placeholder={t("maps_mapping_modal_search")}
               autoFocus
               onChange={(event) => this.setTempMapName(event)}
             />
@@ -257,7 +262,7 @@ class PageMaps extends React.Component {
                 onClick={() => this.handleClose()}
               >
                 <Typography variant="button" display="block" gutterBottom>
-                  Annuler
+                  {t("maps_mapping_modal_cancel_btn")}
                 </Typography>
               </Button>
               <Button
@@ -267,7 +272,7 @@ class PageMaps extends React.Component {
                 style={{ marginLeft: "100px" }}
                 onClick={() => this.addActionNewMapping()}
               >
-                Allons-y
+                {t("maps_mapping_modal_search")}
               </Button>
             </div>
           </div>
@@ -282,16 +287,16 @@ class PageMaps extends React.Component {
         >
           <div class="modal-body">
             <h3 style={{ marginTop: "0", borderBottom: "2px solid white" }}>
-              Supprimer les cartes
+              {t("maps_deleting_modal_title")}
             </h3>
-            <p>Etes vous sûre de vouloir Supprimer vos cartes ?</p>
+            <p>{t("maps_deleting_modal_confirm")}</p>
             <div style={{ margin: "22px 0" }}>
               <Button
                 variant="contained"
                 style={{ margin: "0px" }}
                 onClick={() => this.handleClose()}
               >
-                Annuler
+                {t("maps_deleting_modal_cancel_btn")}
               </Button>
               <Button
                 variant="contained"
@@ -299,7 +304,7 @@ class PageMaps extends React.Component {
                 style={{ marginLeft: "100px" }}
                 onClick={() => {}}
               >
-                Confirmer
+                {t("maps_deleting_modal_confirm_btn")}
               </Button>
             </div>
           </div>
@@ -352,7 +357,7 @@ class PageMaps extends React.Component {
                     variant="h5"
                     style={{ fontFamily: "Josefin Slab, serif" }}
                   >
-                    Cliquer pour Selectionner une Cartographie
+                    {t("maps_title")}
                   </Typography>{" "}
                 </h1>
                 <Table>
@@ -386,9 +391,7 @@ class PageMaps extends React.Component {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      {!s.moving
-                                        ? " mouvement detecté ...."
-                                        : ""}
+                                      {s.moving ? t("maps_moving_status") : ""}
                                     </span>
                                   </Typography>
                                 </h3>
@@ -407,7 +410,7 @@ class PageMaps extends React.Component {
                                     )
                                   }
                                 >
-                                  Editer
+                                  {t("maps_edit_btn")}
                                 </Button>
                               </div>
                               <div>
@@ -437,6 +440,7 @@ class PageMaps extends React.Component {
                                         onClick={() =>
                                           this.handleCallbackOpenMapGestion(
                                             s.map_name,
+                                            s.status,
                                             s.pk + "blob" + s.blob
                                           )
                                         }
@@ -560,14 +564,14 @@ class PageMaps extends React.Component {
             <Card className="sidebarCards">
               <CardHeader
                 avatar={<TuneOutlinedIcon fontSize="large" />}
-                title="Filtrage"
-                subheader="Filtrer par cartes"
+                title={t("maps_filter")}
+                subheader={t("maps_filter_sub")}
               />
               <CardContent>
                 <FormControl size="small" fullWidth variant="outlined">
                   <TextField
                     size="small"
-                    placeholder="Rechercher la carte"
+                    placeholder={t("maps_search")}
                     value={this.state.search}
                     onChange={(event) => {
                       const { value } = event.target;
@@ -588,8 +592,8 @@ class PageMaps extends React.Component {
             <Card className="sidebarCards">
               <CardHeader
                 avatar={<MapIcon fontSize="large" />}
-                title="Cartografier à nouveau"
-                subheader="Envoyer une commande à robot pour lancer une nouvelle exploration"
+                title={t("maps_mapping")}
+                subheader={t("maps_mapping_sub")}
               />
               <CardContent>
                 <FormControl size="small" fullWidth variant="outlined">
@@ -602,7 +606,7 @@ class PageMaps extends React.Component {
                     color="error"
                     size="small"
                   >
-                    refaire la cartographie
+                    {t("maps_mapping_btn")}
                   </Button>
                 </FormControl>
               </CardContent>
@@ -611,8 +615,8 @@ class PageMaps extends React.Component {
             <Card>
               <CardHeader
                 avatar={<DeleteSweepIcon fontSize="large" />}
-                title="Supprimer toutes les cartes"
-                subheader="Vider la contenu de la base des donnees pour ce robot"
+                title={t("maps_delete")}
+                subheader={t("maps_delete_sub")}
               />
               <CardContent>
                 <FormControl size="small" fullWidth variant="outlined">
@@ -625,7 +629,7 @@ class PageMaps extends React.Component {
                     color="red"
                     size="small"
                   >
-                    Supprimer toutes cartes
+                    {t("maps_delete_btn")}
                   </Button>
                 </FormControl>
               </CardContent>
@@ -637,4 +641,4 @@ class PageMaps extends React.Component {
   }
 }
 
-export default PageMaps;
+export default withTranslation()(PageMaps);

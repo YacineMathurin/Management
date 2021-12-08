@@ -10,9 +10,53 @@ export const TRANSLATIONS_FR = {
   translate_text: "Traduire le site en ·",
   first_lng: "English",
   second_lng: "Español",
+  login_ok: "Connexion réussie",
+  logout_ok: "Vous êtes déconnecté",
+  login_ko: "Identifiant de connexion incorrect",
 
   /** Page de Bord */
   dashboard_loading: "Chargement en cours ...",
   dashboard_title: "Mon Parc Cobotic",
   dashboard_subtitle: "Retrouver vos robots suiveurs",
+  dashboard_moving: "En mouvement",
+  dashboard_connected: "Connecté",
+  dashboard_autonomy: "Autonomie",
+  dashboard_details: "Détails",
+  dashboard_maps: "Cartes",
+  dashboard_filtrage: "Filtrage",
+  dashboard_filtrage_sub: "Filtrez votre parc cobotique",
+  dashboard_search: "Rechercher un ID Robot",
+  dashboard_filter_btn: "FILTRER",
+  dashboard_filter_reset: "REINITIALISER LES FILTRES",
+
+  /** Page Maps */
+  maps_title: "Cliquer pour Selectionner une Cartographie",
+  maps_map: "Carte",
+  maps_moving_status: "mouvement detecté ....",
+  maps_edit_btn: "EDITER",
+  maps_filter: "Filtrage",
+  maps_filter_sub: "Filtrer par cartes",
+  maps_search: "Rechercher la carte",
+  maps_mapping: "Cartografier à nouveau",
+  maps_mapping_sub:
+    "Envoyer une commande à robot pour lancer une nouvelle exploration",
+  maps_mapping_btn: "refaire la cartographie",
+  maps_delete: "Supprimer toute les cartes",
+  maps_delete_sub: "Vider la contenu de la base des donnees pour ce robot",
+  maps_delete_btn: "supprimer toutes les cartes",
+  maps_mapping_modal_title: "Nom de votre nouvelle carte",
+  maps_mapping_modal_search: "Entrepot 1",
+  maps_mapping_modal_cancel_btn: "Annuler",
+  maps_mapping_modal_confirm_btn: "Allons - y",
+  maps_deleting_modal_title: "Supprimer les cartes",
+  maps_deleting_modal_confirm:
+    "Etes vous sûre de vouloir Supprimer vos cartes ?",
+  maps_deleting_modal_cancel_btn: "Annuler",
+  maps_deleting_modal_confirm_btn: "Confirmer",
+
+  /** Page Gestion */
+  manag_title: "Carte",
+  manag_msg: "Vous avez cliqué sur ",
+  manag_dest_btn: "Ajouter une destination",
+  manag_refresh_btn: "Rafraichir map",
 };

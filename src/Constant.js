@@ -1,6 +1,14 @@
 /** DEPLOIEMENT LOCAL POUR DEBUG SERVEUR API **/
 /** PERMET DE PASSER PAR LE SERVEUR API DEPLOYE EN LOCAL **/
 
+export const URL_UPD_STATUS_MANAG_PAGE =
+  "http://qenvi.space:8081/updateHeartBeatWS";
+
+export const URL_FETCH_LAST_HEARTBEAT_MSG =
+  "http://qenvi.space:8081/fetchLastHeartbeatMessageWS";
+
+export const URL_UPD_STATUS_MAP_PAGE =
+  "http://qenvi.space:8081/updateMsgMapStatusByMapIdWS";
 export const URL_WS_LOGIN = "http://193.70.86.40:8081/authWS";
 export const URL_WS_PROVIDE_METRICS =
   "http://193.70.86.40:8081/getAllMetricsWS";

@@ -182,9 +182,9 @@ export default function MiniDrawer() {
     setMapGestion(-1);
   };
 
-  const handleCallbackOpenMapGestion = (mapName, data) => {
+  const handleCallbackOpenMapGestion = (mapName, status, data) => {
     console.log("on y va a mapGestion", mapName);
-    setShowDetailsMapGestion({ mapName, data });
+    setShowDetailsMapGestion({ mapName, status, data });
     setShowTableauDeBord(-1);
     setShowMaps(-1);
     setMapGestion(1);
@@ -539,9 +539,9 @@ export default function MiniDrawer() {
               style={{
                 height: "15px",
                 width: "25px",
-                marginLeft: "15px",
+                marginLeft: window.innerWidth < 1280 ? "50px" : "30px",
                 position: "relative",
-                top: "3px",
+                top: "6px",
                 cursor: "pointer",
               }}
             ></img>
@@ -606,14 +606,14 @@ export default function MiniDrawer() {
         {showToastLogout == 1 && (
           <Toast
             severity="success"
-            message="Vous êtes déconnecté"
+            message={t("logout_ok")}
             callback={() => setShowToastLogout(-1)}
           ></Toast>
         )}
         {showToastLoginOK == 1 && (
           <Toast
             severity="success"
-            message="Connexion réussie"
+            message={t("login_ok")}
             callback={() => setShowToastLoginOK(-1)}
           ></Toast>
         )}

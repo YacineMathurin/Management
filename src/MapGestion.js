@@ -46,6 +46,7 @@ class MapGestion extends React.Component {
       idRobot: null,
       destination: "destination",
       modalErrorMsg: "",
+      pk: 1,
     };
   }
 
@@ -57,8 +58,37 @@ class MapGestion extends React.Component {
     // ];
     this.provideCoordinates();
     this.provideRobotInfos();
-    // this.setState({ coodinates });
+    // fetchLastHeartbeatMsg();
   }
+
+  detectMove = (status) => {
+    // fetchLastHeartbeatMsg();
+    // if (status) {
+    // }
+  };
+
+  fetchLastHeartbeatMsg = () => {
+    fetch(
+      Const.URL_FETCH_LAST_HEARTBEAT_MSG +
+        "?id_client=" +
+        this.state.idClient +
+        "&id_robot=" +
+        this.state.idRobot,
+      { retry: 3, retryDelay: 1000 }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        // const pk = data.pk;
+        // this.setState({pk});
+        // if(this.props.showDetailsMapGestion.status){
+        // const pathIndex = data.PATH_INDEX;
+        // this.setState({pathIndex})
+        // pathIdex < 1 ? this.startMove():this.nextDestination();
+        // }
+      })
+      .catch((err) => console.error(err));
+  };
 
   componentDidUpdate() {
     if (window.innerWidth < 1280) {
@@ -379,6 +409,50 @@ class MapGestion extends React.Component {
     return { top: `${area.center[1]}px`, left: `${area.center[0]}px` };
   }
 
+  setMovingStatusMapsPAge = (status, pk) => {
+    fetch(
+      Const.URL_UPD_STATUS_MAP_PAGE + "?statusToSe=" + status + "pk=" + pk,
+      {
+        retry: 3,
+        retryDelay: 1000,
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {})
+      .catch((error) => {
+        console.error("Request failed", error);
+      });
+
+    // fetch(
+    //   Const.URL_UPD_STATUS_MANAG_PAGE +
+    //     `MSG_TYPE=${msgType}&ID_CLIENT=${idClient}&ID_ROBOT=${idRobot}&IS_MOVING=${isMoving}&TIMESTAMP=${timestamp}&STATUS=${status}&BAT_LEVEL=${batLevel}&X_COORD=${xCoord}&Y_COORD=${yCoord}`,
+    //   {
+    //     retry: 3,
+    //     retryDelay: 1000,
+    //   }
+    // )
+    //   .then((res) => res.json())
+    //   .then((data) => {})
+    //   .catch((error) => {
+    //     console.error("Request failed", error);
+    //   });
+  };
+
+  simulateHeartbeat = () => {
+    fetch(
+      Const.URL_UPD_STATUS_MANAG_PAGE + "?statusToSe=" + status + "pk=" + pk,
+      {
+        retry: 3,
+        retryDelay: 1000,
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {})
+      .catch((error) => {
+        console.error("Request failed", error);
+      });
+  };
+
   addRobotPosition = (index, robotPosition, coordinatesClone) => {
     console.log("moving", this.state.moving);
     if (!this.state.moving) {
@@ -429,7 +503,9 @@ class MapGestion extends React.Component {
 
   StartMove = () => {
     // #deeafc #5293fa
-    this.setState({ moving: true, pk: 1, msg: "En mouvement ..." });
+    // this.setMovingStatus(1, this.state.actualID);
+    // this.setState({ moving: true, pk: 1, msg: "En mouvement ..." });
+    this.setState({ moving: true, msg: "En mouvement ..." });
     const coodinates = this.state.coodinates;
     var coordinatesClone = coodinates;
     var pathIndex = 1;
@@ -448,6 +524,10 @@ class MapGestion extends React.Component {
     console.log("robotPosition", robotPosition);
     // Goal: fetch the robot position each interval and insert it in the coordinates,
     // When we get an arrived flag, we stop/delete the interval
+    var simulateHeartbeatTimeInt = setInterval(() => {
+      this.simulateHeartbeat();
+    }, 700);
+
     var timeInterval = setInterval(async () => {
       /** Either database mock
        * this.fetchHeartbeat();
@@ -466,6 +546,7 @@ class MapGestion extends React.Component {
       if (this.state.pk > 35) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
         console.log("Clearing StartMove");
+        // this.setMovingStatus(0, this.state.actualID);
         this.setState({
           moving: false,
           pathIndex: pathIndex + 1,
@@ -483,6 +564,7 @@ class MapGestion extends React.Component {
       return this.StartMove();
     }
     // pathIndex = pathIndex + 1;
+    // this.setMovingStatus(1, this.state.actualID);
     this.setState({ moving: true, msg: "En mouvement ..." });
     const { coodinates } = this.state;
     var coordinatesClone = coodinates;
@@ -502,6 +584,7 @@ class MapGestion extends React.Component {
 
       if (this.state.pk >= 70) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
+        // this.setMovingStatus(0, this.state.actualID);
         clearInterval(timeInterval);
         this.setState({
           moving: false,
@@ -631,8 +714,8 @@ class MapGestion extends React.Component {
         >
           <div className="line1">
             <div className="child1">
-              1-Ajout d'une destination, cliquez sur une position de l'image
-              puis cliquez "Ajouter une destination";
+              1-Ajout d'une destination, cliquez sur mode edition ensuite sur
+              une position de l'image puis cliquez "Ajouter une destination";
             </div>
             <div className="child2">
               2-Supprimer une destination, cliquez sur un point existant de
@@ -727,6 +810,10 @@ class MapGestion extends React.Component {
       choosingDest,
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
+    console.log(
+      "this.props.showDetailsMapGestion",
+      this.props.showDetailsMapGestion
+    );
     const mapName = this.props.showDetailsMapGestion.mapName;
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];

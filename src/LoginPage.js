@@ -134,7 +134,10 @@ function SignIn({ callbackFunction }) {
     else setCheckPassword(true);
   }
   return (
-    <Container component="main" style={{ width: "450px" }}>
+    <Container
+      component="main"
+      style={window.innerWidth < 1280 ? { width: "85%" } : { width: "30%" }}
+    >
       <CssBaseline />
 
       <Card style={{ width: "100%", marginTop: "3em" }}>
@@ -248,7 +251,7 @@ function SignIn({ callbackFunction }) {
                       return (
                         <Toast
                           severity="error"
-                          message="Identifiant de connexion incorrect"
+                          message={t("login_ko")}
                           callback={() => {
                             var dummy = 1;
                           }}
@@ -258,7 +261,7 @@ function SignIn({ callbackFunction }) {
                       return (
                         <Toast
                           severity="error"
-                          message="Identifiant de connexion incorrect"
+                          message={t("login_ko")}
                           callback={() => {
                             var dummy = 1;
                           }}

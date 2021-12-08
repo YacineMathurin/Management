@@ -303,10 +303,16 @@ function PageTableauDeBord(props) {
                     <TableRow>
                       {/* <TableCell align="center">ID Client </TableCell> */}
                       <TableCell align="center">ID Robot</TableCell>
-                      <TableCell align="center">En mouvement</TableCell>
-                      <TableCell align="center">Connecté</TableCell>
+                      <TableCell align="center">
+                        {t("dashboard_moving")}
+                      </TableCell>
+                      <TableCell align="center">
+                        {t("dashboard_connected")}
+                      </TableCell>
                       {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
-                      <TableCell align="center">Autonomie </TableCell>
+                      <TableCell align="center">
+                        {t("dashboard_autonomy")}{" "}
+                      </TableCell>
                       <TableCell align="center"></TableCell>
                       <TableCell align="center"></TableCell>
                     </TableRow>
@@ -383,7 +389,7 @@ function PageTableauDeBord(props) {
                                 color="primary"
                                 size="small"
                               >
-                                détails
+                                {t("dashboard_details")}
                               </Button>
                             </TableCell>
                             <TableCell align="center">
@@ -397,7 +403,7 @@ function PageTableauDeBord(props) {
                                 color="primary"
                                 size="small"
                               >
-                                Maps
+                                {t("dashboard_maps")}
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -542,15 +548,15 @@ function PageTableauDeBord(props) {
             <Card>
               <CardHeader
                 avatar={<TuneOutlinedIcon fontSize="large" />}
-                title="Filtrage"
-                subheader="Filtrez votre parc cobotique"
+                title={t("dashboard_filtrage")}
+                subheader={t("dashboard_filtrage_sub")}
               />
 
               <CardContent>
                 <FormControl size="small" fullWidth variant="outlined">
                   <TextField
                     size="small"
-                    placeholder="Rechercher un ID Robot"
+                    placeholder={t("dashboard_search")}
                     value={search}
                     onChange={(event) => {
                       const { value } = event.target;
@@ -730,7 +736,7 @@ function PageTableauDeBord(props) {
                     moving == null
                   }
                 >
-                  Filtrer
+                  {t("dashboard_filter_btn")}
                 </Button>
                 <br></br>
                 <Button
@@ -747,7 +753,7 @@ function PageTableauDeBord(props) {
                     moving == null
                   }
                 >
-                  Reinitialiser les filtres
+                  {t("dashboard_filter_reset")}
                 </Button>
               </CardContent>
             </Card>
