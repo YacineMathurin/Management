@@ -32,7 +32,7 @@ export const TRANSLATIONS_FR = {
   /** Page Maps */
   maps_title: "Cliquer pour Selectionner une Cartographie",
   maps_map: "Carte",
-  maps_moving_status: "mouvement detecté ....",
+  maps_moving_status: "Mouvement detecté ....",
   maps_edit_btn: "EDITER",
   maps_filter: "Filtrage",
   maps_filter_sub: "Filtrer par cartes",

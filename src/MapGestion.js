@@ -58,7 +58,7 @@ class MapGestion extends React.Component {
     // ];
     this.provideCoordinates();
     this.provideRobotInfos();
-    this.fetchLastHeartbeatMsg();
+    // this.fetchLastHeartbeatMsg();
   }
 
   fetchLastHeartbeatMsg = () => {
@@ -68,6 +68,7 @@ class MapGestion extends React.Component {
       this.state.idClient,
       this.state.idRobot
     );
+    var self = this;
     fetch(
       Const.URL_FETCH_LAST_HEARTBEAT_MSG +
         "?id_client=" +
@@ -81,10 +82,11 @@ class MapGestion extends React.Component {
         console.log("fetchLastHeartbeatMsg data", data);
         const pk = data[0]["PK"];
         this.setState({ pk });
-        if (this.props.showDetailsMapGestion.status) {
+        if (this.props.showDetailsMapGestion.is_moving) {
+          console.log("MOVING...");
           const pathIndex = data[0]["PATH_INDEX"];
           this.setState({ pathIndex });
-          pathIndex < 1 ? this.startMove() : this.nextDestination();
+          pathIndex <= 1 ? self.startMove() : self.nextDestination();
         }
       })
       .catch((err) => console.error(err));
@@ -199,6 +201,7 @@ class MapGestion extends React.Component {
         console.log("Finish i have points !!!!!");
         this.getLines();
       })
+      .then(() => this.fetchLastHeartbeatMsg())
       .catch((error) => {
         console.log("Request failed", error);
       });
@@ -607,24 +610,6 @@ class MapGestion extends React.Component {
     return color;
   };
 
-  /*
-
-  1.0
-  Populate the MSG_HEARTBEAT database to suite our path
-  (coodinate[1]["x_pixel"] - coodinate[0]["x_pixel"]) / 3 ~= 35
-  UPDATE `MSG_HEARTBEAT` SET X_COORD = `X_COORD` + (`PK` - 1) * 3 WHERE  PK < '35';
-  UPDATE `MSG_HEARTBEAT` SET Y_COORD = `Y_COORD` + (`PK` - 35) * 3 WHERE  PK > '35';
-  Need /getHeartbeat() to retreive heartbeat 
-
-  2.0
-  We need a moving flag for each robot and show the cooresponding map on which the move occurs
-  We need an endpoint writting a heartbeat line (moving_status, path_index, timestamp) per second
-  We Fetch the last line of the heartbeat table as a start point, then we increment ...
-
-  The user should have listed all it's robots (ID_ROBOT) and their oldest timestamp
-  This way, we could fetch the info in the heartbeat when launching the client app
-
-*/
   handleOpenModal = () => {
     this.setState({ openModal: true });
   };
@@ -808,10 +793,10 @@ class MapGestion extends React.Component {
       choosingDest,
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
-    // console.log(
-    //   "this.props.showDetailsMapGestion",
-    //   this.props.showDetailsMapGestion
-    // );
+    console.log(
+      "this.props.showDetailsMapGestion",
+      this.props.showDetailsMapGestion
+    );
     const mapName = this.props.showDetailsMapGestion.mapName;
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
@@ -1029,7 +1014,7 @@ class MapGestion extends React.Component {
                       cy={item.y_pixel}
                       r="12"
                       stroke="bisque"
-                      stroke-width="3"
+                      strokeWidth="3"
                       fill={
                         moving
                           ? index === pathIndex

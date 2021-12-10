@@ -454,7 +454,7 @@ class PageMaps extends React.Component {
                                         onClick={() =>
                                           this.handleCallbackOpenMapGestion(
                                             s.map_name,
-                                            s.status,
+                                            s.is_moving,
                                             s.id_client,
                                             s.id_robot,
                                             s.pk + "blob" + s.blob

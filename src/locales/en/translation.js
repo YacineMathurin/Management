@@ -33,7 +33,7 @@ export const TRANSLATIONS_EN = {
   /** Page Maps */
   maps_title: "Click to select your desired map",
   maps_map: "Map",
-  maps_moving_status: "movement detected ....",
+  maps_moving_status: "Movement detected ....",
   maps_edit_btn: "EDIT",
   maps_filter: "Filter",
   maps_filter_sub: "Filter by map name",
