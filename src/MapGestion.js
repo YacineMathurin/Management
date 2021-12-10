@@ -42,8 +42,8 @@ class MapGestion extends React.Component {
       moveMsg: null,
       status: null,
       nbpts: null,
-      idClient: null,
-      idRobot: null,
+      idClient: props.showDetailsMapGestion.id_client,
+      idRobot: props.showDetailsMapGestion.id_robot,
       destination: "destination",
       modalErrorMsg: "",
       pk: 1,
@@ -58,10 +58,16 @@ class MapGestion extends React.Component {
     // ];
     this.provideCoordinates();
     this.provideRobotInfos();
-    // this.fetchLastHeartbeatMsg();
+    this.fetchLastHeartbeatMsg();
   }
 
   fetchLastHeartbeatMsg = () => {
+    const { coodinates } = this.state;
+    console.log(
+      "fetchLastHeartbeatMsg",
+      this.state.idClient,
+      this.state.idRobot
+    );
     fetch(
       Const.URL_FETCH_LAST_HEARTBEAT_MSG +
         "?id_client=" +
@@ -72,15 +78,14 @@ class MapGestion extends React.Component {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        // const pk = data.pk;
-        // const simul_cont = data.simul_cont;
-        // this.setState({pk, simul_cont});
-        // if(this.props.showDetailsMapGestion.status){
-        // const pathIndex = data.PATH_INDEX;
-        // this.setState({pathIndex})
-        // pathIdex < 1 ? this.startMove():this.nextDestination();
-        // }
+        console.log("fetchLastHeartbeatMsg data", data);
+        const pk = data[0]["PK"];
+        this.setState({ pk });
+        if (this.props.showDetailsMapGestion.status) {
+          const pathIndex = data[0]["PATH_INDEX"];
+          this.setState({ pathIndex });
+          pathIndex < 1 ? this.startMove() : this.nextDestination();
+        }
       })
       .catch((err) => console.error(err));
   };
@@ -404,14 +409,11 @@ class MapGestion extends React.Component {
     return { top: `${area.center[1]}px`, left: `${area.center[0]}px` };
   }
 
-  setMovingStatusMapsPAge = (status, pk) => {
-    fetch(
-      Const.URL_UPD_STATUS_MAP_PAGE + "?statusToSe=" + status + "pk=" + pk,
-      {
-        retry: 3,
-        retryDelay: 1000,
-      }
-    )
+  setMovingStatusMapsPAge = (isMoving, pk) => {
+    fetch(Const.URL_UPD_STATUS_MAP_PAGE + "?moving=" + isMoving + "&pk=" + pk, {
+      retry: 3,
+      retryDelay: 1000,
+    })
       .then((res) => res.json())
       .then((data) => {})
       .catch((error) => {
@@ -519,8 +521,9 @@ class MapGestion extends React.Component {
 
   StartMove = () => {
     // #deeafc #5293fa
-    // this.setMovingStatus(1, this.state.actualID);
+    this.setMovingStatusMapsPAge(1, this.state.actualID);
     // this.setState({ moving: true, pk: 1, msg: "En mouvement ..." });
+
     const coodinates = this.state.coodinates;
     this.setState({
       moving: true,
@@ -543,38 +546,39 @@ class MapGestion extends React.Component {
     console.log("robotPosition", robotPosition);
     // Goal: fetch the robot position each interval and insert it in the coordinates,
     // When we get an arrived flag, we stop/delete the interval
+    setTimeout(() => {
+      var timeInterval = setInterval(async () => {
+        /** Either database mock
+         * this.fetchHeartbeat();
+         * this.addRobotPosition(pathIndex, this.state.robotPosition, coordinatesClone);
+         * Either
+         */
+        this.fetchHeartbeat(pathIndex, coordinatesClone);
 
-    var timeInterval = setInterval(async () => {
-      /** Either database mock
-       * this.fetchHeartbeat();
-       * this.addRobotPosition(pathIndex, this.state.robotPosition, coordinatesClone);
-       * Either
-       */
-      this.fetchHeartbeat(pathIndex, coordinatesClone);
+        // Or JS mock
+        // robotPosition.x_pixel = robotPosition.x_pixel + 3;
+        // this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
+        // Or
+        // coordinatesClone.splice(pathIndex, 1);
 
-      // Or JS mock
-      // robotPosition.x_pixel = robotPosition.x_pixel + 3;
-      // this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
-      // Or
-      // coordinatesClone.splice(pathIndex, 1);
-
-      // if (this.state.robotPosition.x_pixel >= 313 - 10) {
-      // The heartbeat generator should send arrived flag
-      // if (this.state.ARRIVED) {
-      // stop after 35 iterations
-      if (this.state.ARRIVED) {
-        // This 313 is temporal, further we'll use a flag from robot heartbeat
-        console.log("Clearing StartMove");
-        // this.setMovingStatus(0, this.state.actualID);
-        this.setState({
-          moving: false,
-          pathIndex: pathIndex + 1,
-          msg: "Arrivée à destination !",
-        });
-        clearInterval(timeInterval);
-        // timeInterval = null;
-      }
-    }, 1000);
+        // if (this.state.robotPosition.x_pixel >= 313 - 10) {
+        // The heartbeat generator should send arrived flag
+        // if (this.state.ARRIVED) {
+        // stop after 35 iterations
+        if (this.state.arrived) {
+          // This 313 is temporal, further we'll use a flag from robot heartbeat
+          console.log("Clearing StartMove");
+          this.setMovingStatusMapsPAge(0, this.state.actualID);
+          this.setState({
+            moving: false,
+            pathIndex: pathIndex + 1,
+            msg: "Arrivée à destination !",
+          });
+          clearInterval(timeInterval);
+          // timeInterval = null;
+        }
+      }, 1000);
+    }, 3000);
   };
 
   nextDestination = () => {
@@ -806,7 +810,6 @@ class MapGestion extends React.Component {
     });
     */
   }
-
   leaveArea(area) {
     //Pas Besoin
     /*
@@ -831,10 +834,10 @@ class MapGestion extends React.Component {
       choosingDest,
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
-    console.log(
-      "this.props.showDetailsMapGestion",
-      this.props.showDetailsMapGestion
-    );
+    // console.log(
+    //   "this.props.showDetailsMapGestion",
+    //   this.props.showDetailsMapGestion
+    // );
     const mapName = this.props.showDetailsMapGestion.mapName;
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];

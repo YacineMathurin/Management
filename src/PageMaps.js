@@ -178,9 +178,21 @@ class PageMaps extends React.Component {
       });
   };
 
-  handleCallbackOpenMapGestion = (mapName, status, idMap) => {
-    console.log("send robot id to MapGestion" + idMap, mapName);
-    this.props.callbackOpenMapGestion(mapName, status, idMap);
+  handleCallbackOpenMapGestion = (
+    mapName,
+    status,
+    id_client,
+    id_robot,
+    idMap
+  ) => {
+    // console.log("send robot id to MapGestion" + idMap, mapName);
+    this.props.callbackOpenMapGestion(
+      mapName,
+      status,
+      id_client,
+      id_robot,
+      idMap
+    );
   };
 
   componentDidMount() {
@@ -391,7 +403,9 @@ class PageMaps extends React.Component {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      {s.moving ? t("maps_moving_status") : ""}
+                                      {s.is_moving
+                                        ? t("maps_moving_status")
+                                        : ""}
                                     </span>
                                   </Typography>
                                 </h3>
@@ -441,6 +455,8 @@ class PageMaps extends React.Component {
                                           this.handleCallbackOpenMapGestion(
                                             s.map_name,
                                             s.status,
+                                            s.id_client,
+                                            s.id_robot,
                                             s.pk + "blob" + s.blob
                                           )
                                         }

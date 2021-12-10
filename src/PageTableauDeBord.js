@@ -85,7 +85,7 @@ function PageTableauDeBord(props) {
 
             setTimeout(() => {
               setLoading(false);
-            }, 3000);
+            }, 1500);
           })
           .catch((error) => {
             console.error("Request failed", error);
@@ -353,7 +353,7 @@ function PageTableauDeBord(props) {
                                 style={{ marginTop: "0.5em" }}
                                 width="34"
                                 src={
-                                  s.STATUS
+                                  s.is_moving
                                     ? "./images/switch-on.svg"
                                     : "./images/switch-off.svg"
                                 }

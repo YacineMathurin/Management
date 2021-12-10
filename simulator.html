@@ -21,7 +21,7 @@
   <body>
     <div class="section1">
       <h4>Lauch your simulator</h4>
-      <h6>By choosing one of the buttons</h6>
+      <h6>By clicking one of the buttons</h6>
 
       <div>
         <button type="button" class="btn btn-primary" onclick="dest1()">
@@ -37,11 +37,11 @@
         </button>
       </div>
       <p>
-        Destination 1 correspponds to the horizontal path<br />
-        Destination 2 to the vertical one
+        Destination 1 fills DB with data simulating horizontal movement<br />
+        Destination 2 for the vertical one
       </p>
-      <label for="progress-bar">Filling DB</label>
-      <progress id="progress-bar" value="20" max="100" >
+      <label for="progress-bar">Filling DB status at <span id="db">0</span>%</label>
+      <progress id="progress-bar" value="0" max="100" >
     </div>
 
     <div class="section2">
@@ -51,16 +51,19 @@
     </div>
 
     <script>
-        // var progress = document.getElementById("progress-bar")
-        // progress.setAttribute("value",50);
+        var progress = document.getElementById("progress-bar");
+        var db = document.getElementById("db");
 
       function dest1() {
         // alert("Destination 1");
         var count = 1;
         var arrived = 0;
         var interval = setInterval(() => {
+          progress.setAttribute("value",Math.round(count*100/34));
+              db.innerText = Math.round(count*100/34);
+
           console.log(count);
-          if (count >= 35) {
+          if (count >= 34) {
             arrived = 1;
             clearInterval(interval);
           }
@@ -83,6 +86,7 @@
             .then(function (response) {
               // handle success
               console.log(response);
+              
             })
             .catch(function (error) {
               // handle error
@@ -94,9 +98,6 @@
           count++;
         }, 750);
       }
-
-      // http://qenvi.space:8081/updateHeartBeatWS?MSG_TYPE=0&ID_CLIENT=0&ID_ROBOT=1&IS_MOVING=1&PATH_INDEX=1&ARRIVED=0&TIMESTAMP=1639064376085&STATUS=0&BAT_LEVEL=80&X_COORD=213&Y_COORD=146
-      // http://qenvi.space:8081/updateHeartBeatWS?MSG_TYPE=0&ID_CLIENT=77&ID_ROBOT=0&IS_MOVING=9&PATH_INDEX=1&ARRIVED=0&TIMESTAMP=1600000&STATUS=99&BAT_LEVEL=99&X_COORD=999&Y_COORD=999
 
       function dest2() {
         alert("Destination 2");

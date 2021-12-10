@@ -182,9 +182,15 @@ export default function MiniDrawer() {
     setMapGestion(-1);
   };
 
-  const handleCallbackOpenMapGestion = (mapName, status, data) => {
+  const handleCallbackOpenMapGestion = (
+    mapName,
+    status,
+    id_client,
+    id_robot,
+    data
+  ) => {
     console.log("on y va a mapGestion", mapName);
-    setShowDetailsMapGestion({ mapName, status, data });
+    setShowDetailsMapGestion({ mapName, status, id_client, id_robot, data });
     setShowTableauDeBord(-1);
     setShowMaps(-1);
     setMapGestion(1);
