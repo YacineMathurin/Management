@@ -58,14 +58,8 @@ class MapGestion extends React.Component {
     // ];
     this.provideCoordinates();
     this.provideRobotInfos();
-    // fetchLastHeartbeatMsg();
+    // this.fetchLastHeartbeatMsg();
   }
-
-  detectMove = (status) => {
-    // fetchLastHeartbeatMsg();
-    // if (status) {
-    // }
-  };
 
   fetchLastHeartbeatMsg = () => {
     fetch(
@@ -80,7 +74,8 @@ class MapGestion extends React.Component {
       .then((data) => {
         console.log(data);
         // const pk = data.pk;
-        // this.setState({pk});
+        // const simul_cont = data.simul_cont;
+        // this.setState({pk, simul_cont});
         // if(this.props.showDetailsMapGestion.status){
         // const pathIndex = data.PATH_INDEX;
         // this.setState({pathIndex})
@@ -439,8 +434,26 @@ class MapGestion extends React.Component {
   };
 
   simulateHeartbeat = () => {
+    const { coodinates, initialXcoord, arrived } = this.state;
+    const pathIndex = 0;
     fetch(
-      Const.URL_UPD_STATUS_MANAG_PAGE + "?statusToSe=" + status + "pk=" + pk,
+      Const.URL_UPD_STATUS_MANAG_PAGE +
+        "?MSG_TYPE=0&ID_CLIENT=" +
+        this.state.idClient +
+        "&ID_ROBOT=" +
+        this.state.idRobot +
+        "&IS_MOVING=" +
+        !arrived +
+        "&PATH_INDEX=" +
+        pathIndex +
+        "&ARRIVED=" +
+        arrived +
+        "&TIMESTAMP=" +
+        Date.now() +
+        "&STATUS=0&BAT_LEVEL=80&X_COORD=" +
+        initialXcoord +
+        "&Y_COORD=" +
+        coodinates[0]["y_pixel"],
       {
         retry: 3,
         retryDelay: 1000,
@@ -472,7 +485,9 @@ class MapGestion extends React.Component {
 
     console.log("idClient, idRobot, pk", idClient, idRobot, pk, moving);
     fetch(
-      `${Const.URL_WS_FETCH_HEARTBEAT}?idclient=${idClient}&idrobot=${idRobot}&pk=${pk}`,
+      `${
+        Const.URL_WS_FETCH_HEARTBEAT
+      }?idclient=${idClient}&idrobot=${idRobot}&pk=${pk + 1}`,
       {
         retry: 3,
         retryDelay: 1000,
@@ -494,6 +509,7 @@ class MapGestion extends React.Component {
         );
         this.setState({
           pk: pk + 1,
+          arrived: data[0]["ARRIVED"],
         });
       })
       .catch((error) => {
@@ -505,8 +521,11 @@ class MapGestion extends React.Component {
     // #deeafc #5293fa
     // this.setMovingStatus(1, this.state.actualID);
     // this.setState({ moving: true, pk: 1, msg: "En mouvement ..." });
-    this.setState({ moving: true, msg: "En mouvement ..." });
     const coodinates = this.state.coodinates;
+    this.setState({
+      moving: true,
+      msg: "En mouvement ...",
+    });
     var coordinatesClone = coodinates;
     var pathIndex = 1;
     console.log(
@@ -524,9 +543,6 @@ class MapGestion extends React.Component {
     console.log("robotPosition", robotPosition);
     // Goal: fetch the robot position each interval and insert it in the coordinates,
     // When we get an arrived flag, we stop/delete the interval
-    var simulateHeartbeatTimeInt = setInterval(() => {
-      this.simulateHeartbeat();
-    }, 700);
 
     var timeInterval = setInterval(async () => {
       /** Either database mock
@@ -543,7 +559,10 @@ class MapGestion extends React.Component {
       // coordinatesClone.splice(pathIndex, 1);
 
       // if (this.state.robotPosition.x_pixel >= 313 - 10) {
-      if (this.state.pk > 35) {
+      // The heartbeat generator should send arrived flag
+      // if (this.state.ARRIVED) {
+      // stop after 35 iterations
+      if (this.state.ARRIVED) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
         console.log("Clearing StartMove");
         // this.setMovingStatus(0, this.state.actualID);
@@ -582,7 +601,9 @@ class MapGestion extends React.Component {
     var timeInterval = setInterval(async () => {
       await this.fetchHeartbeat(pathIndex, coordinatesClone);
 
-      if (this.state.pk >= 70) {
+      // if (this.state.pk >= 70) {
+      // stop after 35 iterations
+      if (this.state.ARRIVED) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
         // this.setMovingStatus(0, this.state.actualID);
         clearInterval(timeInterval);

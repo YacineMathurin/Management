@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/5/cosmo/bootstrap.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <title>Simulator</title>
+  </head>
+  <body>
+    <div class="section1">
+      <h4>Lauch your simulator</h4>
+      <h6>By choosing one of the buttons</h6>
+
+      <div>
+        <button type="button" class="btn btn-primary" onclick="dest1()">
+          Destination 1
+        </button>
+        <button
+          type="button"
+          class="btn btn-dark"
+          onclick="dest2()"
+          style="margin-left: 20px"
+        >
+          Destination 2
+        </button>
+      </div>
+      <p>
+        Destination 1 correspponds to the horizontal path<br />
+        Destination 2 to the vertical one
+      </p>
+      <label for="progress-bar">Filling DB</label>
+      <progress id="progress-bar" value="20" max="100" >
+    </div>
+
+    <div class="section2">
+      <!-- <img src="img.jpg" alt="Robot Qenvi" srcset="" /> -->
+      <!--   -->
+      <p>Copyright QENVI ROBOTICS @ 2021</p>
+    </div>
+
+    <script>
+        // var progress = document.getElementById("progress-bar")
+        // progress.setAttribute("value",50);
+
+      function dest1() {
+        // alert("Destination 1");
+        var count = 1;
+        var arrived = 0;
+        var interval = setInterval(() => {
+          console.log(count);
+          if (count >= 35) {
+            arrived = 1;
+            clearInterval(interval);
+          }
+          axios
+            .get("http://qenvi.space:8081/updateHeartBeatWS", {
+              params: {
+                MSG_TYPE: 0,
+                ID_CLIENT: 0,
+                ID_ROBOT: 1,
+                IS_MOVING: arrived === 1 ? 0 : 1,
+                PATH_INDEX: 1,
+                ARRIVED: arrived,
+                TIMESTAMP: Date.now(),
+                STATUS: 0,
+                BAT_LEVEL: 80,
+                X_COORD: 210 + count * 3,
+                Y_COORD: 146,
+              },
+            })
+            .then(function (response) {
+              // handle success
+              console.log(response);
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+            .then(function () {
+              // always executed
+            });
+          count++;
+        }, 750);
+      }
+
+      // http://qenvi.space:8081/updateHeartBeatWS?MSG_TYPE=0&ID_CLIENT=0&ID_ROBOT=1&IS_MOVING=1&PATH_INDEX=1&ARRIVED=0&TIMESTAMP=1639064376085&STATUS=0&BAT_LEVEL=80&X_COORD=213&Y_COORD=146
+      // http://qenvi.space:8081/updateHeartBeatWS?MSG_TYPE=0&ID_CLIENT=77&ID_ROBOT=0&IS_MOVING=9&PATH_INDEX=1&ARRIVED=0&TIMESTAMP=1600000&STATUS=99&BAT_LEVEL=99&X_COORD=999&Y_COORD=999
+
+      function dest2() {
+        alert("Destination 2");
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    background-color: #e5e5e5;
+  }
+  .section1 {
+    margin: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .section2 {
+    /* background-color: aliceblue; */
+    overflow: hidden;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+  .section2 p{
+      margin: 2em;
+  }
+  button {
+    width: max-content;
+  }
+  h4 {
+    font-family: "Nanum Myeongjo", serif;
+    text-transform: uppercase;
+  }
+  h6 {
+    font-family: "Nanum Myeongjo", serif;
+    text-transform: uppercase;
+  }
+  p, label {
+    font-family: "Nanum Myeongjo", serif;
+    font-size: 0.8em;
+  }
+  div {
+    margin: 2em 0 0.8em 0;
+  }
+  video {
+    width: 200%;
+    height: 99%;
+  }
+  img{
+    height: 100%;
+    position: relative;
+    right: 150px;
+  }
+  progress{
+      width: 100%;
+      transition: 0.6s ease-out;
+  }
+</style>
