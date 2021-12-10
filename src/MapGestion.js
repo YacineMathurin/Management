@@ -419,20 +419,6 @@ class MapGestion extends React.Component {
       .catch((error) => {
         console.error("Request failed", error);
       });
-
-    // fetch(
-    //   Const.URL_UPD_STATUS_MANAG_PAGE +
-    //     `MSG_TYPE=${msgType}&ID_CLIENT=${idClient}&ID_ROBOT=${idRobot}&IS_MOVING=${isMoving}&TIMESTAMP=${timestamp}&STATUS=${status}&BAT_LEVEL=${batLevel}&X_COORD=${xCoord}&Y_COORD=${yCoord}`,
-    //   {
-    //     retry: 3,
-    //     retryDelay: 1000,
-    //   }
-    // )
-    //   .then((res) => res.json())
-    //   .then((data) => {})
-    //   .catch((error) => {
-    //     console.error("Request failed", error);
-    //   });
   };
 
   simulateHeartbeat = () => {
@@ -474,18 +460,24 @@ class MapGestion extends React.Component {
       // coordinatesClone.splice(index, 1);
       return 0;
     }
-    if (this.state.pk > 1) {
+    // Add the robot position first then replace it later
+    // At pk = 1 add then replace it later
+    if (this.state.coodinatesEdited) {
       coordinatesClone.splice(index, 1);
     }
     coordinatesClone.splice(index, 0, robotPosition);
     // console.log("coordinatesClone", coordinatesClone);
-    this.setState({ coodinates: coordinatesClone, pathIndex: index });
+    this.setState({
+      coodinatesEdited: true,
+      coodinates: coordinatesClone,
+      pathIndex: index,
+    });
   };
 
   fetchHeartbeat = (pathIndex, coordinatesClone) => {
     const { idClient, idRobot, pk, moving } = this.state;
-
     console.log("idClient, idRobot, pk", idClient, idRobot, pk, moving);
+
     fetch(
       `${
         Const.URL_WS_FETCH_HEARTBEAT
@@ -544,29 +536,12 @@ class MapGestion extends React.Component {
       y_pixel: coordinatesClone[pathIndex - 1]["y_pixel"],
     };
     console.log("robotPosition", robotPosition);
-    // Goal: fetch the robot position each interval and insert it in the coordinates,
-    // When we get an arrived flag, we stop/delete the interval
+
     setTimeout(() => {
       var timeInterval = setInterval(async () => {
-        /** Either database mock
-         * this.fetchHeartbeat();
-         * this.addRobotPosition(pathIndex, this.state.robotPosition, coordinatesClone);
-         * Either
-         */
         this.fetchHeartbeat(pathIndex, coordinatesClone);
 
-        // Or JS mock
-        // robotPosition.x_pixel = robotPosition.x_pixel + 3;
-        // this.addRobotPosition(pathIndex, robotPosition, coordinatesClone);
-        // Or
-        // coordinatesClone.splice(pathIndex, 1);
-
-        // if (this.state.robotPosition.x_pixel >= 313 - 10) {
-        // The heartbeat generator should send arrived flag
-        // if (this.state.ARRIVED) {
-        // stop after 35 iterations
         if (this.state.arrived) {
-          // This 313 is temporal, further we'll use a flag from robot heartbeat
           console.log("Clearing StartMove");
           this.setMovingStatusMapsPAge(0, this.state.actualID);
           this.setState({
@@ -575,7 +550,6 @@ class MapGestion extends React.Component {
             msg: "Arrivée à destination !",
           });
           clearInterval(timeInterval);
-          // timeInterval = null;
         }
       }, 1000);
     }, 3000);
