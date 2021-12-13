@@ -21,27 +21,59 @@
   <body>
     <div class="section1">
       <h4>Lauch your simulator</h4>
-      <h6>By clicking one of the buttons</h6>
+      <h6>By setting ID's then clicking one of the buttons</h6>
+      <form autocomplete="off">
+        <fieldset>
+          <div class="inputs">
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="form-label mt-4"
+                >ID Client</label
+              >
+              <input
+                type="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                placeholder="Enter Client's ID"
+              />
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="form-label mt-4"
+                >ID Robot</label
+              >
+              <input
+                type="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                placeholder="Enter Robot's ID"
+              />
+            </div>
+          </div>
+          <div>
+            <button type="button" class="btn btn-primary" onclick="dest1()">
+              — Destination 1 —
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="dest2()"
+              style="margin-left: 1em"
+            >
+              | Destination 2 |
+            </button>
+          </div>
+          <p style="margin: 0">
+            Destination 1 fills DB with data simulating horizontal movement · |
+            · Destination 2 for the vertical one
+          </p>
+        </fieldset>
+      </form>
 
-      <div>
-        <button type="button" class="btn btn-primary" onclick="dest1()">
-          Destination 1
-        </button>
-        <button
-          type="button"
-          class="btn btn-dark"
-          onclick="dest2()"
-          style="margin-left: 20px"
-        >
-          Destination 2
-        </button>
-      </div>
-      <p>
-        Destination 1 fills DB with data simulating horizontal movement<br />
-        Destination 2 for the vertical one
-      </p>
-      <label for="progress-bar">Filling DB status at <span id="db">0</span>%</label>
-      <progress id="progress-bar" value="0" max="100" >
+      <label for="progress-bar"
+        >Filling DB status at <span id="db">0</span>%</label
+      >
+      <progress id="progress-bar" value="0" max="100" />
     </div>
 
     <div class="section2">
@@ -51,16 +83,16 @@
     </div>
 
     <script>
-        var progress = document.getElementById("progress-bar");
-        var db = document.getElementById("db");
+      var progress = document.getElementById("progress-bar");
+      var db = document.getElementById("db");
 
       function dest1() {
         // alert("Destination 1");
         var count = 1;
         var arrived = 0;
         var interval = setInterval(() => {
-          progress.setAttribute("value",Math.round(count*100/34));
-              db.innerText = Math.round(count*100/34);
+          progress.setAttribute("value", Math.round((count * 100) / 34));
+          db.innerText = Math.round((count * 100) / 34);
 
           console.log(count);
           if (count >= 34) {
@@ -86,7 +118,6 @@
             .then(function (response) {
               // handle success
               console.log(response);
-              
             })
             .catch(function (error) {
               // handle error
@@ -113,7 +144,24 @@
     height: 100vh;
     overflow: hidden;
     margin: 0;
-    background-color: #e5e5e5;
+    /* background-color: #e5e5e5; */
+    background-image: linear-gradient(
+      to right top,
+      #051937,
+      #2e2d5d,
+      #5f4080,
+      #984f9d,
+      #d65db1
+    );
+    /* background-image: linear-gradient(
+      to right top,
+      #051937,
+      #004d7a,
+      #008793,
+      #00bf72,
+      #a8eb12
+    ); */
+    color: white;
   }
   .section1 {
     margin: 10vh;
@@ -130,8 +178,8 @@
     justify-content: flex-end;
     align-items: flex-end;
   }
-  .section2 p{
-      margin: 2em;
+  .section2 p {
+    margin: 2em;
   }
   button {
     width: max-content;
@@ -144,24 +192,31 @@
     font-family: "Nanum Myeongjo", serif;
     text-transform: uppercase;
   }
-  p, label {
+  p,
+  label {
     font-family: "Nanum Myeongjo", serif;
     font-size: 0.8em;
   }
   div {
-    margin: 2em 0 0.8em 0;
+    margin: 0em 0 0.8em 0;
   }
   video {
     width: 200%;
     height: 99%;
   }
-  img{
+  img {
     height: 100%;
     position: relative;
     right: 150px;
   }
-  progress{
-      width: 100%;
-      transition: 0.6s ease-out;
+  progress {
+    width: 100%;
+    transition: 0.6s ease-out;
+  }
+  .inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1em;
+    margin: 3em 0 0;
   }
 </style>

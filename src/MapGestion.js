@@ -1111,11 +1111,13 @@ class MapGestion extends React.Component {
                   variant="outlined"
                   color="primary"
                   size="medium"
+                  disabled={moving}
                 >
                   {!choosingDest ? "Mode Edition" : "Ajouter une destination"}
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1128,6 +1130,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1140,6 +1143,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1155,6 +1159,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1168,6 +1173,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1182,6 +1188,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1194,6 +1201,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1206,6 +1214,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1218,6 +1227,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   width="2em"
@@ -1238,6 +1248,7 @@ class MapGestion extends React.Component {
                 </Button>
                 <span>&nbsp;</span>
                 <Button
+                  disabled={moving}
                   className="_button"
                   // fullWidth={true}
                   // width="2em"
