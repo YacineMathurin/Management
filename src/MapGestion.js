@@ -955,6 +955,7 @@ class MapGestion extends React.Component {
             </Card>
           </Grid>
         </Grid>
+        {/* Map Management */}
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={4}>
             <Card>
