@@ -22,6 +22,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Hidden from "@material-ui/core/Hidden";
 import LiveHelpIcon from "@material-ui/icons/LiveHelp";
 import "./MapGestion.css";
+import MapGestionButtons from "./MapGestionButtons";
+import Icon from '@material-ui/core/Icon';
+import SaveIcon from '@material-ui/icons/Save';
 
 class MapGestion extends React.Component {
   constructor(props) {
@@ -38,15 +41,16 @@ class MapGestion extends React.Component {
       xCoord: null,
       yCoord: null,
       hoveredArea: null,
-      msg: null,
+      msg: "Message: ",
       moveMsg: null,
-      status: null,
+      status: "null",
       nbpts: null,
       idClient: props.showDetailsMapGestion.id_client,
       idRobot: props.showDetailsMapGestion.id_robot,
       destination: "destination",
       modalErrorMsg: "",
       pk: 1,
+      show:true
     };
   }
 
@@ -58,7 +62,6 @@ class MapGestion extends React.Component {
     // ];
     this.provideCoordinates();
     this.provideRobotInfos();
-    // this.fetchLastHeartbeatMsg();
   }
 
   fetchLastHeartbeatMsg = () => {
@@ -790,7 +793,7 @@ class MapGestion extends React.Component {
       openModal,
       modalErrorMsg,
       openModalInfo,
-      choosingDest,
+      choosingDest,scrollTop
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
     console.log(
@@ -801,6 +804,7 @@ class MapGestion extends React.Component {
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
     var blob = fields[1];
+    const showNavbar = scrollTop >= 200 ?"200px": "0px";
 
     return (
       <div className={this.classes.root}>
@@ -914,50 +918,11 @@ class MapGestion extends React.Component {
           </div>
         </Modal>
 
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={12} lg={12}>
-            <Card>
-              <CardContent>
-                <div>
-                  <img
-                    style={{ float: "left", marginTop: "0.5em" }}
-                    width="40"
-                    src="./images/carrier.svg"
-                  />
-                  <img
-                    style={{
-                      float: "right",
-                      marginTop: "0.5em",
-                      position: "relative",
-                      bottom: "0.5em",
-                    }}
-                    width="50"
-                    src="./images/go_back.png"
-                    onClick={() => this.props.callBackRetourMaps()}
-                  />
-                </div>
-
-                <div style={{ marginLeft: "3.5em" }}>
-                  <Typography
-                    style={{
-                      color: "BLACK",
-                      fontFamily: "Black Ops One, cursive",
-                      transform: "translateY(10px)",
-                      display: "flex",
-                    }}
-                    component="h5"
-                    variant="h5"
-                  >
-                    Map {mapName} - Robot {this.state.idRobot}
-                  </Typography>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        <MapGestionButtons handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
+           
         {/* Map Management */}
         <Grid container spacing={2}>
-          <Grid item xs={12} md={12} lg={4}>
+          <Grid item xs={12} md={12} lg={12}>
             <Card>
               <CardContent>
                 <ImageMapper
@@ -1043,12 +1008,13 @@ class MapGestion extends React.Component {
               </div>
             )}
           </Grid>
-
+          
+          <Hidden mdUp>
           <Grid
             item
             xs={12}
             md={12}
-            lg={4}
+            lg={12}
             style={{ height: "820px" }}
             id="section2"
           >
@@ -1281,12 +1247,12 @@ class MapGestion extends React.Component {
               </CardContent>
             </Card>
           </Grid>
-
-          <Hidden only="sm">
-            <Grid item xs={12} md={12} lg={4} style={{ height: "820px" }}>
+          </Hidden>
+          {/* <Hidden only="sm">
+            <Grid item xs={12} md={12} lg={12} style={{ height: "820px" }}>
               {this.returnInfo()}
             </Grid>
-          </Hidden>
+          </Hidden> */}
         </Grid>
       </div>
     );

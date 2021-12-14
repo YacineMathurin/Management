@@ -465,9 +465,9 @@ export default function MiniDrawer() {
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
-        style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
+        style={{ backgroundColor: "#4B4B4B" }}
       >
-        <Toolbar>
+        <Toolbar style={{minHeight: "44px"}}>
           {apiKey != null && ( // if login page no drawer
             <IconButton
               color="inherit"
@@ -569,7 +569,7 @@ export default function MiniDrawer() {
             }),
           }}
         >
-          <div className={classes.toolbar}>
+          <div className={classes.toolbar} style={{minHeight:"25px"}} >
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "rtl" ? (
                 <ChevronRightIcon />
@@ -607,7 +607,7 @@ export default function MiniDrawer() {
         </Drawer>
       )}
       <main className={classes.content}>
-        <div className={classes.toolbar} />
+        <div className={classes.toolbar} style={{minHeight:"25px"}} />
         {/* for the toast the callback reset the variable that displays the toast */}
         {showToastLogout == 1 && (
           <Toast
