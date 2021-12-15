@@ -814,7 +814,6 @@ class MapGestion extends React.Component {
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
     var blob = fields[1];
-    const showNavbar = scrollTop >= 200 ?"200px": "0px";
 
     return (
       <div className={this.classes.root}>
@@ -914,7 +913,7 @@ class MapGestion extends React.Component {
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-          <div className="modal-body" style={{ backgroundColor: "white" }}>
+          <div className="modal-body" style={{ backgroundColor: "white", width:"80%" }}>
             {this.returnInfo()}
             <Button
               variant="outlined"
@@ -928,7 +927,7 @@ class MapGestion extends React.Component {
           </div>
         </Modal>
 
-        <MapGestionButtons zoom={zoom} handleZoomOut={()=>this.handleZoomOut()} handleZoomIn={()=>this.setState({zoom: this.state.zoom + 10})} handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
+        <MapGestionButtons showInfoMobile={()=>this.showInfoMobile()} zoom={zoom} handleZoomOut={()=>this.handleZoomOut()} handleZoomIn={()=>this.setState({zoom: this.state.zoom + 10})} handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
            
         {/* Map Management */}
         <Grid container spacing={2} style={{position:"relative", top: show ? "250px":"0"}}>

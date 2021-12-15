@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Tooltip } from '@material-ui/core';
 
-const MapGestionButtons = ({zoom, handleZoomOut, handleZoomIn, show, handleShow, moving, choosingDest, nbpts, destination, msg, status, mapName, idRobot, callBackRetourMaps, editDestinations,StartMove, deletePoints, deleteOnePoint, provideCoordinates}) => {
+const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, show, handleShow, moving, choosingDest, nbpts, destination, msg, status, mapName, idRobot, callBackRetourMaps, editDestinations,StartMove, deletePoints, deleteOnePoint, provideCoordinates}) => {
   return (
     <div style={{
       position: "fixed",
@@ -204,9 +204,18 @@ const MapGestionButtons = ({zoom, handleZoomOut, handleZoomIn, show, handleShow,
             <Tooltip title="Zoom out">
             <img onClick={()=>handleZoomOut()} src={"./images/zoom-out.png"} style={{width:"25px", marginRight:"1em"}}></img>
             </Tooltip>
-            <span style={{ marginRight:"1em", fontFamily: "Black Ops One, cursive"}}>{zoom}{"%"}</span>
+            <span style={{ marginRight:"1em", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px"}}>{zoom}{"%"}</span>
             <Tooltip title="Zoom in">
             <img onClick={()=>handleZoomIn()} src={"./images/zoom-in.png"} style={{width:"25px", marginRight:"1em"}}></img>
+            </Tooltip>
+            <Tooltip title="Help">
+            <img
+                     style={{width:"25px", marginRight:"1em"}}
+                    src="./images/question.png"
+                    onClick={() => {
+                      showInfoMobile();
+                    }}
+            />
             </Tooltip>
             {!show && (
             <span>
