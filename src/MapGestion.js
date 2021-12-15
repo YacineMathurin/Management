@@ -27,6 +27,9 @@ import Icon from '@material-ui/core/Icon';
 import SaveIcon from '@material-ui/icons/Save';
 
 class MapGestion extends React.Component {
+
+  classes = makeStyles((Theme) => createStyles({}));
+
   constructor(props) {
     super(props);
     this.timer = null;
@@ -50,7 +53,8 @@ class MapGestion extends React.Component {
       destination: "destination",
       modalErrorMsg: "",
       pk: 1,
-      show:true
+      show:true,
+      zoom:100
     };
   }
 
@@ -110,8 +114,6 @@ class MapGestion extends React.Component {
     }
   }
 
-  classes = makeStyles((Theme) => createStyles({}));
-
   deleteOnePoint(pk) {
     console.log("vous voulez effacer  le point de pk=" + pk);
     fetch(Const.URL_WS_DEL_DEF + "?pk=" + pk, { retry: 3, retryDelay: 1000 })
@@ -128,7 +130,6 @@ class MapGestion extends React.Component {
   }
 
   deletePoints(id) {
-    //console.log("vous voulez effacer toutes les destinations de id="+ id)
     fetch(Const.URL_WS_DEL_ALL_DEF + "?id=" + id, {
       retry: 3,
       retryDelay: 1000,
@@ -138,6 +139,7 @@ class MapGestion extends React.Component {
         this.setState({
           status:
             "Vous avez supprimé plusieures destinations, Veuillez Rafraichir",
+            nbpts:null
         });
         this.provideCoordinates();
       })
@@ -780,6 +782,14 @@ class MapGestion extends React.Component {
       msg: `Vous avez quitté ${area.shape} ${area.name}`
     });*/
   }
+  handleZoomOut = ()=> {
+    var {coodinates} = this.state;
+    coodinates = coodinates.map(item => {
+      return {x_pixel: item["x_pixel"] * 0.1, y_pixel: item["y_pixel"] * 0.1}
+    });
+    console.log("Unzommed coodinates", coodinates);
+    this.setState({zoom: this.state.zoom - 10,});
+  }
 
   render() {
     const {
@@ -793,13 +803,13 @@ class MapGestion extends React.Component {
       openModal,
       modalErrorMsg,
       openModalInfo,
-      choosingDest,scrollTop
+      choosingDest,scrollTop,zoom, show
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
-    console.log(
-      "this.props.showDetailsMapGestion",
-      this.props.showDetailsMapGestion
-    );
+    // console.log(
+    //   "this.props.showDetailsMapGestion",
+    //   this.props.showDetailsMapGestion
+    // );
     const mapName = this.props.showDetailsMapGestion.mapName;
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
@@ -918,12 +928,12 @@ class MapGestion extends React.Component {
           </div>
         </Modal>
 
-        <MapGestionButtons handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
+        <MapGestionButtons zoom={zoom} handleZoomOut={()=>this.handleZoomOut()} handleZoomIn={()=>this.setState({zoom: this.state.zoom + 10})} handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
            
         {/* Map Management */}
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{position:"relative", top: show ? "250px":"0"}}>
           <Grid item xs={12} md={12} lg={12}>
-            <Card>
+            <Card style={{zoom:zoom+"%"}}>
               <CardContent>
                 <ImageMapper
                   src={`data:image/jpeg;base64,` + blob}
@@ -938,7 +948,9 @@ class MapGestion extends React.Component {
                   onImageMouseMove={(evt) => this.moveOnImage(evt)}
                   lineWidth={4}
                   strokeColor={"white"}
+                  
                 />
+                {/* <img src={"./images/indoor.jpg"} style={{zoom:zoom+"%"}}></img> */}
               </CardContent>
             </Card>
             {imageHeight && (
@@ -949,6 +961,7 @@ class MapGestion extends React.Component {
                   bottom: imageHeight + 24,
                   left: "16px",
                   zIndex: 1,
+                  zoom:zoom+"%"
                 }}
               >
                 <svg style={{ height: "100%", width: "100%" }}>

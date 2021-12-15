@@ -32,9 +32,10 @@
               <input
                 type="email"
                 class="form-control"
-                id="exampleInputEmail1"
+                id="idclient"
                 aria-describedby="emailHelp"
                 placeholder="Enter Client's ID"
+                onchange=""
               />
             </div>
             <div class="form-group">
@@ -44,7 +45,7 @@
               <input
                 type="email"
                 class="form-control"
-                id="exampleInputEmail1"
+                id="idrobot"
                 aria-describedby="emailHelp"
                 placeholder="Enter Robot's ID"
               />
@@ -85,9 +86,19 @@
     <script>
       var progress = document.getElementById("progress-bar");
       var db = document.getElementById("db");
+      var idClient = 0;
+      var idRobot = 1;
+      const idClientSelect = document.getElementById('idclient');
+      const idRobotSelect = document.getElementById('idrobot');
+
+      idClientSelect.addEventListener('change', (event) => {
+        idClient = event.target.value;
+      });
+      idRobotSelect.addEventListener('change', (event) => {
+        idRobot = event.target.value;
+      });
 
       function dest1() {
-        // alert("Destination 1");
         var count = 1;
         var arrived = 0;
         var interval = setInterval(() => {
@@ -103,8 +114,8 @@
             .get("http://qenvi.space:8081/updateHeartBeatWS", {
               params: {
                 MSG_TYPE: 0,
-                ID_CLIENT: 0,
-                ID_ROBOT: 1,
+                ID_CLIENT: idClient,
+                ID_ROBOT: idRobot,
                 IS_MOVING: arrived === 1 ? 0 : 1,
                 PATH_INDEX: 1,
                 ARRIVED: arrived,
@@ -127,11 +138,50 @@
               // always executed
             });
           count++;
-        }, 750);
+        }, 900);
       }
 
       function dest2() {
-        alert("Destination 2");
+        var count = 1;
+        var arrived = 0;
+        var interval = setInterval(() => {
+          progress.setAttribute("value", Math.round((count * 100) / 34));
+          db.innerText = Math.round((count * 100) / 34);
+
+          console.log(count);
+          if (count >= 34) {
+            arrived = 1;
+            clearInterval(interval);
+          }
+          axios
+            .get("http://qenvi.space:8081/updateHeartBeatWS", {
+              params: {
+                MSG_TYPE: 0,
+                ID_CLIENT: idClient,
+                ID_ROBOT: idRobot,
+                IS_MOVING: arrived === 1 ? 0 : 1,
+                PATH_INDEX: 1,
+                ARRIVED: arrived,
+                TIMESTAMP: Date.now(),
+                STATUS: 0,
+                BAT_LEVEL: 80,
+                X_COORD: 312,
+                Y_COORD: 146 + count * 3,
+              },
+            })
+            .then(function (response) {
+              // handle success
+              console.log(response);
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+            .then(function () {
+              // always executed
+            });
+          count++;
+        }, 900);
       }
     </script>
   </body>
