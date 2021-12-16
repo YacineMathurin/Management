@@ -54,7 +54,8 @@ class MapGestion extends React.Component {
       modalErrorMsg: "",
       pk: 1,
       show:true,
-      zoom:100
+      zoom:100, 
+      positionIndex:0
     };
   }
 
@@ -529,6 +530,7 @@ class MapGestion extends React.Component {
     this.setState({
       moving: true,
       msg: "En mouvement ...",
+      positionIndex: this.state.positionIndex + 1
     });
     var coordinatesClone = coodinates;
     var pathIndex = 1;
@@ -572,7 +574,7 @@ class MapGestion extends React.Component {
     }
     // pathIndex = pathIndex + 1;
     // this.setMovingStatus(1, this.state.actualID);
-    this.setState({ moving: true, msg: "En mouvement ..." });
+    this.setState({ moving: true, msg: "En mouvement ...",  positionIndex: this.state.positionIndex + 1 });
     const { coodinates } = this.state;
     var coordinatesClone = coodinates;
     console.log(
@@ -797,7 +799,7 @@ class MapGestion extends React.Component {
       openModal,
       modalErrorMsg,
       openModalInfo,
-      choosingDest,scrollTop,zoom, show
+      choosingDest,scrollTop,zoom, show, positionIndex
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
     // console.log(
@@ -1007,31 +1009,27 @@ class MapGestion extends React.Component {
                   })}
                   {coodinates.map((item, index, array) => (
                     <React.Fragment>
-                      {/* <circle
+                      <circle
                         cx={item.x_pixel}
                         cy={item.y_pixel}
                         r="12"
                         stroke="bisque"
                         strokeWidth="3"
+                        fill={
+                          moving
+                            ? index === pathIndex
+                              ? "#8f1b36"
+                              : "#2e7aa3"
+                            : "#2e7aa3"
+                        }
+  
                       />
-                      {index === 0 && <circle
-                        cx={item.x_pixel}
-                        cy={item.y_pixel}
-                        r="12"
-                        stroke="bisque"
-                        strokeWidth="3"
-                        className="pulse"
-                      />} */}
-                      
-                        {/* <circle cx = {"15%"} cy = {"24.5%"} r = "7px"></circle>
-                        <circle class = "pulse" cx = {"15%"} cy = {"24.5%"} r = "10px"></circle> */}
-                        {index === 0 && <React.Fragment>
-                          <circle cx={item.x_pixel} cy={item.y_pixel} fill="none" r="10" stroke="#383a36" stroke-width="2">
-                          <animate attributeName="r" from="8" to="20" dur="1.5s" begin="0s" repeatCount="indefinite"/>
-                          <animate attributeName="opacity" from="1" to="0" dur="1.5s" begin="0s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx={item.x_pixel} cy={item.y_pixel} fill="#383a36" r="10"/></React.Fragment>}
-                     
+                      {index === positionIndex && <React.Fragment>
+                        <circle cx={item.x_pixel} cy={item.y_pixel} fill="none" r="10" stroke="#383a36" stroke-width="2">
+                        <animate attributeName="r" from="8" to="20" dur="1.5s" begin="0s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" from="1" to="0" dur="1.5s" begin="0s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx={item.x_pixel} cy={item.y_pixel} fill="#383a36" r="10"/></React.Fragment>}
                     </React.Fragment>
                   ))}
                 </svg>
