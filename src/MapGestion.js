@@ -921,12 +921,12 @@ class MapGestion extends React.Component {
           </div>
         </Modal>
 
-        <MapGestionButtons showInfoMobile={()=>this.showInfoMobile()} zoom={zoom} handleZoomOut={()=>this.handleZoomOut()} handleZoomIn={()=>this.setState({zoom: this.state.zoom + 10})} handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
+        <MapGestionButtons showInfoMobile={()=>this.showInfoMobile()} zoom={zoom} handleZoomOut={()=>this.setState({zoom: this.state.zoom - 10})} handleZoomIn={()=>this.setState({zoom: this.state.zoom + 10})} handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
            
         {/* Map Management */}
         <Grid container spacing={2} style={{position:"relative", top: show ? "250px":"0"}}>
           <Grid item xs={12} md={12} lg={12}>
-            <Card style={{zoom:zoom+"%"}}>
+            <Card style={{zoom:zoom+"%", backgroundColor: "rgb(238, 238, 238)"}}>
               <CardContent>
                 <ImageMapper
                   src={`data:image/jpeg;base64,` + blob}
@@ -1006,20 +1006,33 @@ class MapGestion extends React.Component {
                     }
                   })}
                   {coodinates.map((item, index, array) => (
-                    <circle
-                      cx={item.x_pixel}
-                      cy={item.y_pixel}
-                      r="12"
-                      stroke="bisque"
-                      strokeWidth="3"
-                      fill={
-                        moving
-                          ? index === pathIndex
-                            ? "#8f1b36"
-                            : "#2e7aa3"
-                          : "#2e7aa3"
-                      }
-                    />
+                    <React.Fragment>
+                      {/* <circle
+                        cx={item.x_pixel}
+                        cy={item.y_pixel}
+                        r="12"
+                        stroke="bisque"
+                        strokeWidth="3"
+                      />
+                      {index === 0 && <circle
+                        cx={item.x_pixel}
+                        cy={item.y_pixel}
+                        r="12"
+                        stroke="bisque"
+                        strokeWidth="3"
+                        className="pulse"
+                      />} */}
+                      
+                        {/* <circle cx = {"15%"} cy = {"24.5%"} r = "7px"></circle>
+                        <circle class = "pulse" cx = {"15%"} cy = {"24.5%"} r = "10px"></circle> */}
+                        {index === 0 && <React.Fragment>
+                          <circle cx={item.x_pixel} cy={item.y_pixel} fill="none" r="10" stroke="#383a36" stroke-width="2">
+                          <animate attributeName="r" from="8" to="20" dur="1.5s" begin="0s" repeatCount="indefinite"/>
+                          <animate attributeName="opacity" from="1" to="0" dur="1.5s" begin="0s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx={item.x_pixel} cy={item.y_pixel} fill="#383a36" r="10"/></React.Fragment>}
+                     
+                    </React.Fragment>
                   ))}
                 </svg>
               </div>
