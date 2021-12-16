@@ -177,7 +177,7 @@ class MapGestion extends React.Component {
             shape: "circle",
             coords: [s.x_pixel, s.y_pixel, 9],
             preFillColor: "#0099ff",
-            fillColor: "red",
+            fillColor: "#C51162",
           });
         });
 
@@ -185,7 +185,8 @@ class MapGestion extends React.Component {
           //ajouter la couleur
           lgg = this.state.coodinates.length;
           console.log(lgg);
-          MAP.areas[lgg - 1].preFillColor = "red";
+          MAP.areas[0].preFillColor = "gold";
+          MAP.areas[lgg - 1].preFillColor = "#C51162";
           this.setState({
             nbpts: this.state.coodinates.length,
           });
@@ -556,6 +557,7 @@ class MapGestion extends React.Component {
             moving: false,
             pathIndex: pathIndex + 1,
             msg: "Arrivée à destination !",
+            moved:true
           });
           clearInterval(timeInterval);
         }
@@ -782,14 +784,6 @@ class MapGestion extends React.Component {
       msg: `Vous avez quitté ${area.shape} ${area.name}`
     });*/
   }
-  handleZoomOut = ()=> {
-    var {coodinates} = this.state;
-    coodinates = coodinates.map(item => {
-      return {x_pixel: item["x_pixel"] * 0.1, y_pixel: item["y_pixel"] * 0.1}
-    });
-    console.log("Unzommed coodinates", coodinates);
-    this.setState({zoom: this.state.zoom - 10,});
-  }
 
   render() {
     const {
@@ -966,24 +960,49 @@ class MapGestion extends React.Component {
                 <svg style={{ height: "100%", width: "100%" }}>
                   {coodinates.map((item, index, array) => {
                     if (index + 1 < array.length) {
-                      return (
-                        <PathLine
-                          points={[
-                            {
-                              x: item["x_pixel"],
-                              y: item["y_pixel"],
-                            },
-                            {
-                              x: array[index + 1]["x_pixel"],
-                              y: array[index + 1]["y_pixel"],
-                            },
-                          ]}
-                          stroke={this.handleStrokeColor(index)}
-                          strokeWidth="10"
-                          fill="none"
-                          r={10}
-                        />
-                      );
+                      if (moving || moved) {
+                        // Draw line 1
+                        return (
+                          <PathLine
+                            points={[
+                              {
+                                x: item["x_pixel"],
+                                y: item["y_pixel"],
+                              },
+                              {
+                                x: array[index + 1]["x_pixel"],
+                                y: array[index + 1]["y_pixel"],
+                              },
+                            ]}
+                            stroke={this.handleStrokeColor(index)}
+                            strokeWidth="10"
+                            fill="none"
+                            r={10}
+                          />
+                        ) 
+                      } else {
+                        // Don't Draw line 1
+                        if (index != 0 ) {
+                          return (
+                            <PathLine
+                              points={[
+                                {
+                                  x: item["x_pixel"],
+                                  y: item["y_pixel"],
+                                },
+                                {
+                                  x: array[index + 1]["x_pixel"],
+                                  y: array[index + 1]["y_pixel"],
+                                },
+                              ]}
+                              stroke={this.handleStrokeColor(index)}
+                              strokeWidth="10"
+                              fill="none"
+                              r={10}
+                            />
+                          ) 
+                        }
+                      }
                     }
                   })}
                   {coodinates.map((item, index, array) => (
@@ -1002,20 +1021,6 @@ class MapGestion extends React.Component {
                       }
                     />
                   ))}
-                  {/* {moving && (
-                    <PathLine
-                      points={[
-                        { x: 30, y: 30 },
-                        { x: targetx, y: 30 },
-                        // { x: 125, y: 125 },
-                        // { x: 250, y: 125 },
-                      ]}
-                      stroke="#f5a9a4"
-                      strokeWidth="10"
-                      fill="none"
-                      r={10}
-                    />
-                  )} */}
                 </svg>
               </div>
             )}

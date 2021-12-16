@@ -13,7 +13,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
           top: "48px",
           zIndex: "5",
           backgroundColor:"#eee",
-          width:"100%"
+          width:"96%"
     }}>
        <div style={{display: show ? "block":"none"}}>
       <Grid container spacing={2} >
@@ -50,7 +50,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                     component="h5"
                     variant="h5"
                   >
-                    {mapName} - Robot {idRobot}
+                    {mapName ? mapName:"- Map"}
                   </Typography>
                 </div>
               </CardContent>
@@ -193,38 +193,47 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                   )}
       </div>
       <div style={{borderBottom: "5px solid gold"}}></div>
-        </div>  
-        <div style={{margin:"3px 17px 0 17px"}}>
-            <Tooltip title="Go To Back page">
-            <img onClick={()=>callBackRetourMaps()} src={"./images/go_back.png"} style={{width:"25px", marginRight:"1em"}}></img>
-            </Tooltip>
-            <Tooltip title="Show / Hide Toolbar">
-            <img onClick={()=>handleShow()} src={"./images/arrow.png"} style={{width:"25px", marginRight:"1em"}}></img>
-            </Tooltip>
-            <Tooltip title="Zoom out">
-            <img onClick={()=>handleZoomOut()} src={"./images/zoom-out.png"} style={{width:"25px", marginRight:"1em"}}></img>
-            </Tooltip>
-            <span style={{ marginRight:"1em", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px"}}>{zoom}{"%"}</span>
-            <Tooltip title="Zoom in">
-            <img onClick={()=>handleZoomIn()} src={"./images/zoom-in.png"} style={{width:"25px", marginRight:"1em"}}></img>
-            </Tooltip>
-            <Tooltip title="Help">
-            <img
-                     style={{width:"25px", marginRight:"1em"}}
-                    src="./images/question.png"
-                    onClick={() => {
-                      showInfoMobile();
-                    }}
-            />
-            </Tooltip>
-            {!show && (
-            <span>
-              <span style={{color: "BLACK", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px", marginRight:"1em"}}>{mapName} - Robot {idRobot}</span>
-              {nbpts &&  <span style={{color: "BLACK", position:"relative", bottom:"7px", marginRight:"1em"}}>{nbpts} destinations</span>}
-              {status &&  <span style={{color: "BLACK", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px", marginRight:"1em"}}>{status}</span>}
-            </span>
-            )}
-             
+        </div> 
+        <div style={{display:"flex", position:"relative"}}>
+          <div style={{margin:"3px 17px 0 17px"}}>
+              <Tooltip title="Go To Back page">
+              <img onClick={()=>callBackRetourMaps()} src={"./images/go_back.png"} style={{width:"25px", marginRight:"1em"}}></img>
+              </Tooltip>
+              <Tooltip title="Show / Hide Toolbar">
+              <img onClick={()=>handleShow()} src={"./images/arrow.png"} style={{width:"25px", marginRight:"1em"}}></img>
+              </Tooltip>
+              <Tooltip title="Zoom out">
+              <img onClick={()=>handleZoomOut()} src={"./images/zoom-out.png"} style={{width:"25px", marginRight:"1em"}}></img>
+              </Tooltip>
+              <span style={{ marginRight:"1em", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px"}}>{zoom}{"%"}</span>
+              <Tooltip title="Zoom in">
+              <img onClick={()=>handleZoomIn()} src={"./images/zoom-in.png"} style={{width:"25px", marginRight:"1em"}}></img>
+              </Tooltip>
+              <Tooltip title="Help">
+              <img
+                      style={{width:"25px", marginRight:"1em"}}
+                      src="./images/question.png"
+                      onClick={() => {
+                        showInfoMobile();
+                      }}
+              />
+              </Tooltip>
+              {!show && (
+              <span>
+                <span style={{color: "BLACK", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px", marginRight:"1em"}}>{mapName ? mapName:"- Map"}</span>
+                {nbpts &&  <span style={{color: "BLACK", position:"relative", bottom:"7px", marginRight:"1em"}}>{nbpts} destinations</span>}
+                {status &&  <span style={{color: "BLACK", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px", marginRight:"1em"}}>{status}</span>}
+              </span>
+              )}
+          </div> 
+          <div style={{display:"flex", position:"absolute", right:"10px"}}>
+            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>Start point</span>
+            <p style={{width:"20px", height:"20px", borderRadius:"50%", backgroundColor:"gold", margin: "0", position: "relative",top: "7px", marginRight:"1em"}}>{" "}</p>
+            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>Intermediate points</span>
+            <p style={{width:"20px", height:"20px", borderRadius:"50%", backgroundColor:"#0099ff", margin: "0", position: "relative",top: "7px", marginRight:"1em"}}>{" "}</p>
+            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>End point</span>
+            <p style={{width:"20px", height:"20px", borderRadius:"50%", backgroundColor:"#C51162", margin: "0", position: "relative",top: "7px", marginRight:"1em"}}>{" "}</p>
+          </div>
         </div> 
      </div> 
   );
