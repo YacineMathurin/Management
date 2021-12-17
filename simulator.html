@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link
       rel="stylesheet"
       href="https://bootswatch.com/5/cosmo/bootstrap.min.css"
@@ -14,6 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap"
       rel="stylesheet"
     />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <title>Simulator</title>
@@ -21,7 +23,7 @@
   <body>
     <div class="section1">
       <h4>Lauch your simulator</h4>
-      <h6>By setting ID's then clicking one of the buttons</h6>
+      <h6>By setting ID's then follow helper text bellow</h6>
       <form autocomplete="off">
         <fieldset>
           <div class="inputs">
@@ -53,7 +55,13 @@
             </div>
           </div>
           <div>
-            <button type="button" class="btn btn-primary" onclick="dest1()">
+            <p>
+              <!-- <button type="button" class="btn btn-primary" onclick="reset()"> -->
+              <button type="button" class="btn btn-primary" onclick="restart()">
+                Reset &#x21bb;
+              </button>
+            </p>
+            <button type="button" class="btn btn-primary" onclick="dest1()" >
               — Destination 1 —
             </button>
             <button
@@ -65,17 +73,19 @@
               | Destination 2 |
             </button>
           </div>
-          <p style="margin: 0">
-            Destination 1 fills DB with data simulating horizontal movement · |
-            · Destination 2 for the vertical one
-          </p>
+          
         </fieldset>
       </form>
 
       <label for="progress-bar"
         >Filling DB status at <span id="db">0</span>%</label
       >
-      <progress id="progress-bar" value="0" max="100" />
+      <progress id="progress-bar" value="0" max="100"></progress>
+      <p style="margin: 0">
+        Reset button resets the robot to it's depart position <br> 
+        Destination 1 fills DB with data simulating horizontal movement <br>
+        Destination 2 for the vertical one
+      </p>
     </div>
 
     <div class="section2">
@@ -183,6 +193,42 @@
             });
           count++;
         }, 900);
+      }
+    
+      function restart() {
+        
+        axios
+            .get("http://qenvi.space:8081/updateHeartBeatWS", {
+              params: {
+                MSG_TYPE: 0,
+                ID_CLIENT: idClient,
+                ID_ROBOT: idRobot,
+                IS_MOVING: 0,
+                PATH_INDEX: 1,
+                ARRIVED: 1,
+                TIMESTAMP: Date.now(),
+                STATUS: 0,
+                BAT_LEVEL: 80,
+                X_COORD: 210,
+                Y_COORD: 146,
+              },
+            })
+            .then(function (response) {
+              // handle success
+              console.log(response);
+              Toastify({
+                text: "Robot Position Reseted",
+                className: "info",
+                style: {
+                  // background: "linear-gradient(to right, #00b09b, #96c93d)",
+                  background: "linear-gradient(to right top,#051937,#2e2d5d,#5f4080,#984f9d,#d65db1)",
+                }
+              }).showToast();
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
       }
     </script>
   </body>
