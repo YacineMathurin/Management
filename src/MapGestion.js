@@ -55,7 +55,8 @@ class MapGestion extends React.Component {
       pk: 1,
       show:true,
       zoom:100, 
-      positionIndex:0
+      positionIndex:0,
+      pathIndex:1
     };
   }
 
@@ -88,8 +89,12 @@ class MapGestion extends React.Component {
       .then((res) => res.json())
       .then((data) => {
         console.log("fetchLastHeartbeatMsg data", data);
+        if (data.length === 0) return 0;
         const pk = data[0]["PK"];
-        this.setState({ pk });
+        const robotPosition = {x_pixel:data[0]["X_COORD"], y_pixel: data[0]["Y_COORD"]};
+        console.log("robotPosition", robotPosition);
+        coodinates.splice(0, 0, robotPosition);
+        this.setState({ pk, coodinates });
         if (this.props.showDetailsMapGestion.is_moving) {
           console.log("MOVING...");
           const pathIndex = data[0]["PATH_INDEX"];
@@ -523,7 +528,11 @@ class MapGestion extends React.Component {
 
   StartMove = () => {
     // #deeafc #5293fa
+    // if (pathIndex > 1) {
+    //   return this.nextDestination();
+    // }
     this.setMovingStatusMapsPAge(1, this.state.actualID);
+    const {pathIndex}= this.state;
     // this.setState({ moving: true, pk: 1, msg: "En mouvement ..." });
 
     const coodinates = this.state.coodinates;
@@ -533,7 +542,7 @@ class MapGestion extends React.Component {
       positionIndex: this.state.positionIndex + 1
     });
     var coordinatesClone = coodinates;
-    var pathIndex = 1;
+    // var pathIndex = 1;
     console.log(
       "coordinatesClone",
       coordinatesClone,
@@ -559,7 +568,8 @@ class MapGestion extends React.Component {
             moving: false,
             pathIndex: pathIndex + 1,
             msg: "Arrivée à destination !",
-            moved:true
+            moved:true,
+            arrived:false
           });
           clearInterval(timeInterval);
         }
@@ -573,7 +583,7 @@ class MapGestion extends React.Component {
       return this.StartMove();
     }
     // pathIndex = pathIndex + 1;
-    // this.setMovingStatus(1, this.state.actualID);
+    this.setMovingStatus(1, this.state.actualID);
     this.setState({ moving: true, msg: "En mouvement ...",  positionIndex: this.state.positionIndex + 1 });
     const { coodinates } = this.state;
     var coordinatesClone = coodinates;
@@ -595,7 +605,7 @@ class MapGestion extends React.Component {
       // stop after 35 iterations
       if (this.state.ARRIVED) {
         // This 313 is temporal, further we'll use a flag from robot heartbeat
-        // this.setMovingStatus(0, this.state.actualID);
+        this.setMovingStatus(0, this.state.actualID);
         clearInterval(timeInterval);
         this.setState({
           moving: false,
