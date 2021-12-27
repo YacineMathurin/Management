@@ -85,7 +85,7 @@ function PageTableauDeBord(props) {
 
             setTimeout(() => {
               setLoading(false);
-            }, 500);
+            }, 100);
           })
           .catch((error) => {
             console.error("Request failed", error);

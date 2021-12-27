@@ -1,6 +1,9 @@
 /** DEPLOIEMENT LOCAL POUR DEBUG SERVEUR API **/
 /** PERMET DE PASSER PAR LE SERVEUR API DEPLOYE EN LOCAL **/
 
+export const URL_GET_ALL_MAPS =
+  "http://qenvi.space:8081/GetAllMsgMapWS";
+
 export const URL_UPD_STATUS_MANAG_PAGE =
   "http://qenvi.space:8081/updateHeartBeatWS";
 

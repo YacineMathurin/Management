@@ -35,6 +35,8 @@ import PageTopChrono from "./PageTopChrono";
 import PageMaps from "./PageMaps";
 import MapGestion from "./MapGestion";
 import { useTranslation } from "react-i18next";
+import PageTableauDeBordMaps from "./PageTableauDeBordMaps";
+import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
 
 const drawerWidth = 240;
 
@@ -136,6 +138,7 @@ export default function MiniDrawer() {
   const [showMapGestion, setMapGestion] = React.useState(-1);
   const [showScreener, setShowScreener] = React.useState(-1);
   const [showBiblio, setShowBiblio] = React.useState(-1);
+  const [showTableauDeBordMaps, setShowTableauDeBordMaps] = React.useState(-1); // default screen
   const [showTableauDeBord, setShowTableauDeBord] = React.useState(1); // default screen
 
   const handleDrawerOpen = () => {
@@ -400,6 +403,7 @@ export default function MiniDrawer() {
       setMapGestion(-1);
       setShowScreener(-1);
       setShowBiblio(1);
+      setShowTableauDeBordMaps(-1);
       setShowTableauDeBord(-1);
     } else if (name.includes("tableau")) {
       // Tableau de bord
@@ -415,7 +419,24 @@ export default function MiniDrawer() {
       setMapGestion(-1);
       setShowScreener(-1);
       setShowBiblio(-1);
+      setShowTableauDeBordMaps(-1);
       setShowTableauDeBord(1);
+    } else if (name.includes("maps")) {
+      // Tableau de bord
+      setShowDetailsSelection(-1);
+      setShowClassementTrotteur(-1);
+      setShowRechercheSelections(-1);
+      setShowEcartFavoris(-1);
+      setShowStatsTrotteurs(-1);
+      setShowMonDossier(-1);
+      setShowAdmin(-1);
+      setShowAide(-1);
+      setShowMaps(-1);
+      setMapGestion(-1);
+      setShowScreener(-1);
+      setShowBiblio(-1);
+      setShowTableauDeBordMaps(1);
+      setShowTableauDeBord(-1);
     }
   };
 
@@ -588,6 +609,7 @@ export default function MiniDrawer() {
             >
               <ListItemIcon>
                 <DashboardOutlinedIcon />
+                {/* <img width="30" height="30" src="./images/trolley.png" /> */}
               </ListItemIcon>
               <ListItemText primary="Tableau de bord"></ListItemText>
             </ListItem>
@@ -595,11 +617,12 @@ export default function MiniDrawer() {
             <ListItem
               button
               onClick={() => {
-                drawerButtonClicked("Biblio", 1);
+                drawerButtonClicked("maps", 1);
               }}
             >
               <ListItemIcon>
-                <img width="22" height="22" src="./images/wrench.svg" />
+                {/* <img width="25" height="25" src="./images/maps.png" /> */}
+                <MapOutlinedIcon></MapOutlinedIcon>
               </ListItemIcon>
               <ListItemText primary="Journaux"></ListItemText>
             </ListItem>
@@ -722,6 +745,16 @@ export default function MiniDrawer() {
         {/* pas besoinde callback - pas de bouton de retour */}
         {showTableauDeBord > -1 && apiKey != null && (
           <PageTableauDeBord
+            callbackNeedToLogin={handleCallbackNeedToLogin}
+            apiKey={apiKey}
+            callbackOpenDetails={handleCallbackOpenDetails}
+            callbackOpenMaps={handleCallbackOpenMaps}
+            callbackRetourDetails={handleCallbackRetourDetails}
+          />
+        )}{" "}
+        {/* pas besoinde callback - pas de bouton de retour */}
+        {showTableauDeBordMaps > -1 && apiKey != null && (
+          <PageTableauDeBordMaps
             callbackNeedToLogin={handleCallbackNeedToLogin}
             apiKey={apiKey}
             callbackOpenDetails={handleCallbackOpenDetails}

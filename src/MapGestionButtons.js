@@ -5,8 +5,10 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Tooltip } from '@material-ui/core';
+import { useTranslation } from "react-i18next";
 
 const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, show, handleShow, moving, choosingDest, nbpts, destination, msg, status, mapName, idRobot, callBackRetourMaps, editDestinations,StartMove, deletePoints, deleteOnePoint, provideCoordinates}) => {
+  const { t } = useTranslation();
   return (
     <div style={{
       position: "fixed",
@@ -50,7 +52,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                     component="h5"
                     variant="h5"
                   >
-                    {mapName ? mapName:"- Map"}
+                    {mapName ? mapName:`- ${t("manag_title")}`}
                   </Typography>
                 </div>
               </CardContent>
@@ -79,7 +81,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
           size="small"
           disabled={moving}
         >
-          {!choosingDest ? "Mode Edition" : "Ajouter une destination"}
+          {!choosingDest ? t('manag_edit_btn') : t('manag_dest_btn')}
         </Button>
       </div>
       <div style={{marginRight:"1em"}}>
@@ -92,7 +94,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                   color="primary"
                   size="small"
                 >
-                  Rafraichir Map
+                  {t('manag_refresh_btn')}
       </Button>
       </div>
       <div style={{marginRight:"1em"}}> 
@@ -105,7 +107,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                   color="primary"
                   size="small"
                 >
-                  Démarrage immédiat
+                  {t('manag_go_btn')}
                 </Button>
       </div>
       <div style={{marginRight:"1em"}}>
@@ -119,7 +121,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                   color="secondary"
                   size="small"
                 >
-                  Effacer une destination
+                  {t('manag_erase_btn')}
                 </Button>
       </div>
       <div style={{marginRight:"1em"}}>
@@ -141,7 +143,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                   color="secondary"
                   size="small"
                 >
-                  Effacer destinations (Tous les points)
+                  {t('manag_erase_all_btn')}
                 </Button>
       </div>
       <div style={{marginRight:"1em"}}>
@@ -229,9 +231,9 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
           <div style={{display:"flex", position:"absolute", right:"10px"}}>
             {/* <span style={{position:"relative", top:"7px", marginRight:"1em"}}>Start point</span>
             <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"gold", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p> */}
-            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>Intermediate points</span>
+            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_intermediate_point_legend')}</span>
             <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"gold", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>
-            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>End point</span>
+            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_end_point_legend')}</span>
             <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"#C51162", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>
           </div>
         </div> 

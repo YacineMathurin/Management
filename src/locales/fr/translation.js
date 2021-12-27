@@ -56,7 +56,19 @@ export const TRANSLATIONS_FR = {
 
   /** Page Gestion */
   manag_title: "Carte",
-  manag_msg: "Vous avez cliqué sur ",
+  manag_msg: "Vous avez cliqué sur la destination ",
+  manag_status: "Vous avez une nouvelle destination, Veuillez Rafraichir",
+  manag_edit_btn: "Mode edition",
   manag_dest_btn: "Ajouter une destination",
   manag_refresh_btn: "Rafraichir map",
+  manag_go_btn: "Demarrage immediat",
+  manag_erase_btn: "Effacer une destination",
+  manag_erase_all_btn: "Effacer toute les destinations",
+  manag_intermediate_point_legend: "Points Intermediaire",
+  manag_end_point_legend: "Point d'arrivé",
+  manag_step1_help: 'Ajout d\'une destination, cliquez sur mode edition ensuite sur une position de l\'image puis cliquez "Ajouter une destination"',
+  manag_step2_help: 'Supprimer une destination, cliquez sur un point existant de l\'image puis cliquez sur "Effacer une destination"',
+  manag_step3_help: 'Supprimer toutes les destination, cliquez juste sur "Effacer destinations"',
+  manag_step4_help: 'Démarrage Immédiat, Envoie une action avec le nombre de points au robot',
+  manag_step5_help: 'Effacer la Map, Effacera la Map et toutes les destinations affiliées cliquez juste sur "Effacer la Map"',
 };

@@ -25,6 +25,7 @@ import "./MapGestion.css";
 import MapGestionButtons from "./MapGestionButtons";
 import Icon from '@material-ui/core/Icon';
 import SaveIcon from '@material-ui/icons/Save';
+import { useTranslation, withTranslation } from "react-i18next";
 
 class MapGestion extends React.Component {
 
@@ -121,12 +122,13 @@ class MapGestion extends React.Component {
   }
 
   deleteOnePoint(pk) {
+    const { t } = this.props;
     console.log("vous voulez effacer  le point de pk=" + pk);
     fetch(Const.URL_WS_DEL_DEF + "?pk=" + pk, { retry: 3, retryDelay: 1000 })
       .then((res) => res.json())
       .then((data) => {
         this.setState({
-          status: "Vous avez supprimé une destination, Veuillez Rafraichir",
+          status: t('manag_status'),
         });
         this.provideCoordinates();
       })
@@ -331,8 +333,9 @@ class MapGestion extends React.Component {
   }
 
   clicked(area) {
+    const { t } = this.props;
     this.setState({
-      msg: `Vous avez cliqué sur la destination  ${JSON.stringify(
+      msg: `${t('manag_msg')}  ${JSON.stringify(
         area.center
       )} .`,
       actualPk: area.name,
@@ -820,7 +823,7 @@ class MapGestion extends React.Component {
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
     var blob = fields[1];
-
+    const { t } = this.props;
     return (
       <div className={this.classes.root}>
         {/* Old Scenario */}
@@ -953,7 +956,6 @@ class MapGestion extends React.Component {
                   onImageMouseMove={(evt) => this.moveOnImage(evt)}
                   lineWidth={4}
                   strokeColor={"white"}
-                  
                 />
                 {/* <img src={"./images/indoor.jpg"} style={{zoom:zoom+"%"}}></img> */}
               </CardContent>
@@ -1297,4 +1299,4 @@ class MapGestion extends React.Component {
   }
 }
 
-export default MapGestion;
+export default  withTranslation()(MapGestion);

@@ -133,6 +133,10 @@ function SignIn({ callbackFunction }) {
     if (checkPassword) setCheckPassword(false);
     else setCheckPassword(true);
   }
+  function handleEnterTolog(e) {
+    console.log("handleEnterTolog", e, e.which);
+    if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.which==13) wantToCheckPassword();
+  }
   return (
     <Container
       component="main"
@@ -196,6 +200,7 @@ function SignIn({ callbackFunction }) {
                     ? localStorage.getItem("password")
                     : ""
                 }
+                onKeyPress={(event)=>handleEnterTolog(event)}
               />
               {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}

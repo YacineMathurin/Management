@@ -15,10 +15,10 @@ export const TRANSLATIONS_EN = {
   logout_ok: "logout succeed",
   login_ko: "Connexion failed, please try later",
 
-  /** Page de Bord */
+  /** Page de Bord robots*/
   dashboard_loading: "Loading your content",
   dashboard_title: "My Cobotic Arsenal",
-  dashboard_subtitle: "Find your robot follower",
+  dashboard_subtitle: "Find here all your robot",
   dashboard_moving: "Is moving",
   dashboard_connected: "Connected",
   dashboard_autonomy: "Autonomy",
@@ -29,7 +29,12 @@ export const TRANSLATIONS_EN = {
   dashboard_search: "Search a robot ID",
   dashboard_filter_btn: "FILTER",
   dashboard_filter_reset: "RESET FILTERS",
-
+  
+  /** Page de Bord robots*/
+  dashboard_maps_title: "All My Maps",
+  dashboard_maps_subtitle: "Visualize robot on their map",
+  dashboard_maps_search: "Search a map ID",
+  
   /** Page Maps */
   maps_title: "Click to select your desired map",
   maps_map: "Map",
@@ -52,4 +57,21 @@ export const TRANSLATIONS_EN = {
   maps_deleting_modal_confirm: "Do you confirm the deletion of all the maps ?",
   maps_deleting_modal_cancel_btn: "Cancel",
   maps_deleting_modal_confirm_btn: "Confirm",
+
+  /** Page Gestion */
+  manag_title: "Map",
+  manag_msg: "You've clicked at ",
+  manag_edit_btn: "Edition Mode",
+  manag_dest_btn: "Add a destination",
+  manag_refresh_btn: "Refresh map",
+  manag_go_btn: "Go !",
+  manag_erase_btn: "Delete a destination",
+  manag_erase_all_btn: "Delete all destinations",
+  manag_intermediate_point_legend: "Intermediate points",
+  manag_end_point_legend: "End point",
+  manag_step1_help: 'Ajout d\'une destination, cliquez sur mode edition ensuite sur une position de l\'image puis cliquez "Ajouter une destination"',
+  manag_step2_help: 'Supprimer une destination, cliquez sur un point existant de l\'image puis cliquez sur "Effacer une destination"',
+  manag_step3_help: 'Supprimer toutes les destination, cliquez juste sur "Effacer destinations"',
+  manag_step4_help: 'Démarrage Immédiat, Envoie une action avec le nombre de points au robot',
+  manag_step5_help: 'Effacer la Map, Effacera la Map et toutes les destinations affiliées cliquez juste sur "Effacer la Map"',
 };
