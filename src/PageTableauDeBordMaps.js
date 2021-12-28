@@ -305,8 +305,9 @@ function PageTableauDeBordMaps(props) {
                             <TableCell align="center">{s.id}</TableCell>
                             <TableCell align="center">{s.map_name}</TableCell>
                             <TableCell align="center">{s.user_comment}</TableCell>
-                            <TableCell >{allData.map(item => item.id === s.id ? 
+                            <TableCell >{allData.map((item, index) => item.id === s.id ? 
                               <Button
+                                key={index}
                                 onClick={()=>{handleCallbackOpenMaps(item.id_robot)}}
                                 variant="outlined"
                                 // color="secondary"
@@ -323,7 +324,7 @@ function PageTableauDeBordMaps(props) {
                                 fullWidth={false}
                                 width="2em"
                                 onClick={() =>
-                                  handleCallbackOpenMaps(s.ID_ROBOT)
+                                  props.callbackOpenMapOverview(s.id_client ,s.id_robot, s.id, allData)
                                 }
                                 variant="outlined"
                                 color="primary"

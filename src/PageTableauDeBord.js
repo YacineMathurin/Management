@@ -69,17 +69,6 @@ function PageTableauDeBord(props) {
     )
       .then((res) => res.json())
       .then((data) => {
-        fetch(
-          "http://qenvi.space:8081/GetDashboardReqByClientWS" +
-            "?idclient=" +
-            data[0]["ID_CLIENT"],
-          {
-            retry: 3,
-            retryDelay: 1000,
-          }
-        )
-          .then((res) => res.json())
-          .then((data) => {
             setlisteMetrics(data);
             setdefaultMetrics(data);
 
@@ -111,11 +100,7 @@ function PageTableauDeBord(props) {
         // result = data;
         // setlisteMetrics(result);
         // setdefaultMetrics(result);
-        // setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Request failed", error);
-      });
+      
   };
 
   const handleCallbackOpenDetails = (idRobot) => {

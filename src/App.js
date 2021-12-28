@@ -37,6 +37,7 @@ import MapGestion from "./MapGestion";
 import { useTranslation } from "react-i18next";
 import PageTableauDeBordMaps from "./PageTableauDeBordMaps";
 import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
+import MapOverview from "./MapOverview";
 
 const drawerWidth = 240;
 
@@ -136,6 +137,7 @@ export default function MiniDrawer() {
   const [showAide, setShowAide] = React.useState(-1);
   const [showMaps, setShowMaps] = React.useState(-1);
   const [showMapGestion, setMapGestion] = React.useState(-1);
+  const [showMapOverview, setMapOverview] = React.useState(-1);
   const [showScreener, setShowScreener] = React.useState(-1);
   const [showBiblio, setShowBiblio] = React.useState(-1);
   const [showTableauDeBordMaps, setShowTableauDeBordMaps] = React.useState(-1); // default screen
@@ -199,6 +201,14 @@ export default function MiniDrawer() {
     setShowMaps(-1);
     setMapGestion(1);
   };
+  const handleCallbackOpenMapOverview = (id_client, id_robot, id, allData) => { 
+    // console.log("on y va a mapOverview et afficher la carte à l'id: ", id);
+    setShowDetailsMapGestion({ id_client, id_robot, id, allData });
+    setShowTableauDeBord(-1);
+    setShowMaps(-1);
+    setShowTableauDeBordMaps(-1);
+    setMapOverview(1);
+  };
 
   const handleCallbackRetourDetails = (data) => {
     console.log("user wants to return to selection trotteur / main page");
@@ -215,6 +225,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
       setShowBiblio(-1);
       setShowScreener(1);
       setShowTableauDeBord(-1);
@@ -228,6 +239,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
       setShowBiblio(-1);
       setShowScreener(-1);
       setShowTableauDeBord(-1);
@@ -254,6 +266,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
       setShowBiblio(-1);
       setShowScreener(1);
       setShowTableauDeBord(-1);
@@ -267,6 +280,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
       setShowBiblio(-1);
       setShowScreener(-1);
       setShowTableauDeBord(-1);
@@ -287,6 +301,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
       setShowScreener(-1);
       setShowTableauDeBord(-1);
     } else if (name.includes("Trotteur")) {
@@ -402,6 +417,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
       setShowScreener(-1);
       setShowBiblio(1);
       setShowTableauDeBordMaps(-1);
@@ -418,6 +434,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
       setShowScreener(-1);
       setShowBiblio(-1);
       setShowTableauDeBordMaps(-1);
@@ -434,10 +451,29 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
       setShowScreener(-1);
       setShowBiblio(-1);
       setShowTableauDeBordMaps(1);
       setShowTableauDeBord(-1);
+    } else if (name.includes("maps_overview")) {
+      // Tableau de bord
+      setShowDetailsSelection(-1);
+      setShowClassementTrotteur(-1);
+      setShowRechercheSelections(-1);
+      setShowEcartFavoris(-1);
+      setShowStatsTrotteurs(-1);
+      setShowMonDossier(-1);
+      setShowAdmin(-1);
+      setShowAide(-1);
+      setShowMaps(-1);
+      setMapGestion(-1);
+      setMapOverview(-1);
+      setShowScreener(-1);
+      setShowBiblio(-1);
+      setShowTableauDeBordMaps(-1);
+      setShowTableauDeBord(-1);
+      setMapOverview(1);
     }
   };
 
@@ -457,6 +493,7 @@ export default function MiniDrawer() {
     setShowAide(-1);
     setShowMaps(-1);
     setMapGestion(-1);
+    setMapOverview(-1);
     setShowTableauDeBord(1);
   };
 
@@ -464,6 +501,7 @@ export default function MiniDrawer() {
     setShowAide(-1);
     setShowMaps(1);
     setMapGestion(-1);
+      setMapOverview(-1);
     setShowTableauDeBord(-1);
   };
 
@@ -471,12 +509,14 @@ export default function MiniDrawer() {
     setShowAide(-1);
     setShowMaps(-1);
     setMapGestion(-1);
+      setMapOverview(-1);
     setShowTableauDeBord(1);
   };
   const handleRetourTableauDeBordAide = () => {
     setShowAide(-1);
     setShowMaps(-1);
     setMapGestion(-1);
+      setMapOverview(-1);
     setShowTableauDeBord(1);
   };
   return (
@@ -728,6 +768,14 @@ export default function MiniDrawer() {
             showDetailsMapGestion={showDetailsMapGestion}
           />
         )}{" "}
+        {showMapOverview > -1 && apiKey != null && (
+          <MapOverview
+            callbackNeedToLogin={handleCallbackNeedToLogin}
+            callBackRetourMaps={handleRetourMaps}
+            apiKey={apiKey}
+            showDetailsMapGestion={showDetailsMapGestion}
+          />
+        )}{" "}
         {/* pas besoinde callback - pas de bouton de retour */}
         {showScreener > -1 && apiKey != null && (
           <PageTopChrono
@@ -760,6 +808,7 @@ export default function MiniDrawer() {
             apiKey={apiKey}
             callbackOpenDetails={handleCallbackOpenDetails}
             callbackOpenMaps={handleCallbackOpenMaps}
+            callbackOpenMapOverview={handleCallbackOpenMapOverview}
             callbackRetourDetails={handleCallbackRetourDetails}
           />
         )}{" "}
