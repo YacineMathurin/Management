@@ -182,6 +182,7 @@ export default function MiniDrawer() {
     setShowTableauDeBord(-1);
     setShowDetailsMapGestion(-1);
     setShowMaps(1);
+    setShowTableauDeBordMaps(-1);
     setMapGestion(-1);
   };
 

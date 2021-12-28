@@ -30,10 +30,14 @@ export const TRANSLATIONS_EN = {
   dashboard_filter_btn: "FILTER",
   dashboard_filter_reset: "RESET FILTERS",
   
-  /** Page de Bord robots*/
+  /** Page de Bord maps */
   dashboard_maps_title: "All My Maps",
   dashboard_maps_subtitle: "Visualize robot on their map",
   dashboard_maps_search: "Search a map ID",
+  dashboard_maps_name: "Name",
+  dashboard_maps_comment: "Comment",
+  dashboard_maps_robots: "Robot(s)",
+  dashboard_map: "Map",
   
   /** Page Maps */
   maps_title: "Click to select your desired map",

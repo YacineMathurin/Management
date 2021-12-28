@@ -39,6 +39,7 @@ function PageTableauDeBordMaps(props) {
   ]);
   const [filtreActivite, setfiltreActivite] = React.useState([0, 100]);
   const [listeMetrics, setlisteMetrics] = React.useState(null);
+  const [allData, setAllData] = React.useState(null);
   const [printTable, setprintTable] = React.useState("block");
   const [printCard, setprintCard] = React.useState("none");
   const [search, setsearch] = React.useState("");
@@ -75,6 +76,8 @@ function PageTableauDeBordMaps(props) {
         }
     });
     console.log("result", result);
+    setlisteMetrics(result);
+    setAllData(data);
   }
 
   const provideMetrics = () => {
@@ -278,16 +281,16 @@ function PageTableauDeBordMaps(props) {
                   <TableHead>
                     <TableRow>
                       {/* <TableCell align="center">ID Client </TableCell> */}
-                      <TableCell align="center">ID Robot</TableCell>
+                      <TableCell align="center">ID Map</TableCell>
                       <TableCell align="center">
-                        {t("dashboard_moving")}
+                        {t("dashboard_maps_name")}
                       </TableCell>
                       <TableCell align="center">
-                        {t("dashboard_connected")}
+                        {t("dashboard_maps_comment")}
                       </TableCell>
                       {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
                       <TableCell align="center">
-                        {t("dashboard_autonomy")}{" "}
+                        {t("dashboard_maps_robots")}{" "}
                       </TableCell>
                       <TableCell align="center"></TableCell>
                       <TableCell align="center"></TableCell>
@@ -295,78 +298,25 @@ function PageTableauDeBordMaps(props) {
                   </TableHead>
                   {listeMetrics != null &&
                     listeMetrics.map((s) => {
-                      var batterie = "./images/b1.png";
-
-                      if (s.BAT_LEVEL <= 55 && s.BAT_LEVEL >= 45) {
-                        batterie = "./images/b50.png";
-                      } else if (s.BAT_LEVEL < 45) {
-                        batterie = "./images/b0.png";
-                      }
-
-                      var processor = "./images/check.svg";
-                      /* if(s.system.cpu >= 80){
-                      processor = "./images/warning.svg";
-                      }*/
-
-                      var dispo = "./images/switch-on.svg";
-                      var timeS = Date.now() - s.TIMESTAMP;
-                      var dateS = new Date(timeS * 1000);
-                      var minutesS = dateS.getMinutes();
-                      //console.log("robot " +s.ID_ROBOT +" nb minutes="+minutesS);
-
-                      if (minutesS >= 15) {
-                        dispo = "./images/switch-off.svg";
-                      }
-
                       return (
-                        <TableBody key={s.ID_ROBOT}>
+                        <TableBody key={s.id}>
                           <TableRow>
                             {/* <TableCell align="center">{s.ID_CLIENT}</TableCell> */}
-                            <TableCell align="center">{s.ID_ROBOT}</TableCell>
-                            <TableCell align="center">
-                              {" "}
-                              <img
-                                style={{ marginTop: "0.5em" }}
-                                width="34"
-                                src={
-                                  s.is_moving
-                                    ? "./images/switch-on.svg"
-                                    : "./images/switch-off.svg"
-                                }
-                              />
-                            </TableCell>
-                            <TableCell align="center"></TableCell>
-                            <TableCell align="center">
-                              <img
-                                src={"./images/car-battery.svg"}
-                                style={{ width: "20px" }}
-                              />
-                              <span sytle={{ margin: "0 1em" }}>
-                                <CircularProgressWithLabel
-                                  value={s.BAT_LEVEL}
-                                  color={
-                                    s.BAT_LEVEL < 20
-                                      ? "#FF6666"
-                                      : s.BAT_LEVEL > 20 && s.BAT_LEVEL < 80
-                                      ? "gold"
-                                      : "#4DD637"
-                                  }
-                                />
-                              </span>
-                            </TableCell>
-                            <TableCell align="center">
+                            <TableCell align="center">{s.id}</TableCell>
+                            <TableCell align="center">{s.map_name}</TableCell>
+                            <TableCell align="center">{s.user_comment}</TableCell>
+                            <TableCell >{allData.map(item => item.id === s.id ? 
                               <Button
-                                fullWidth={false}
-                                width="2em"
-                                onClick={() =>
-                                  handleCallbackOpenDetails(s.ID_ROBOT)
-                                }
+                                onClick={()=>{handleCallbackOpenMaps(item.id_robot)}}
                                 variant="outlined"
-                                color="primary"
+                                // color="secondary"
                                 size="small"
+                                style={{margin:"0 0.5em 0.5em"}}
                               >
-                                {t("dashboard_details")}
-                              </Button>
+                                Robot-{item.id_robot}
+                              </Button>: "")}
+                            </TableCell>
+                            <TableCell align="center">
                             </TableCell>
                             <TableCell align="center">
                               <Button
@@ -379,7 +329,7 @@ function PageTableauDeBordMaps(props) {
                                 color="primary"
                                 size="small"
                               >
-                                {t("dashboard_maps")}
+                                {t("dashboard_map")}
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -389,134 +339,8 @@ function PageTableauDeBordMaps(props) {
                 </Table>
               </CardContent>
 
-              <CardContent style={{ display: printCard }}>
-                <Grid container spacing={2}>
-                  {listeMetrics != null &&
-                    listeMetrics.map((s) => {
-                      var batterie = "./images/b1.png";
-
-                      if (s.BAT_LEVEL <= 55 && s.BAT_LEVEL >= 45) {
-                        batterie = "./images/b50.png";
-                      } else if (s.BAT_LEVEL < 45) {
-                        batterie = "./images/b0.png";
-                      }
-
-                      var processor = "./images/check.svg";
-                      /* if(s.system.cpu >= 80){
-                processor = "./images/warning.svg";
-              }*/
-
-                      var dispo = "./images/switch-on.svg";
-                      var timeS = Date.now() - s.TIMESTAMP;
-                      var dateS = new Date(timeS * 1000);
-                      var minutesS = dateS.getMinutes();
-                      console.log(minutesS);
-
-                      if (minutesS >= 15) {
-                        dispo = "./images/switch-off.svg";
-                      }
-
-                      return (
-                        <Grid item xs={12} md={4} lg={3} key={s.ID_ROBOT}>
-                          <Card>
-                            <CardContent>
-                              <div>
-                                <img
-                                  style={{ float: "left", marginTop: "0.5em" }}
-                                  width="24"
-                                  src="./images/carrier.svg"
-                                />
-                              </div>
-                              <div>
-                                <img
-                                  style={{ float: "right", marginTop: "0.5em" }}
-                                  width="34"
-                                  src={dispo}
-                                />
-                              </div>
-                              <div style={{ marginLeft: "2.5em" }}>
-                                <Typography
-                                  style={{ color: "BLACK" }}
-                                  component="h3"
-                                  variant="h3"
-                                >
-                                  {s.ID_CLIENT}
-                                </Typography>
-                                <Typography
-                                  style={{ color: "BLACK" }}
-                                  component="h3"
-                                  variant="h3"
-                                >
-                                  {s.ID_ROBOT}
-                                </Typography>
-                                <Typography
-                                  style={{ fontSize: "14px" }}
-                                  color="textSecondary"
-                                >
-                                  description
-                                </Typography>
-                              </div>
-                              <Divider style={{ marginTop: "1em" }} />
-                              <div>
-                                <Table>
-                                  <TableBody>
-                                    <TableRow>
-                                      <TableCell>
-                                        <img
-                                          width="24"
-                                          src="./images/microchip.svg"
-                                        />
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        <img width="24" src={processor} />
-                                      </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                      <TableCell>
-                                        <img
-                                          width="24"
-                                          src="./images/car-battery.svg"
-                                        />
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        <img width="30" src={batterie} />
-                                      </TableCell>
-                                    </TableRow>
-                                  </TableBody>
-                                </Table>
-                                <Button
-                                  style={{ marginTop: "1em" }}
-                                  fullWidth={true}
-                                  //onClick={() => handleCallbackOpenDetails(s) }
-                                  onClick={() =>
-                                    handleCallbackOpenDetails(s.ID_ROBOT)
-                                  }
-                                  variant="outlined"
-                                  color="primary"
-                                  size="small"
-                                >
-                                  détails
-                                </Button>
-                                <Button
-                                  style={{ marginTop: "1em" }}
-                                  fullWidth={true}
-                                  onClick={() =>
-                                    handleCallbackOpenMaps(s.ID_ROBOT)
-                                  }
-                                  variant="outlined"
-                                  color="primary"
-                                  size="small"
-                                >
-                                  Maps
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      );
-                    })}
-                </Grid>
-              </CardContent>
+              
+            
             </Card>
           </Grid>
 

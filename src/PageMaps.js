@@ -102,7 +102,7 @@ class PageMaps extends React.Component {
   }
 
   provideMaps() {
-    fetch(Const.URL_WS_ALL_MAPS + `?robot=${this.state.map}`, {
+    fetch(Const.URL_WS_ALL_MAPS + `?idclient=0&idrobot=${this.state.map}`, {
       retry: 3,
       retryDelay: 1000,
     })
