@@ -25,22 +25,9 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                 <div>
                   <img
                     style={{ float: "left", marginTop: "0.5em", width:"25px", position:"relative", top:"12px" }}
-                    
                     src="./images/carrier.svg"
                   />
-                  {/* <img
-                    style={{
-                      float: "right",
-                      marginTop: "0.5em",
-                      position: "relative",
-                      bottom: "0.5em",
-                    }}
-                    width="50"
-                    src="./images/go_back.png"
-                    onClick={() => callBackRetourMaps()}
-                  /> */}
                 </div>
-
                 <div style={{ marginLeft: "3.5em" }}>
                   <Typography
                     style={{
@@ -198,7 +185,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
         </div> 
         <div style={{display:"flex", position:"relative"}}>
           <div style={{margin:"3px 17px 0 17px"}}>
-              <Tooltip title="Go To Back page">
+              <Tooltip title="Back to last page">
               <img onClick={()=>callBackRetourMaps()} src={"./images/go_back.png"} style={{width:"25px", marginRight:"1em"}}></img>
               </Tooltip>
               <Tooltip title="Show / Hide Toolbar">
@@ -229,8 +216,6 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
               )}
           </div> 
           <div style={{display:"flex", position:"absolute", right:"10px"}}>
-            {/* <span style={{position:"relative", top:"7px", marginRight:"1em"}}>Start point</span>
-            <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"gold", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p> */}
             <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_intermediate_point_legend')}</span>
             <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"gold", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>
             <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_end_point_legend')}</span>

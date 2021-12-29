@@ -324,7 +324,7 @@ function PageTableauDeBordMaps(props) {
                                 fullWidth={false}
                                 width="2em"
                                 onClick={() =>
-                                  props.callbackOpenMapOverview(s.id_client ,s.id_robot, s.id, allData)
+                                  props.callbackOpenMapOverview(s.id_client ,s.id_robot, s.id, allData, s.map_name)
                                 }
                                 variant="outlined"
                                 color="primary"

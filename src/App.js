@@ -201,9 +201,9 @@ export default function MiniDrawer() {
     setShowMaps(-1);
     setMapGestion(1);
   };
-  const handleCallbackOpenMapOverview = (id_client, id_robot, id, allData) => { 
+  const handleCallbackOpenMapOverview = (id_client, id_robot, id, allData, mapName) => { 
     // console.log("on y va a mapOverview et afficher la carte à l'id: ", id);
-    setShowDetailsMapGestion({ id_client, id_robot, id, allData });
+    setShowDetailsMapGestion({ id_client, id_robot, id, allData, mapName });
     setShowTableauDeBord(-1);
     setShowMaps(-1);
     setShowTableauDeBordMaps(-1);
@@ -509,8 +509,12 @@ export default function MiniDrawer() {
     setShowAide(-1);
     setShowMaps(-1);
     setMapGestion(-1);
-      setMapOverview(-1);
+    setMapOverview(-1);
     setShowTableauDeBord(1);
+  };
+  const handleRetourTableauDeBordMaps = () => {
+    setMapOverview(-1);
+    setShowTableauDeBordMaps(1);
   };
   const handleRetourTableauDeBordAide = () => {
     setShowAide(-1);
@@ -771,7 +775,7 @@ export default function MiniDrawer() {
         {showMapOverview > -1 && apiKey != null && (
           <MapOverview
             callbackNeedToLogin={handleCallbackNeedToLogin}
-            callBackRetourMaps={handleRetourMaps}
+            callBackRetourMaps={handleRetourTableauDeBordMaps}
             apiKey={apiKey}
             showDetailsMapGestion={showDetailsMapGestion}
           />

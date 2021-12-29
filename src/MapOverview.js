@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import * as Const from "./Constant";
 import CardHeader from "@material-ui/core/CardHeader";
-import { TableRow, TableCell } from "@material-ui/core";
+import { TableRow, TableCell, colors } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableHead from "@material-ui/core/TableHead";
@@ -26,6 +26,7 @@ import MapGestionButtons from "./MapGestionButtons";
 import Icon from '@material-ui/core/Icon';
 import SaveIcon from '@material-ui/icons/Save';
 import { useTranslation, withTranslation } from "react-i18next";
+import cryptoRandomString from 'crypto-random-string';
 
 class MapOverview extends React.Component {
 
@@ -57,7 +58,8 @@ class MapOverview extends React.Component {
       show:true,
       zoom:100, 
       positionIndex:0,
-      pathIndex:1
+      pathIndex:1,
+      colors:[]
     };
   }
 
@@ -107,8 +109,13 @@ class MapOverview extends React.Component {
 
   fetchLastHeartbeats = (robots) => {
     // const {id_client, id_robot} = this.props.showDetailsMapGestion;
+    const {colors} = this.state;
     let robotsPosition = []; 
+    var color = "";
     Promise.all(robots.map(({id_client, id_robot}) => {
+      color = cryptoRandomString({length: 6, type: 'numeric'});
+      colors.push({color, robot: id_robot});
+      this.setState({colors});
       fetch(
         Const.URL_FETCH_LAST_HEARTBEAT_MSG +
           "?id_client=" +
@@ -151,8 +158,10 @@ class MapOverview extends React.Component {
       openModalInfo,
       choosingDest,scrollTop,zoom, show, positionIndex,
       blob,
+      colors,
       robotsPosition
     } = this.state;
+
     // console.log("this.state & coodinates & map", this.state, coodinates, mp);
     // console.log(
     //   "this.props.showDetailsMapGestion",
@@ -162,52 +171,104 @@ class MapOverview extends React.Component {
     console.log("STATE", this.state);
     // const {blob}= maps[0];
     
-    const { t } = this.props;
+    const { t, callBackRetourMaps } = this.props;
+    const { mapName } = this.props.showDetailsMapGestion;
     return (
-   <Grid item xs={12} md={12} lg={12}>
-            <Card style={{zoom:zoom+"%", backgroundColor: "rgb(238, 238, 238)"}}>
-              <CardContent>
-                <ImageMapper
-                  src={`data:image/jpeg;base64,` + blob}
-                  map={mp}
-                  width={500}
-                  onLoad={() => this.load()}
-                  // onClick={(area) => this.clicked(area)}
-                  // onMouseEnter={(area) => this.enterArea(area)}
-                  // onMouseLeave={(area) => this.leaveArea(area)}
-                  // onMouseMove={(area, _, evt) => this.moveOnArea(area, evt)}
-                  // onImageClick={(evt) => this.clickedOutside(evt)}
-                  // onImageMouseMove={(evt) => this.moveOnImage(evt)}
-                  lineWidth={4}
-                  strokeColor={"white"}
-                />
-              </CardContent>
-            </Card>
-            {imageHeight ? (
-              <div
-                style={{
-                  position: "relative",
-                  height: imageHeight,
-                  bottom: imageHeight + 24,
-                  left: "16px",
-                  zIndex: 1,
-                  zoom:zoom+"%"
-                }}
-              >
-                <svg style={{ height: "100%", width: "100%" }}>
-                  {robotsPosition.map((item, index, array) => (
-                     <React.Fragment key={index}>
-                        <circle cx={item.X_COORD} cy={item.Y_COORD} fill="none" r="10" stroke="#383a36" strokeWidth="2">
-                        <animate attributeName="r" from="8" to="20" dur="1.5s" begin="0s" repeatCount="indefinite"/>
-                        <animate attributeName="opacity" from="1" to="0" dur="1.5s" begin="0s" repeatCount="indefinite"/>
-                      </circle>
-                      <circle cx={item.X_COORD} cy={item.Y_COORD} fill="#383a36" r="10"/>
-                    </React.Fragment>
-                  ))}
-                </svg>
-              </div>
-            ): ""}
-    </Grid>
+      <React.Fragment>
+      <div style={{display:"flex",
+                   backgroundColor: "rgb(238, 238, 238)",
+                    alignItems:"center", 
+                   padding:"1em",
+                   }}>
+        <img
+          style={{ width:"25px",}}
+          src="./images/carrier.svg"
+        />
+        <h5
+          style={{
+            color: "BLACK",
+            fontFamily: "Black Ops One, cursive",
+            // transform: "translateY(17px)",
+            // display: "flex",
+            margin:"0 0 0 1em",
+            fontSize:"1.2em"
+          }}
+        >
+          {mapName ? mapName:`- ${t("manag_title")}`}
+        </h5>
+      </div>
+      <div style={{display:"flex", position:"relative",borderBottom: "5px solid gold", marginBottom:"2em",}}>
+          <div style={{margin:"3px 17px 0 17px"}}>
+              <Tooltip title="Back to last page">
+              <img onClick={()=>{callBackRetourMaps()}} src={"./images/go_back.png"} style={{width:"25px", marginRight:"1em"}}></img>
+              </Tooltip>
+              
+              <Tooltip title="Zoom out">
+              <img onClick={()=> this.setState({zoom: this.state.zoom - 10})} src={"./images/zoom-out.png"} style={{width:"25px", marginRight:"1em"}}></img>
+              </Tooltip>
+              <span style={{ marginRight:"1em", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px"}}>{zoom}{"%"}</span>
+              <Tooltip title="Zoom in">
+              <img onClick={()=> this.setState({zoom: this.state.zoom + 10})} src={"./images/zoom-in.png"} style={{width:"25px", marginRight:"1em"}}></img>
+              </Tooltip>
+             
+                      
+          </div> 
+          <div style={{display:"flex", position:"absolute", right:"10px"}}>
+            {colors.map((item, index) => 
+              <React.Fragment key={index}>
+                <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{"Robot-" + item.robot}</span>
+                <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor: `#${item.color}`, margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>  
+              </React.Fragment>
+            )}
+          </div>
+      </div> 
+      <Grid item xs={12} md={12} lg={12}>
+                <Card style={{zoom:zoom+"%", backgroundColor: "rgb(238, 238, 238)"}}>
+                  <CardContent>
+                    <ImageMapper
+                      src={`data:image/jpeg;base64,` + blob}
+                      map={mp}
+                      width={500}
+                      onLoad={() => this.load()}
+                      // onClick={(area) => this.clicked(area)}
+                      // onMouseEnter={(area) => this.enterArea(area)}
+                      // onMouseLeave={(area) => this.leaveArea(area)}
+                      // onMouseMove={(area, _, evt) => this.moveOnArea(area, evt)}
+                      // onImageClick={(evt) => this.clickedOutside(evt)}
+                      // onImageMouseMove={(evt) => this.moveOnImage(evt)}
+                      lineWidth={4}
+                      strokeColor={"white"}
+                    />
+                  </CardContent>
+                </Card>
+                {imageHeight && colors ? (
+                  <div
+                    style={{
+                      position: "relative",
+                      height: imageHeight,
+                      bottom: imageHeight + 24,
+                      left: "16px",
+                      zIndex: 1,
+                      zoom:zoom+"%"
+                    }}
+                  >
+                    <svg style={{ height: "100%", width: "100%" }}>
+                      {robotsPosition.map((item, index) => {
+                       return (
+                        <React.Fragment key={index}>
+                            <circle cx={item.X_COORD} cy={item.Y_COORD} fill="none" r="10" stroke={"#" + colors[index]['color']} strokeWidth="2">
+                            <animate attributeName="r" from="8" to="20" dur="1.5s" begin="0s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" from="1" to="0" dur="1.5s" begin="0s" repeatCount="indefinite"/>
+                          </circle>
+                          <circle cx={item.X_COORD} cy={item.Y_COORD} fill={"#" + colors[index]['color']} r="10"/>
+                        </React.Fragment>
+                      )
+                    })}
+                    </svg>
+                  </div>
+                ): ""}
+        </Grid>
+      </React.Fragment>  
     );
   }
 }
