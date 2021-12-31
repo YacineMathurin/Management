@@ -1,6 +1,9 @@
 /** DEPLOIEMENT LOCAL POUR DEBUG SERVEUR API **/
 /** PERMET DE PASSER PAR LE SERVEUR API DEPLOYE EN LOCAL **/
 
+export const URL_GET_LAST_HEARTBEAT_MSG =
+  "http://qenvi.space:8081/GetDashboardReqByClientWS";
+
 export const URL_GET_ALL_MAPS =
   "http://qenvi.space:8081/GetAllMsgMapWS";
 

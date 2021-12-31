@@ -69,6 +69,12 @@ function PageTableauDeBord(props) {
     )
       .then((res) => res.json())
       .then((data) => {
+        fetch(
+          Const.URL_GET_LAST_HEARTBEAT_MSG + "?idclient=" + data[0]["ID_CLIENT"],
+          { retry: 3, retryDelay: 1000 }
+        )
+          .then((res) => res.json())
+          .then((data) => {
             setlisteMetrics(data);
             setdefaultMetrics(data);
 
@@ -76,32 +82,14 @@ function PageTableauDeBord(props) {
               setLoading(false);
             }, 100);
           })
-          .catch((error) => {
-            console.error("Request failed", error);
-          });
-        // data.map((item) => {
-        //   fetch(
-        //     Const.URL_WS_GET_CLIENT_ROBOT +
-        //       "?id_client=" +
-        //       item.ID_CLIENT +
-        //       "?id_robot=" +
-        //       item.ID_ROBOT,
-        //     { retry: 3, retryDelay: 1000 }
-        //   )
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //       // returns [{}]
-        //       result.push(data[0]);
-        //     })
-        //     .catch((error) => {
-        //       console.error("Request failed", error);
-        //     });
-        // });
-        // result = data;
-        // setlisteMetrics(result);
-        // setdefaultMetrics(result);
-      
-  };
+        .catch((error) => {
+          console.error("Request failed", error);
+        }); 
+    })
+    .catch((error) => {
+      console.error("Request failed", error);
+    }); 
+  }
 
   const handleCallbackOpenDetails = (idRobot) => {
     console.log("send robot id to PageAide");

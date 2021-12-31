@@ -216,8 +216,10 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
               )}
           </div> 
           <div style={{display:"flex", position:"absolute", right:"10px"}}>
-            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_intermediate_point_legend')}</span>
+            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_start_point_legend')}</span>
             <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"gold", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>
+            <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_intermediate_point_legend')}</span>
+            <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"#0099ff", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>
             <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_end_point_legend')}</span>
             <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"#C51162", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>
           </div>

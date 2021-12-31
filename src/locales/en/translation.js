@@ -72,6 +72,7 @@ export const TRANSLATIONS_EN = {
   manag_erase_btn: "Delete a destination",
   manag_erase_all_btn: "Delete all destinations",
   manag_intermediate_point_legend: "Intermediate points",
+  manag_start_point_legend: "Start point",
   manag_end_point_legend: "End point",
   manag_step1_help: 'Ajout d\'une destination, cliquez sur mode edition ensuite sur une position de l\'image puis cliquez "Ajouter une destination"',
   manag_step2_help: 'Supprimer une destination, cliquez sur un point existant de l\'image puis cliquez sur "Effacer une destination"',

@@ -59,7 +59,8 @@ class MapOverview extends React.Component {
       zoom:100, 
       positionIndex:0,
       pathIndex:1,
-      colors:[]
+      colors:[],
+      robotsPosition:[],
     };
   }
 
@@ -74,6 +75,7 @@ class MapOverview extends React.Component {
   }
   provideMap() {
     const {id_client, id_robot, id, allData} = this.props.showDetailsMapGestion;
+    var robots = [];
     fetch(Const.URL_WS_ALL_MAPS + `?idclient=${id_client}&idrobot=${id_robot}`, {
       retry: 3,
       retryDelay: 1000,
@@ -98,13 +100,14 @@ class MapOverview extends React.Component {
             default: data,
           });
         }
+        robots = allData.filter(item=>item.id === id);
+      console.log("ROBOTS", robots);
+      this.fetchLastHeartbeats(robots)
       })
       .catch((error) => {
         console.log("Request failed", error);
       });
-      const robots = allData.filter(item=>item.id === id);
-      console.log("ROBOTS", robots);
-      this.fetchLastHeartbeats(robots)
+      
   }
 
   fetchLastHeartbeats = (robots) => {
@@ -112,31 +115,32 @@ class MapOverview extends React.Component {
     const {colors} = this.state;
     let robotsPosition = []; 
     var color = "";
-    Promise.all(robots.map(({id_client, id_robot}) => {
+    robots.map(({id_client, id_robot}) => {
       color = cryptoRandomString({length: 6, type: 'numeric'});
       colors.push({color, robot: id_robot});
       this.setState({colors});
-      fetch(
-        Const.URL_FETCH_LAST_HEARTBEAT_MSG +
-          "?id_client=" +
-          id_client +
-          "&id_robot=" +
-          id_robot,
-        { retry: 3, retryDelay: 1000 }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("URL_FETCH_LAST_HEARTBEAT_MSG", data);
-          // if (data.length > 0) robotsPosition.push(data[0]);
-          robotsPosition.push(data[0]);
+    })
+
+    fetch(
+      Const.URL_GET_LAST_HEARTBEAT_MSG + "?idclient=" + robots[0]["id_client"],
+      { retry: 3, retryDelay: 1000 }
+    )
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("URL_GET_LAST_HEARTBEAT_MSG", data);
+      data.map(d => {
+        robots.map(r => {
+          if(d.ID_ROBOT === r.id_robot) robotsPosition.push(d);
         })
-        .catch((error) => {
-          console.error("Request failed", error);
-        });
-    }))
-    .then(this.setState({robotsPosition}))
-    
+      })
+      console.log("robotsPosition", robotsPosition);
+       this.setState({robotsPosition})
+    })
+    .catch((error) => {
+      console.error("Request failed", error);
+    });
   }
+
   load() {
     let canvas = document.getElementsByTagName("canvas")[0];
     console.log(canvas);
