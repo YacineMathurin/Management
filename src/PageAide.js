@@ -27,7 +27,9 @@ class PageAide extends React.Component {
   classes = makeStyles((Theme) => createStyles({}));
 
   provideHeartBeats() {
-    var MAP = [];
+    var CPU = [];
+    var MEM = [];
+    var BAT = [];
     var MAPD = [];
 
     fetch(Const.URL_WS_ROBOT_HEARTS + `?robot=${this.state.robot}`)
@@ -39,12 +41,12 @@ class PageAide extends React.Component {
 
         data.reverse().map((donnee) => {
           var d = new Date(donnee.TIMESTAMP * 1000).toLocaleString();
-          MAP.push(donnee.BAT_LEVEL);
+          CPU.push(donnee.CPU);
+          MEM.push(donnee.MEMORY);
+          BAT.push(donnee.BAT_LEVEL);
           MAPD.push(d);
         });
-        this.setState({ mapBat: MAP, mapDat: MAPD });
-        console.log("MAP", MAP);
-        console.log("MAPD", MAPD);
+        this.setState({ CPU, MEM, mapBat: BAT, mapDat: MAPD,  });
       })
       .catch((error) => {
         console.log("Request failed", error);
@@ -56,28 +58,48 @@ class PageAide extends React.Component {
   }
 
   render() {
-    var series = [
+    var seriesCPU = [
+      {
+        name: "Level",
+        data: this.state.CPU,
+      },
+    ];
+    var seriesMEM = [
+      {
+        name: "Level",
+        data: this.state.MEM,
+      },
+    ];
+    var seriesBAT = [
       {
         name: "Level",
         data: this.state.mapBat,
       },
     ];
-    var options = {
+    var optionsChartCpu = {
       chart: {
         height: 350,
         type: "line",
         zoom: {
-          enabled: false,
-        },
+          enabled: true,
+          type: 'x',  
+          autoScaleYaxis: false,  
+          zoomedArea: {
+            fill: {
+              color: '#90CAF9',
+              opacity: 0.4
+            },
+          }
+      },
       },
       dataLabels: {
-        enabled: true,
+        // enabled: true,
       },
       stroke: {
-        curve: "straight",
+        curve: "smooth",
       },
       title: {
-        text: "Battery percentage",
+        text: "CPU percentage",
         align: "center",
       },
       grid: {
@@ -92,6 +114,107 @@ class PageAide extends React.Component {
           show: true,
           rotate: -45,
         },
+        tickAmount:10
+      },
+    };
+    var optionsChartMem = {
+      chart: {
+        height: 350,
+        type: "line",
+        zoom: {
+          enabled: true,
+          type: 'x',  
+          autoScaleYaxis: false,  
+          zoomedArea: {
+            fill: {
+              color: '#90CAF9',
+              opacity: 0.4
+            },
+            stroke: {
+              color: '#0D47A1',
+              opacity: 0.4,
+              width: 1
+            }
+          }
+      },
+      },
+      dataLabels: {
+        // enabled: true,
+      },
+      stroke: {
+        curve: "smooth",
+      },
+      title: {
+        text: "Memory percentage",
+        align: "center",
+      },
+      grid: {
+        row: {
+          colors: ["transparent", "transparent"],
+          opacity: 0.6,
+        },
+        padding: {
+          left: 30, // or whatever value that works
+          right: 30 // or whatever value that works
+        }
+      },
+      xaxis: {
+        categories: this.state.mapDat,
+        labels: {
+          show: true,
+          rotate: -45,
+        },
+        tickAmount:10
+      },
+    };
+    var optionsChartBat = {
+      chart: {
+        height: 350,
+        type: "line",
+        zoom: {
+          enabled: true,
+          type: 'x',  
+          autoScaleYaxis: false,  
+          zoomedArea: {
+            fill: {
+              color: '#90CAF9',
+              opacity: 0.4
+            },
+            stroke: {
+              color: '#0D47A1',
+              opacity: 0.4,
+              width: 1
+            }
+          }
+      },
+      },
+      dataLabels: {
+        // enabled: true,
+      },
+      stroke: {
+        curve: "smooth",
+      },
+      title: {
+        text: "Battery percentage",
+        align: "center",
+      },
+      grid: {
+        row: {
+          colors: ["transparent", "transparent"],
+          opacity: 0.6,
+        },
+        padding: {
+          left: 30, // or whatever value that works
+          right: 30 // or whatever value that works
+        }
+      },
+      xaxis: {
+        categories: this.state.mapDat,
+        labels: {
+          show: true,
+          rotate: -45,
+        },
+        tickAmount:10
       },
     };
 
@@ -149,12 +272,19 @@ class PageAide extends React.Component {
                     <Grid container spacing={2}>
                       <Grid item xs={8}>
                         <Card>
-                          <CardHeader
-                            avatar={<img width="24" src="./images/cpu.svg" />}
-                            title="CPU"
-                            subheader="Évolution du taux d'occupation du CPU"
-                          />
-                          <CardContent></CardContent>
+                          <CardContent>
+                            <CardHeader
+                              avatar={<img width="24" src="./images/cpu.svg" />}
+                              title="CPU"
+                              subheader="Évolution du taux d'occupation du CPU"
+                            />
+                            <ReactApexChart
+                              options={optionsChartCpu}
+                              series={seriesCPU}
+                              type="line"
+                              height={350}
+                            />
+                          </CardContent>
                         </Card>
 
                         <Card style={{ marginTop: "1em" }}>
@@ -165,6 +295,12 @@ class PageAide extends React.Component {
                               }
                               title="Mémoire"
                               subheader="Évolution du taux d'occupation de la mémoire"
+                            />
+                            <ReactApexChart
+                              options={optionsChartMem}
+                              series={seriesMEM}
+                              type="line"
+                              height={350}
                             />
                           </CardContent>
                         </Card>
@@ -183,8 +319,8 @@ class PageAide extends React.Component {
                             />
 
                             <ReactApexChart
-                              options={options}
-                              series={series}
+                              options={optionsChartBat}
+                              series={seriesBAT}
                               type="line"
                               height={350}
                             />
