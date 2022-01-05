@@ -77,6 +77,7 @@ function PageTableauDeBordMaps(props) {
     });
     console.log("result", result);
     setlisteMetrics(result);
+    setdefaultMetrics(result);
     setAllData(data);
   }
 
@@ -84,7 +85,9 @@ function PageTableauDeBordMaps(props) {
     var result = [];
     fetch(
       Const.URL_GET_ALL_MAPS,
-      { retry: 3, retryDelay: 1000 }
+      {
+        
+      }
     )
       .then((res) => res.json())
       .then((data) => {
@@ -122,18 +125,18 @@ function PageTableauDeBordMaps(props) {
     setprintCard("block");
   };
   const searchFilterFunction = (text) => {
-    if (!defaultMetrics) {
+    if (!allData) {
       alert("Votre Flotte est vide !!!");
       return 0;
     }
-    const newData = defaultMetrics.filter((item) => {
-      const itemData = `${item.ID_ROBOT}`;
-      return itemData.includes(text);
-    });
+    
+    var regex = new RegExp(text, "gi");
 
-    // this.setState({
-    //   listeMetrics: newData,
-    // });
+    const newData = allData.filter((item) => {
+      return item.id_robot == text || item.map_name.match(regex) ;
+    }); 
+    console.log("newData", newData);
+
     setlisteMetrics(newData);
   };
   const autoReset = (newBatLevels, movingFilter) => {
@@ -199,30 +202,15 @@ function PageTableauDeBordMaps(props) {
   const resetFilter = () => {
     console.log("Reseting ...");
     setsearch("");
-    setMoving(null);
-
-    var resetFilters = batFilters;
-    resetFilters.batFilter0 = false;
-    resetFilters.batFilter1 = false;
-    resetFilters.batFilter2 = false;
-    setBatFilters(resetFilters);
-
-    var resetLevels = batLevels;
-    resetLevels.batLevel0 = undefined;
-    resetLevels.batLevel1 = undefined;
-    resetLevels.batLevel2 = undefined;
-    setBatLevels(resetLevels);
-
     setlisteMetrics(defaultMetrics);
-    // const { defaultMetrics } = state;
 
-    // setState({
-    //   listeMetrics: defaultMetrics,
-    //   batFilter0: false,
-    //   batFilter1: false,
-    //   batFilter2: false,
-    // });
   };
+
+  const getComment = (comment) => {
+    const parser = new DOMParser();
+    console.log(parser.parseFromString(comment, 'text/html'))
+    return new String(comment);
+  }
 
   if (loading) {
     return (
@@ -246,35 +234,7 @@ function PageTableauDeBordMaps(props) {
                 title={t("dashboard_maps_title")}
                 subheader={t("dashboard_maps_subtitle")}
               />
-              <div
-                style={{
-                  float: "right",
-                  marginTop: "-4em",
-                  marginRight: "2em",
-                }}
-              >
-                <Button
-                  style={{ marginTop: "1em", display: printTable }}
-                  fullWidth={false}
-                  onClick={() => handlePrintCard()}
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                >
-                  <DashboardIcon fontSize="large" />
-                </Button>
-
-                <Button
-                  style={{ marginTop: "1em", display: printCard }}
-                  fullWidth={false}
-                  onClick={() => handlePrintTable()}
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                >
-                  <ViewStreamIcon fontSize="large" />
-                </Button>
-              </div>
+              
 
               <CardContent style={{ display: printTable }}>
                 <Table>
@@ -304,7 +264,7 @@ function PageTableauDeBordMaps(props) {
                             {/* <TableCell align="center">{s.ID_CLIENT}</TableCell> */}
                             <TableCell align="center">{s.id}</TableCell>
                             <TableCell align="center">{s.map_name}</TableCell>
-                            <TableCell align="center">{s.user_comment}</TableCell>
+                            <TableCell align="center" dangerouslySetInnerHTML={{ __html: getComment(s.user_comment)}}></TableCell> 
                             <TableCell >{allData.map((item, index) => item.id === s.id ? 
                               <Button
                                 key={index}
@@ -375,186 +335,19 @@ function PageTableauDeBordMaps(props) {
                   />
                 </FormControl>
 
-                <div style={{ marginTop: "1.5em" }}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        name="moving"
-                        onChange={() => {
-                          setFiltMoving(1, 0);
-                        }}
-                        disabled={moving === 0 ? true : false}
-                        checked={moving === 1}
-                      />
-                    }
-                    label={
-                      <img
-                        style={{ marginTop: "0.5em" }}
-                        width="30"
-                        src="./images/switch-on.svg"
-                      />
-                    }
-                  />
-
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        name="stoped"
-                        onChange={() => {
-                          setFiltMoving(0, 1);
-                        }}
-                        disabled={moving === 1 ? true : false}
-                        checked={moving === 0}
-                      />
-                    }
-                    label={
-                      <img
-                        style={{ marginTop: "0.5em" }}
-                        width="30"
-                        src="./images/switch-off.svg"
-                      />
-                    }
-                  />
-                </div>
-
-                {/* <div>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="checkedI"
-                    />
-                  }
-                  label={
-                    <img
-                      style={{ marginTop: "0.5em" }}
-                      width="25"
-                      src="./images/check.svg"
-                    />
-                  }
-                />
-
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      name="checkedI"
-                    />
-                  }
-                  label={
-                    <img
-                      style={{ marginTop: "0.5em" }}
-                      width="25"
-                      src="./images/warning.svg"
-                    />
-                  }
-                />
-              </div>
-                   */}
-                <div>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        name="batFilter0"
-                        onChange={(e) => {
-                          setFilteredBatLevel(e, true, 0);
-                        }}
-                        inputProps={{ "aria-label": "controlled-checkbox" }}
-                        checked={batFilters.batFilter0}
-                      />
-                    }
-                    label={
-                      <img
-                        style={{ marginTop: "0.5em" }}
-                        width="30"
-                        src="./images/b0.png"
-                      />
-                    }
-                  />
-
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        name="batFilter1"
-                        onChange={(e) => {
-                          setFilteredBatLevel(e, true, 1);
-                        }}
-                        checked={batFilters.batFilter1}
-                      />
-                    }
-                    label={
-                      <img
-                        style={{ marginTop: "0.5em" }}
-                        width="30"
-                        src="./images/b50.png"
-                      />
-                    }
-                  />
-
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        name="batFilter2"
-                        onChange={(e) => {
-                          setFilteredBatLevel(e, true, 2);
-                        }}
-                        checked={batFilters.batFilter2}
-                      />
-                    }
-                    label={
-                      <img
-                        style={{ marginTop: "0.5em" }}
-                        width="30"
-                        src="./images/b1.png"
-                      />
-                    }
-                  />
-                </div>
+                <br></br>
+                
                 <br></br>
                 <Button
                   style={{ marginTop: "1em" }}
                   fullWidth={true}
                   variant="outlined"
-                  color="primary"
-                  size="small"
-                  onClick={() => handleFiltering()}
-                  disabled={
-                    !batLevels.batLevel0 &&
-                    !batLevels.batLevel1 &&
-                    !batLevels.batLevel2 &&
-                    moving == null
-                  }
-                >
-                  {t("dashboard_filter_btn")}
-                </Button>
-                <br></br>
-                <Button
-                  style={{ marginTop: "1em" }}
-                  fullWidth={true}
-                  variant="outlined"
-                  color="default"
+                  color="secondary"
                   size="small"
                   onClick={() => resetFilter()}
-                  disabled={
-                    !batLevels.batLevel0 &&
-                    !batLevels.batLevel1 &&
-                    !batLevels.batLevel2 &&
-                    moving == null
-                  }
+                  
                 >
-                  {t("dashboard_filter_reset")}
+                  {t("dashboard_maps_filter_reset")}
                 </Button>
               </CardContent>
             </Card>

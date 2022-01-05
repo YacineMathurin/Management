@@ -25,6 +25,8 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import LinearBuffer from "./PageTableauDeBordChargement";
 import CircularProgressWithLabel from "./PageTableauDeBordBattery";
 import { useTranslation } from "react-i18next";
+import { Tooltip } from "@material-ui/core";
+
 
 function PageTableauDeBord(props) {
   const { t, i18n } = useTranslation();
@@ -39,6 +41,7 @@ function PageTableauDeBord(props) {
   ]);
   const [filtreActivite, setfiltreActivite] = React.useState([0, 100]);
   const [listeMetrics, setlisteMetrics] = React.useState(null);
+  const [mapsNames, setMapsNames] = React.useState(null);
   const [printTable, setprintTable] = React.useState("block");
   const [printCard, setprintCard] = React.useState("none");
   const [search, setsearch] = React.useState("");
@@ -61,6 +64,22 @@ function PageTableauDeBord(props) {
     provideMetrics();
   }, []);
 
+  const provideMaps = () => {
+    var result = [];
+    fetch(
+      Const.URL_GET_ALL_MAPS,
+      { retry: 3, retryDelay: 1000 }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+         console.log(data);
+         setMapsNames(data);
+      })
+      .catch((error) => {
+        console.error("Request failed", error);
+      });
+  };
+
   const provideMetrics = () => {
     var result = [];
     fetch(
@@ -77,10 +96,12 @@ function PageTableauDeBord(props) {
           .then((data) => {
             setlisteMetrics(data);
             setdefaultMetrics(data);
-
+            provideMaps();
+            
             setTimeout(() => {
               setLoading(false);
             }, 100);
+            
           })
         .catch((error) => {
           console.error("Request failed", error);
@@ -177,9 +198,9 @@ function PageTableauDeBord(props) {
     if (batLevel0 || batLevel1 || batLevel2) {
       newData = defaultMetrics.filter(
         (item) =>
-          (batLevel0 && item.BAT_LEVEL >= 0 && item.BAT_LEVEL < 45) ||
-          (batLevel1 && item.BAT_LEVEL > 45 && item.BAT_LEVEL < 55) ||
-          (batLevel2 && item.BAT_LEVEL > 55)
+          (batLevel0 && item.BAT_LEVEL >= 0 && item.BAT_LEVEL < 20) ||
+          (batLevel1 && item.BAT_LEVEL > 20 && item.BAT_LEVEL < 80) ||
+          (batLevel2 && item.BAT_LEVEL >= 80)
       );
     }
 
@@ -217,6 +238,12 @@ function PageTableauDeBord(props) {
     //   batFilter2: false,
     // });
   };
+  const getSiteName = (idRobot) => {
+    const name = mapsNames.filter(item => {
+      if(item.id_robot === idRobot) return item.map_name;
+    })
+    return name[0]["map_name"];
+  }
 
   if (loading) {
     return (
@@ -247,41 +274,41 @@ function PageTableauDeBord(props) {
                   marginRight: "2em",
                 }}
               >
-                <Button
-                  style={{ marginTop: "1em", display: printTable }}
+                {printTable === "block" && <Button
+                  style={{ marginTop: "1em" }}
                   fullWidth={false}
                   onClick={() => handlePrintCard()}
                   variant="outlined"
                   color="primary"
                   size="small"
                 >
-                  <DashboardIcon fontSize="large" />
-                </Button>
+                  <DashboardIcon fontSize="large" style={{display:"flex"}} />
+                </Button>}
 
-                <Button
-                  style={{ marginTop: "1em", display: printCard }}
+                {printCard === "block" && <Button
+                  style={{ marginTop: "1em" }}
                   fullWidth={false}
                   onClick={() => handlePrintTable()}
                   variant="outlined"
                   color="primary"
                   size="small"
                 >
-                  <ViewStreamIcon fontSize="large" />
-                </Button>
+                  <ViewStreamIcon fontSize="large" style={{display:"flex"}}/>
+                </Button>}
               </div>
 
               <CardContent style={{ display: printTable }}>
-                <Table>
-                  <TableHead>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead style={{backgroundColor:"black"}}>
                     <TableRow>
-                      {/* <TableCell align="center">ID Client </TableCell> */}
+                      <TableCell align="left">ID Client </TableCell>
                       <TableCell align="center">ID Robot</TableCell>
                       <TableCell align="center">
                         {t("dashboard_moving")}
                       </TableCell>
-                      <TableCell align="center">
+                      {/* <TableCell align="center">
                         {t("dashboard_connected")}
-                      </TableCell>
+                      </TableCell> */}
                       {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
                       <TableCell align="center">
                         {t("dashboard_autonomy")}{" "}
@@ -291,34 +318,12 @@ function PageTableauDeBord(props) {
                     </TableRow>
                   </TableHead>
                   {listeMetrics != null &&
-                    listeMetrics.map((s) => {
-                      var batterie = "./images/b1.png";
-
-                      if (s.BAT_LEVEL <= 55 && s.BAT_LEVEL >= 45) {
-                        batterie = "./images/b50.png";
-                      } else if (s.BAT_LEVEL < 45) {
-                        batterie = "./images/b0.png";
-                      }
-
-                      var processor = "./images/check.svg";
-                      /* if(s.system.cpu >= 80){
-                      processor = "./images/warning.svg";
-                      }*/
-
-                      var dispo = "./images/switch-on.svg";
-                      var timeS = Date.now() - s.TIMESTAMP;
-                      var dateS = new Date(timeS * 1000);
-                      var minutesS = dateS.getMinutes();
-                      //console.log("robot " +s.ID_ROBOT +" nb minutes="+minutesS);
-
-                      if (minutesS >= 15) {
-                        dispo = "./images/switch-off.svg";
-                      }
-
+                    listeMetrics.map((s, index) => {
                       return (
                         <TableBody key={s.ID_ROBOT}>
-                          <TableRow>
-                            {/* <TableCell align="center">{s.ID_CLIENT}</TableCell> */}
+                          <TableRow style={{backgroundColor: index%2 === 0 ? "aliceblue":""}}>
+                            <TableCell align="left" >{getSiteName(s.ID_ROBOT)}
+                            </TableCell>
                             <TableCell align="center">{s.ID_ROBOT}</TableCell>
                             <TableCell align="center">
                               {" "}
@@ -332,7 +337,7 @@ function PageTableauDeBord(props) {
                                 }
                               />
                             </TableCell>
-                            <TableCell align="center"></TableCell>
+                            {/* <TableCell align="center"></TableCell> */}
                             <TableCell align="center">
                               <img
                                 src={"./images/car-battery.svg"}
@@ -390,29 +395,6 @@ function PageTableauDeBord(props) {
                 <Grid container spacing={2}>
                   {listeMetrics != null &&
                     listeMetrics.map((s) => {
-                      var batterie = "./images/b1.png";
-
-                      if (s.BAT_LEVEL <= 55 && s.BAT_LEVEL >= 45) {
-                        batterie = "./images/b50.png";
-                      } else if (s.BAT_LEVEL < 45) {
-                        batterie = "./images/b0.png";
-                      }
-
-                      var processor = "./images/check.svg";
-                      /* if(s.system.cpu >= 80){
-                processor = "./images/warning.svg";
-              }*/
-
-                      var dispo = "./images/switch-on.svg";
-                      var timeS = Date.now() - s.TIMESTAMP;
-                      var dateS = new Date(timeS * 1000);
-                      var minutesS = dateS.getMinutes();
-                      console.log(minutesS);
-
-                      if (minutesS >= 15) {
-                        dispo = "./images/switch-off.svg";
-                      }
-
                       return (
                         <Grid item xs={12} md={4} lg={3} key={s.ID_ROBOT}>
                           <Card>
@@ -428,16 +410,20 @@ function PageTableauDeBord(props) {
                                 <img
                                   style={{ float: "right", marginTop: "0.5em" }}
                                   width="34"
-                                  src={dispo}
+                                  src={
+                                    s.is_moving
+                                      ? "./images/switch-on.svg"
+                                      : "./images/switch-off.svg"
+                                  }
                                 />
                               </div>
                               <div style={{ marginLeft: "2.5em" }}>
                                 <Typography
                                   style={{ color: "BLACK" }}
-                                  component="h3"
-                                  variant="h3"
+                                  component="h6"
+                                  variant="h6"
                                 >
-                                  {s.ID_CLIENT}
+                                  {getSiteName(s.ID_ROBOT)}
                                 </Typography>
                                 <Typography
                                   style={{ color: "BLACK" }}
@@ -455,32 +441,25 @@ function PageTableauDeBord(props) {
                               </div>
                               <Divider style={{ marginTop: "1em" }} />
                               <div>
-                                <Table>
-                                  <TableBody>
-                                    <TableRow>
-                                      <TableCell>
-                                        <img
-                                          width="24"
-                                          src="./images/microchip.svg"
-                                        />
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        <img width="24" src={processor} />
-                                      </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                      <TableCell>
-                                        <img
-                                          width="24"
-                                          src="./images/car-battery.svg"
-                                        />
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        <img width="30" src={batterie} />
-                                      </TableCell>
-                                    </TableRow>
-                                  </TableBody>
-                                </Table>
+                                  <div style={{display:"flex", justifyContent:"space-between", marginTop:"1em"}}>
+                                    <img
+                                      width="24"
+                                      src="./images/car-battery.svg"
+                                    />
+                                    <span style={{width: "70px", position: "relative", left: "15px"}}>
+                                      <CircularProgressWithLabel
+                                        value={s.BAT_LEVEL}
+                                        color={
+                                          s.BAT_LEVEL < 20
+                                            ? "#FF6666"
+                                            : s.BAT_LEVEL > 20 && s.BAT_LEVEL < 80
+                                            ? "gold"
+                                            : "#4DD637"
+                                        }
+                                      />
+                                    </span>
+                                  </div>
+                                <Divider style={{ marginTop: "1em" }} />
                                 <Button
                                   style={{ marginTop: "1em" }}
                                   fullWidth={true}
@@ -548,11 +527,12 @@ function PageTableauDeBord(props) {
                 </FormControl>
 
                 <div style={{ marginTop: "1.5em" }}>
+                  <Tooltip title={"Filter by moving robots"} placement='left'>
                   <FormControlLabel
                     control={
                       <Checkbox
                         color="primary"
-                        // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         name="moving"
                         onChange={() => {
                           setFiltMoving(1, 0);
@@ -568,8 +548,9 @@ function PageTableauDeBord(props) {
                         src="./images/switch-on.svg"
                       />
                     }
-                  />
+                  /></Tooltip>
 
+                  <Tooltip title={"Filter by stoped robots"} placement='right'>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -590,7 +571,7 @@ function PageTableauDeBord(props) {
                         src="./images/switch-off.svg"
                       />
                     }
-                  />
+                  /></Tooltip>
                 </div>
 
                 {/* <div>
@@ -630,6 +611,7 @@ function PageTableauDeBord(props) {
               </div>
                    */}
                 <div>
+                <Tooltip title={"Filter by robots of battery level less than 20%"} placement='left'>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -650,8 +632,9 @@ function PageTableauDeBord(props) {
                         src="./images/b0.png"
                       />
                     }
-                  />
+                  /></Tooltip>
 
+                  <Tooltip title={"Filter by robots of battery level between 20% and 80%"} placement='bottom'>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -671,8 +654,9 @@ function PageTableauDeBord(props) {
                         src="./images/b50.png"
                       />
                     }
-                  />
+                  /></Tooltip>
 
+                  <Tooltip title={"Filter by robots of battery level more than 80%"} placement='right'>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -692,7 +676,7 @@ function PageTableauDeBord(props) {
                         src="./images/b1.png"
                       />
                     }
-                  />
+                  /></Tooltip>
                 </div>
                 <br></br>
                 <Button

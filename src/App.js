@@ -38,6 +38,7 @@ import { useTranslation } from "react-i18next";
 import PageTableauDeBordMaps from "./PageTableauDeBordMaps";
 import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
 import MapOverview from "./MapOverview";
+import { Tooltip } from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -646,31 +647,35 @@ export default function MiniDrawer() {
           </div>
           <Divider />
           <List>
-            <ListItem
-              button
-              onClick={() => {
-                drawerButtonClicked("tableau", 1);
-              }}
-            >
-              <ListItemIcon>
-                <DashboardOutlinedIcon />
-                {/* <img width="30" height="30" src="./images/trolley.png" /> */}
-              </ListItemIcon>
-              <ListItemText primary="Tableau de bord"></ListItemText>
-            </ListItem>
+            <Tooltip title={t("sidebar_robots")} placement="right">
+              <ListItem
+                button
+                onClick={() => {
+                  drawerButtonClicked("tableau", 1);
+                }}
+              >
+                <ListItemIcon>
+                  <DashboardOutlinedIcon />
+                  {/* <img width="30" height="30" src="./images/trolley.png" /> */}
+                </ListItemIcon>
+                <ListItemText primary="Tableau de bord"></ListItemText>
+              </ListItem>
+            </Tooltip>
             <Divider />
-            <ListItem
-              button
-              onClick={() => {
-                drawerButtonClicked("maps", 1);
-              }}
-            >
-              <ListItemIcon>
-                {/* <img width="25" height="25" src="./images/maps.png" /> */}
-                <MapOutlinedIcon></MapOutlinedIcon>
-              </ListItemIcon>
-              <ListItemText primary="Journaux"></ListItemText>
-            </ListItem>
+            <Tooltip title={t("sidebar_maps")} placement="right">
+              <ListItem
+                button
+                onClick={() => {
+                  drawerButtonClicked("maps", 1);
+                }}
+              >
+                <ListItemIcon>
+                  {/* <img width="25" height="25" src="./images/maps.png" /> */}
+                  <MapOutlinedIcon></MapOutlinedIcon>
+                </ListItemIcon>
+                <ListItemText primary="Journaux"></ListItemText>
+              </ListItem>
+            </Tooltip>
           </List>
         </Drawer>
       )}

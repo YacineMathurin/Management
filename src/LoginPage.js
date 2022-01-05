@@ -69,7 +69,7 @@ function Copyright() {
   };
 
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" color="textSecondary" align="center" style={{fontSize: window.innerWidth < 1200 ? "2.5em":"1em"}}>
       {t("copyright")}
       <Link color="inherit" href="http://www.qenvirobotics.com/">
         {t("company")}
@@ -86,8 +86,8 @@ function Copyright() {
           {t("first_lng")}{" "}
           <img
             style={{
-              width: "25px",
-              height: "15px",
+              width: "1.5em",
+              height: "1em",
               position: "relative",
               top: "3px",
             }}
@@ -96,20 +96,6 @@ function Copyright() {
           ></img>
         </Link>{" "}
         ·
-        {/* | ·{" "}
-        <Link
-          to="/"
-          className="language2"
-          onClick={() => changeLanguage(t("second_lng").substring(0, 2))}
-          style={{
-            textDecoration: "none",
-            cursor: "pointer",
-            color: "#E03B8B",
-          }}
-        >
-          {t("second_lng")}
-        </Link>{" "}
-        · */}
       </span>
     </Typography>
   );
@@ -140,31 +126,31 @@ function SignIn({ callbackFunction }) {
   return (
     <Container
       component="main"
-      style={window.innerWidth < 1280 ? { width: "85%" } : { width: "30%" }}
+      style={window.innerWidth < 1200 ? { width: "100%", padding:"0" } : window.innerWidth < 1280 ? { width: "85%" } : { width: "30%" }}
     >
       <CssBaseline />
 
       <Card style={{ width: "100%", marginTop: "3em" }}>
         <CardContent>
           <div className={classes.paper}>
-            <Avatar>
-              <VpnKeyOutlinedIcon />
+            <Avatar style={{width: window.innerWidth < 1200 ? "5em":"2em", height:window.innerWidth < 1200 ? "5em":"2em"}}>
+              <VpnKeyOutlinedIcon style={{width:window.innerWidth < 1200 ? "2.5em":"1em", height:window.innerWidth < 1200 ? "2.5em":"1em"}}/>
             </Avatar>
             <Typography
               style={{ color: "#3F51B5", marginTop: "0.5em" }}
-              component="h1"
-              variant="h5"
+              component={window.innerWidth < 1200 ? "h3":"h5"}
+              variant={window.innerWidth < 1200 ? "h3":"h5"}
             >
               {t("title")}
             </Typography>
 
             <form
-              style={{ marginTop: "2em" }}
+              style={{ marginTop: "5em" }}
               className={classes.form}
               noValidate
             >
               <TextField
-                variant="outlined"
+                size="large"
                 margin="normal"
                 fullWidth
                 id="email"
@@ -183,7 +169,7 @@ function SignIn({ callbackFunction }) {
                 }
               />
               <TextField
-                variant="outlined"
+                style={{marginTop: window.innerWidth < 1200 ? "100px":"30px"}}
                 margin="normal"
                 fullWidth
                 placeholder=""
@@ -207,7 +193,7 @@ function SignIn({ callbackFunction }) {
             label="Rester connecté"
           /> */}
               <Router>
-                <div style={{ marginTop: "1em" }}>
+                <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
                   <center>
                     <span>{t("question")}</span>
                   </center>
@@ -231,7 +217,8 @@ function SignIn({ callbackFunction }) {
                 </Switch>
               </Router>
               <Button
-                //type="submit"
+                style={{height:window.innerWidth < 1200 ? "100px":"50px", fontSize: window.innerWidth < 1200 ? "2em":"1em"}}
+                size="large"
                 fullWidth
                 variant="contained"
                 color="primary"

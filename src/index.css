@@ -17,3 +17,16 @@ code {
 .language2:hover {
   border-bottom: 3px solid #f1bf00;
 }
+/* Login Page */
+
+@media only screen and (max-width: 1200px) {
+  #email,
+  #password {
+    height: 50px;
+    font-size: 2.5em;
+  }
+  #email-label,
+  #password-label {
+    font-size: 2em;
+  }
+}

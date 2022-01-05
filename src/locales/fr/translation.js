@@ -14,6 +14,10 @@ export const TRANSLATIONS_FR = {
   logout_ok: "Vous êtes déconnecté",
   login_ko: "Identifiant de connexion incorrect",
 
+  /** Side Bar */
+  sidebar_robots:"LISTER TOUT VOS ROBOTS",
+  sidebar_maps:"LISTER TOUT VOS ENTREPOTS",
+
   /** Page de Bord */
   dashboard_loading: "Chargement en cours ...",
   dashboard_title: "Mon Parc Cobotic",

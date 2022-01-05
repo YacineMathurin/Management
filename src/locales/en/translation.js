@@ -15,6 +15,10 @@ export const TRANSLATIONS_EN = {
   logout_ok: "logout succeed",
   login_ko: "Connexion failed, please try later",
 
+  /** Side Bar */
+  sidebar_robots:"LIST ALL ROBOTS",
+  sidebar_maps:"LIST ALL STOCKS",
+
   /** Page de Bord robots*/
   dashboard_loading: "Loading your content",
   dashboard_title: "My Cobotic Arsenal",
@@ -33,11 +37,12 @@ export const TRANSLATIONS_EN = {
   /** Page de Bord maps */
   dashboard_maps_title: "All My Maps",
   dashboard_maps_subtitle: "Visualize robot on their map",
-  dashboard_maps_search: "Search a map ID",
+  dashboard_maps_search: "Search by ID Map or Name",
   dashboard_maps_name: "Name",
   dashboard_maps_comment: "Comment",
   dashboard_maps_robots: "Robot(s)",
   dashboard_map: "Map",
+  dashboard_maps_filter_reset: "RESET Search",
   
   /** Page Maps */
   maps_title: "Click to select your desired map",
