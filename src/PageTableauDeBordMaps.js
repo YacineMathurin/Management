@@ -221,7 +221,7 @@ function PageTableauDeBordMaps(props) {
     );
   } else
     return (
-      <div>
+      <div id="PageTableauDeBordMaps">
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} lg={9}>
             <Card>
@@ -237,6 +237,15 @@ function PageTableauDeBordMaps(props) {
               
 
               <CardContent style={{ display: printTable }}>
+                <div style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      position: "relative",
+                      bottom: "6.5em",
+                }}>
+                  {/* <img onClick={()=>callBackRetourMaps()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px"}}></img> */}
+                  <img onClick={() => props.callBackRetourTableauDeBord()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px"}}></img>
+                </div>
                 <Table>
                   <TableHead>
                     <TableRow>
@@ -274,7 +283,7 @@ function PageTableauDeBordMaps(props) {
                                 size="small"
                                 style={{margin:"0 0.5em 0.5em"}}
                               >
-                                Robot-{item.id_robot}
+                                {item.id_robot}
                               </Button>: "")}
                             </TableCell>
                             <TableCell align="center">

@@ -27,7 +27,6 @@ import CircularProgressWithLabel from "./PageTableauDeBordBattery";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "@material-ui/core";
 
-
 function PageTableauDeBord(props) {
   const { t, i18n } = useTranslation();
 
@@ -99,6 +98,7 @@ function PageTableauDeBord(props) {
             provideMaps();
             
             setTimeout(() => {
+              // if(window.innerWidth < 1200) alert("For a better experience of use on mobile and tablets, please set your orientation to landscape")
               setLoading(false);
             }, 100);
             
@@ -254,7 +254,7 @@ function PageTableauDeBord(props) {
     );
   } else
     return (
-      <div>
+      <div id="PageTableauDeBord">
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} lg={9}>
             <Card>
@@ -301,23 +301,19 @@ function PageTableauDeBord(props) {
                 <Table stickyHeader aria-label="sticky table">
                   <TableHead style={{backgroundColor:"black"}}>
                     <TableRow>
-                      <TableCell align="left">ID Client </TableCell>
+                      <TableCell align="left" style={{fontSize: "1.75em"}}>{t('dashboard_id_client')}</TableCell>
                       <TableCell align="center">ID Robot</TableCell>
                       <TableCell align="center">
                         {t("dashboard_moving")}
                       </TableCell>
-                      {/* <TableCell align="center">
-                        {t("dashboard_connected")}
-                      </TableCell> */}
-                      {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
                       <TableCell align="center">
-                        {t("dashboard_autonomy")}{" "}
+                        {t("dashboard_autonomy")}
                       </TableCell>
                       <TableCell align="center"></TableCell>
                       <TableCell align="center"></TableCell>
                     </TableRow>
                   </TableHead>
-                  {listeMetrics != null &&
+                  {listeMetrics != null && mapsNames &&
                     listeMetrics.map((s, index) => {
                       return (
                         <TableBody key={s.ID_ROBOT}>
@@ -358,6 +354,7 @@ function PageTableauDeBord(props) {
                             </TableCell>
                             <TableCell align="center">
                               <Button
+                                style={{fontSize:window.innerWidth < 1200 ? "0.4em":"1em"}}
                                 fullWidth={false}
                                 width="2em"
                                 onClick={() =>
@@ -372,6 +369,7 @@ function PageTableauDeBord(props) {
                             </TableCell>
                             <TableCell align="center">
                               <Button
+                                style={{fontSize:window.innerWidth < 1200 ? "0.4em":"1em"}}
                                 fullWidth={false}
                                 width="2em"
                                 onClick={() =>
@@ -393,7 +391,7 @@ function PageTableauDeBord(props) {
 
               <CardContent style={{ display: printCard }}>
                 <Grid container spacing={2}>
-                  {listeMetrics != null &&
+                  {listeMetrics != null && mapsNames &&
                     listeMetrics.map((s) => {
                       return (
                         <Grid item xs={12} md={4} lg={3} key={s.ID_ROBOT}>

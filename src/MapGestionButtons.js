@@ -10,37 +10,46 @@ import { useTranslation } from "react-i18next";
 const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, show, handleShow, moving, choosingDest, nbpts, destination, msg, status, mapName, idRobot, callBackRetourMaps, editDestinations,StartMove, deletePoints, deleteOnePoint, provideCoordinates}) => {
   const { t } = useTranslation();
   return (
-    <div style={{
+    <div id='MapGestionButtons' style={{
       position: "fixed",
-          top: "48px",
+          top: window.innerWidth < 1200 ? "80px":"48px",
           zIndex: "5",
           backgroundColor:"#eee",
-          width:"95%"
+          width: window.innerWidth < 1200 ? "inherit":"95%"
     }}>
        <div style={{display: show ? "block":"none"}}>
       <Grid container spacing={2} >
           <Grid item xs={12} md={12} lg={12} >
             <Card style={{background:"#eee", position:"relative", bottom:"23px"}}>
-              <CardContent>
-                <div>
-                  <img
-                    style={{ float: "left", marginTop: "0.5em", width:"25px", position:"relative", top:"12px" }}
-                    src="./images/carrier.svg"
-                  />
-                </div>
-                <div style={{ marginLeft: "3.5em" }}>
-                  <Typography
-                    style={{
-                      color: "BLACK",
-                      fontFamily: "Black Ops One, cursive",
-                      transform: "translateY(17px)",
-                      display: "flex",
-                    }}
-                    component="h5"
-                    variant="h5"
-                  >
-                    {mapName ? mapName:`- ${t("manag_title")}`}
-                  </Typography>
+              <CardContent style={{paddingBottom: "17px"}}>
+                <div style={{display:"flex", justifyContent:"space-between"}}>
+                  <div>
+                    <div>
+                      <img
+                        style={{ float: "left", marginTop: "0.5em", width:"25px", position:"relative", top:"12px" }}
+                        src="./images/carrier.svg"
+                      />
+                    </div>
+                    <div style={{ marginLeft: "3.5em" }}>
+                      <Typography
+                        style={{
+                          color: "BLACK",
+                          fontFamily: "Black Ops One, cursive",
+                          transform: "translateY(17px)",
+                          display: "flex",
+                        }}
+                        component="h5"
+                        variant="h5"
+                      >
+                        {mapName ? `${mapName} - Robot ${idRobot}`:`- ${t("manag_title")}`}
+                      </Typography>
+                    </div>
+                  </div>
+                  <div>
+                    <div>
+                        <img onClick={()=>callBackRetourMaps()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px"}}></img>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -120,7 +129,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
                   onClick={() => {  
                     if (
                       window.confirm(
-                        " Voulez-vous vraiment supprimer toutes les destinations ?"
+                        t('manag_delete')
                       )
                     ) {
                       deletePoints();
@@ -215,7 +224,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
               </span>
               )}
           </div> 
-          <div style={{display:"flex", position:"absolute", right:"10px"}}>
+          <div style={{display:"flex", position:"absolute", right:"30px"}}>
             <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_start_point_legend')}</span>
             <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"gold", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>
             <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_intermediate_point_legend')}</span>

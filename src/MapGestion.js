@@ -106,20 +106,6 @@ class MapGestion extends React.Component {
       .catch((err) => console.error(err));
   };
 
-  componentDidUpdate() {
-    if (window.innerWidth < 1280) {
-      var el = document.getElementById("section2");
-      if (!this.state.choosingDest) {
-        el.style.transition = "1s";
-        el.style.position = "relative";
-        el.style.bottom = "550px";
-      } else {
-        el.style.transition = "1s";
-        el.style.position = "relative";
-        el.style.bottom = "-50px";
-      }
-    }
-  }
 
   deleteOnePoint(pk) {
     const { t } = this.props;
@@ -138,6 +124,7 @@ class MapGestion extends React.Component {
   }
 
   deletePoints(id) {
+    const {t} = this.props;
     fetch(Const.URL_WS_DEL_ALL_DEF + "?id=" + id, {
       retry: 3,
       retryDelay: 1000,
@@ -146,7 +133,7 @@ class MapGestion extends React.Component {
       .then((data) => {
         this.setState({
           status:
-            "Vous avez supprimé plusieures destinations, Veuillez Rafraichir",
+            t('manag_del_refresh'),
             nbpts:null
         });
         this.provideCoordinates();
@@ -228,6 +215,7 @@ class MapGestion extends React.Component {
     const { coodinates } = this.state;
     // This pathIndex will be useful when playing scenarios
     const pathIndex = coodinates.length < 2 ? 1 : coodinates.length - 1;
+    const { t } = this.props;
     fetch(
       Const.URL_WS_INS_DEF +
         "?idClient=" +
@@ -250,7 +238,7 @@ class MapGestion extends React.Component {
         console.log("Vous avez ajouté une destination x=" + x + "  y=" + y);
         console.log(data);
         this.setState({
-          status: "Vous avez une nouvelle destination, Veuillez Rafraichir",
+          status: t('manag_refresh_msg'),
         });
       })
       .catch((error) => {
@@ -343,9 +331,10 @@ class MapGestion extends React.Component {
   }
 
   clickedOutside(evt) {
+    const { t } = this.props;
     const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
     this.setState({
-      msg: `Vous avez cliqué sur  ${JSON.stringify(coords)} `,
+      msg: `${t('manag_clicked')}  ${JSON.stringify(coords)}, ${t('manag_clicked_next_step')}`,
     });
     this.setState({
       xCoord: evt.nativeEvent.layerX,
@@ -720,30 +709,31 @@ class MapGestion extends React.Component {
         >
           <div className="line1">
             <div className="child1">
-              1-Ajout d'une destination, cliquez sur mode edition ensuite sur
-              une position de l'image puis cliquez "Ajouter une destination";
+              1- Pour ajouter une destination, cliquez sur mode edition ensuite sur
+              une position de la carte puis cliquez "Ajouter une destination".
+              Cliquer "Rafraichir Map" pour visualiser la destination ajouté.
             </div>
             <div className="child2">
-              2-Supprimer une destination, cliquez sur un point existant de
+              2- Pour supprimer une destination, cliquez sur un point existant de
               l'image puis cliquez sur "Effacer une destination"
             </div>
           </div>
           <div className="line2">
             <div className="child1">
-              3-Supprimer toutes les destination, cliquez juste sur "Effacer
+              3- Pour supprimer toutes les destination, cliquez juste sur "Effacer
               destinations"
             </div>
             <div className="child2">
-              4-Démarrage Immédiat, Envoie une action avec le nombre de points
+              4- Le bouton "GO !", envoie une action avec le nombre de points
               au robot
             </div>
           </div>
-          <div className="line3">
+          {/* <div className="line3">
             <div>
               Effacer la Map, Effacera la Map et toutes les destinations
               affiliées cliquez juste sur "Effacer la Map"
             </div>
-          </div>
+          </div> */}
           {/* <h3>
             {" "}
             1-Ajout d'une destination, cliquez sur une position de l'image puis
@@ -777,10 +767,11 @@ class MapGestion extends React.Component {
     this.setState({ openModalInfo: true });
   };
   editDestinations = () => {
+    const { t } = this.props;
     const { xCoord, yCoord, choosingDest } = this.state;
     choosingDest
       ? this.deplacerRobot(xCoord, yCoord)
-      : this.setState({ imageHeight: null, choosingDest: true });
+      : this.setState({ imageHeight: null, choosingDest: true, msg: t('manag_add_dest') });
   };
   enterArea(area) {
     //Pas Besoin
@@ -812,7 +803,7 @@ class MapGestion extends React.Component {
       openModal,
       modalErrorMsg,
       openModalInfo,
-      choosingDest,scrollTop,zoom, show, positionIndex
+      choosingDest,scrollTop,zoom, show, positionIndex, idRobot
     } = this.state;
     console.log("this.state & coodinates & map", this.state, coodinates, mp);
     // console.log(
@@ -825,7 +816,7 @@ class MapGestion extends React.Component {
     var blob = fields[1];
     const { t } = this.props;
     return (
-      <div className={this.classes.root}>
+      <div className={this.classes.root} style={{marginTop:window.innerWidth < 1200 ? "2em":"0"}}>
         {/* Old Scenario */}
         <Modal
           open={openModal}
@@ -936,7 +927,7 @@ class MapGestion extends React.Component {
           </div>
         </Modal>
 
-        <MapGestionButtons showInfoMobile={()=>this.showInfoMobile()} zoom={zoom} handleZoomOut={()=>this.setState({zoom: this.state.zoom - 10})} handleZoomIn={()=>this.setState({zoom: this.state.zoom + 10})} handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
+        <MapGestionButtons showInfoMobile={()=>this.showInfoMobile()} zoom={zoom} handleZoomOut={()=>this.setState({zoom: this.state.zoom - 10})} handleZoomIn={()=>this.setState({zoom: this.state.zoom + 10})} handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} idRobot={idRobot} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
            
         {/* Map Management */}
         <Grid container spacing={2} style={{position:"relative", top: show ? "250px":"0"}}>
@@ -1049,250 +1040,6 @@ class MapGestion extends React.Component {
             )}
           </Grid>
           
-          <Hidden mdUp>
-          <Grid
-            item
-            xs={12}
-            md={12}
-            lg={12}
-            style={{ height: "820px" }}
-            id="section2"
-          >
-            <Card
-              className="section2"
-              style={{ height: "100%", transition: "1s" }}
-            >
-              <Hidden mdUp>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <img
-                    style={{ margin: "1em", padding: "1em" }}
-                    width="70"
-                    src="./images/question.png"
-                    onClick={() => {
-                      this.showInfoMobile();
-                    }}
-                  />
-                </div>
-              </Hidden>
-              <CardContent>
-                <div align="center">
-                  {this.state.nbpts && (
-                    <h1
-                      style={{
-                        color: "blue",
-                        fontWeight: "bold",
-                        // position: "relative",
-                        // left: "1em",
-                        fontFamily: "Josefin Slab, serif",
-                      }}
-                    >
-                      <b>
-                        {this.state.nbpts} {this.state.destination}
-                      </b>
-                    </h1>
-                  )}
-
-                  {this.state.msg && (
-                    <h3
-                      className="message"
-                      style={{ fontFamily: "Josefin Slab, serif" }}
-                    >
-                      <b>{this.state.msg}</b>
-                    </h3>
-                  )}
-
-                  {this.state.status && (
-                    <h3 style={{ color: "green", fontWeight: "bold" }}>
-                      {this.state.status}
-                    </h3>
-                  )}
-                </div>
-                <Button
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  onClick={() =>
-                    // this.deplacerRobot(this.state.xCoord, this.state.yCoord)
-                    this.editDestinations()
-                  }
-                  variant="outlined"
-                  color="primary"
-                  size="medium"
-                  disabled={moving}
-                >
-                  {!choosingDest ? "Mode Edition" : "Ajouter une destination"}
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  onClick={() => this.provideCoordinates()}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                >
-                  Rafraichir Map
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  onClick={() => {}}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                >
-                  Envoyer les données au robot
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  // onClick={() => this.addAction()}
-                  onClick={() => {
-                    this.handleOpenModal();
-                  }}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                >
-                  Parcours passés
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  // onClick={() => this.addAction()}
-                  onClick={() => this.StartMove()}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                >
-                  Démarrage immédiat
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  onClick={() => {
-                    this.nextDestination();
-                  }}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                >
-                  Prochaine destination
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  onClick={() => {}}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                >
-                  Démarrage planifié
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  onClick={() => {}}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                >
-                  Démarrage répetitif
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  onClick={() => this.deleteOnePoint(this.state.actualPk)}
-                  variant="outlined"
-                  color="secondary"
-                  size="large"
-                >
-                  Effacer une destination
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  width="2em"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        " Voulez-vous vraiment supprimer toutes les destinations ?"
-                      )
-                    ) {
-                      this.deletePoints(this.state.actualID);
-                    }
-                  }}
-                  variant="outlined"
-                  color="secondary"
-                  size="large"
-                >
-                  Effacer destinations (Tous les points)
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  disabled={moving}
-                  className="_button"
-                  // fullWidth={true}
-                  // width="2em"
-                  onClick={() => {
-                    if (
-                      window.confirm(" Voulez-vous vraiment supprimer la Map ?")
-                    ) {
-                      this.deleteMap(this.state.actualID);
-                    }
-                  }}
-                  variant="outlined"
-                  color="secondary"
-                  size="large"
-                >
-                  Effacer la Map
-                </Button>
-                <span>&nbsp;</span>
-                <Button
-                  className="_button"
-                  // fullWidth={true}
-                  // width="2em"
-
-                  variant="contained"
-                  color="secondary"
-                  size="large"
-                >
-                  stop
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-          </Hidden>
-          {/* <Hidden only="sm">
-            <Grid item xs={12} md={12} lg={12} style={{ height: "820px" }}>
-              {this.returnInfo()}
-            </Grid>
-          </Hidden> */}
         </Grid>
       </div>
     );

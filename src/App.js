@@ -39,6 +39,7 @@ import PageTableauDeBordMaps from "./PageTableauDeBordMaps";
 import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
 import MapOverview from "./MapOverview";
 import { Tooltip } from "@material-ui/core";
+import {Helmet} from "react-helmet";
 
 const drawerWidth = 240;
 
@@ -511,6 +512,7 @@ export default function MiniDrawer() {
     setShowMaps(-1);
     setMapGestion(-1);
     setMapOverview(-1);
+    setShowTableauDeBordMaps(-1);
     setShowTableauDeBord(1);
   };
   const handleRetourTableauDeBordMaps = () => {
@@ -526,13 +528,31 @@ export default function MiniDrawer() {
   };
   return (
     <div className={classes.root}>
+      {window.innerWidth < 1200 &&
+        <Helmet>
+          <title>Mobile - Softrobot</title>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=0.45, maximum-scale=1"
+          />
+        </Helmet>
+      }
+      {/* {window.innerWidth < 1200 && showAide === 1 &&
+        <Helmet>
+          <title>Mobile - Details</title>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=0.27, maximum-scale=1"
+          />
+        </Helmet>
+      } */}
       <CssBaseline />
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
-        style={{ backgroundColor: "#4B4B4B" }}
+        style={{ backgroundColor: "#4B4B4B", padding: window.innerWidth < 1200 ? "1em 0":"0" }}
       >
         <Toolbar style={{minHeight: "44px"}}>
           {apiKey != null && ( // if login page no drawer
@@ -582,7 +602,7 @@ export default function MiniDrawer() {
           {apiKey == null && (
             <div className={clsx(classes.contentRight)}>
               <IconButton color="inherit" edge="end">
-                <LockIcon />
+                <LockIcon style={{width:window.innerWidth < 1280 ? "1.7em":"1em",height: window.innerWidth < 1280 ? "1.7em":"1em"}} />
               </IconButton>
             </div>
           )}
@@ -610,8 +630,8 @@ export default function MiniDrawer() {
             <img
               src={"./images/" + t("first_lng") + ".png"}
               style={{
-                height: "15px",
-                width: "25px",
+                width: window.innerWidth < 1280 ? "3em":"1.5em",
+                height: window.innerWidth < 1280 ? "2em":"1em",
                 marginLeft: window.innerWidth < 1280 ? "50px" : "30px",
                 position: "relative",
                 top: "6px",
@@ -636,7 +656,7 @@ export default function MiniDrawer() {
             }),
           }}
         >
-          <div className={classes.toolbar} style={{minHeight:"25px"}} >
+          <div className={classes.toolbar} style={{minHeight:"25px", marginTop:window.innerWidth < 1200 ? "2em":"0"}} >
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "rtl" ? (
                 <ChevronRightIcon />
@@ -679,7 +699,7 @@ export default function MiniDrawer() {
           </List>
         </Drawer>
       )}
-      <main className={classes.content}>
+      <main className={classes.content} style={{marginTop: window.innerWidth < 1200 ? "3.5em":"0"}}>
         <div className={classes.toolbar} style={{minHeight:"25px"}} />
         {/* for the toast the callback reset the variable that displays the toast */}
         {showToastLogout == 1 && (
@@ -819,6 +839,7 @@ export default function MiniDrawer() {
             callbackOpenMaps={handleCallbackOpenMaps}
             callbackOpenMapOverview={handleCallbackOpenMapOverview}
             callbackRetourDetails={handleCallbackRetourDetails}
+            callBackRetourTableauDeBord={handleRetourTableauDeBord}
           />
         )}{" "}
         {/* pas besoinde callback - pas de bouton de retour */}

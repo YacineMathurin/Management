@@ -8,6 +8,7 @@ import React from "react";
 import * as Const from "./Constant";
 import CardHeader from "@material-ui/core/CardHeader";
 import ReactApexChart from "react-apexcharts";
+import {Helmet} from "react-helmet";
 // import "./PageAide.css";
 
 class PageAide extends React.Component {
@@ -99,7 +100,7 @@ class PageAide extends React.Component {
         curve: "smooth",
       },
       title: {
-        text: "CPU percentage",
+        text: window.innerWidth < 1200 ? "": "CPU percentage",
         align: "center",
       },
       grid: {
@@ -145,7 +146,7 @@ class PageAide extends React.Component {
         curve: "smooth",
       },
       title: {
-        text: "Memory percentage",
+        text:window.innerWidth < 1200 ? "": "Memory percentage",
         align: "center",
       },
       grid: {
@@ -195,7 +196,7 @@ class PageAide extends React.Component {
         curve: "smooth",
       },
       title: {
-        text: "Battery percentage",
+        text: window.innerWidth < 1200 ? "":"Battery percentage",
         align: "center",
       },
       grid: {
@@ -219,12 +220,13 @@ class PageAide extends React.Component {
     };
 
     return (
-      <div className={this.classes.root}>
+      <div className={this.classes.root} id="PageAide">
         {/* Section recherche  */}
+        
         <Container
           style={{
-            minWidth: "1200px",
-            maxWidth: "1200px",
+            // minWidth: "1200px",
+            // maxWidth: "1200px",
             backgroundColor: "#FAFBFC",
             height: "100%",
           }}
@@ -270,7 +272,7 @@ class PageAide extends React.Component {
 
                   <CardContent>
                     <Grid container spacing={2}>
-                      <Grid item xs={8}>
+                      <Grid item xs={12} lg={8}>
                         <Card>
                           <CardContent>
                             <CardHeader

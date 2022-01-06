@@ -247,7 +247,7 @@ class PageMaps extends React.Component {
     const { t } = this.props;
     const { open, openDeleteModal, editingMapDetails } = this.state;
     return (
-      <div className={this.classes.root}>
+      <div className={this.classes.root} id="PageMaps">
         {/* Rebuild Maps */}
         <Modal
           open={open}

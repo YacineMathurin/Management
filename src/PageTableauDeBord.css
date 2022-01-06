@@ -1,0 +1,6 @@
+@media only screen and (max-width: 1200px) {
+  span {
+    font-size: 1.75em;
+    width: fit-content;
+  }
+}

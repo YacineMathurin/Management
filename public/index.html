@@ -6,7 +6,7 @@
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1 " /> -->
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=0.45, maximum-scale=0.5"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
     />
     <meta name="theme-color" content="#000000" />
     <meta name="Robot fleet QENVI" content="Robot fleet QENVI" />
@@ -48,6 +48,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Robot Fleet</title>
+    
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -66,5 +67,11 @@
       href="https://fonts.googleapis.com/css2?family=Girassol&family=Lobster&family=Roboto+Mono:wght@100&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
       rel="stylesheet"
     />
+    <script>
+      var locOrientation = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation || screen.orientation.lock;
+      locOrientation('landscape')
+      .then(success=>{})
+      .catch(e=>{})
+    </script>
   </body>
 </html>

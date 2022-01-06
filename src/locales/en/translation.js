@@ -17,12 +17,13 @@ export const TRANSLATIONS_EN = {
 
   /** Side Bar */
   sidebar_robots:"LIST ALL ROBOTS",
-  sidebar_maps:"LIST ALL STOCKS",
+  sidebar_maps:"LIST ALL wAREHOUSES",
 
   /** Page de Bord robots*/
   dashboard_loading: "Loading your content",
   dashboard_title: "My Cobotic Arsenal",
   dashboard_subtitle: "Find here all your robot",
+  dashboard_id_client: "Warehouse",
   dashboard_moving: "Is moving",
   dashboard_connected: "Connected",
   dashboard_autonomy: "Autonomy",
@@ -35,9 +36,9 @@ export const TRANSLATIONS_EN = {
   dashboard_filter_reset: "RESET FILTERS",
   
   /** Page de Bord maps */
-  dashboard_maps_title: "All My Maps",
-  dashboard_maps_subtitle: "Visualize robot on their map",
-  dashboard_maps_search: "Search by ID Map or Name",
+  dashboard_maps_title: "All My Warehouses",
+  dashboard_maps_subtitle: "Visualize robot on their warehouse",
+  dashboard_maps_search: "Search for a robot",
   dashboard_maps_name: "Name",
   dashboard_maps_comment: "Comment",
   dashboard_maps_robots: "Robot(s)",
@@ -47,7 +48,7 @@ export const TRANSLATIONS_EN = {
   /** Page Maps */
   maps_title: "Click to select your desired map",
   maps_map: "Map",
-  maps_moving_status: "Movement detected ....",
+  maps_moving_status: " - Movement detected -",
   maps_edit_btn: "EDIT",
   maps_filter: "Filter",
   maps_filter_sub: "Filter by map name",
@@ -79,9 +80,13 @@ export const TRANSLATIONS_EN = {
   manag_intermediate_point_legend: "Intermediate points",
   manag_start_point_legend: "Start point",
   manag_end_point_legend: "End point",
-  manag_step1_help: 'Ajout d\'une destination, cliquez sur mode edition ensuite sur une position de l\'image puis cliquez "Ajouter une destination"',
-  manag_step2_help: 'Supprimer une destination, cliquez sur un point existant de l\'image puis cliquez sur "Effacer une destination"',
-  manag_step3_help: 'Supprimer toutes les destination, cliquez juste sur "Effacer destinations"',
-  manag_step4_help: 'Démarrage Immédiat, Envoie une action avec le nombre de points au robot',
-  manag_step5_help: 'Effacer la Map, Effacera la Map et toutes les destinations affiliées cliquez juste sur "Effacer la Map"',
+  manag_add_dest:"Click on the map at the destination you would like to add",
+  manag_clicked:"You've clicked on",
+  manag_clicked_next_step:"click on ADD A DESTINATION",
+  manag_refresh_msg: "You have added a new destination, please refresh by clicking REFRESH MAP",
+  manag_delete:"Do you confirm the deletion of all the destinations ?",
+  manag_step1_help: 'Pour ajouter une destination, cliquez sur mode edition ensuite sur une position de la carte puis cliquez "Ajouter une destination". Cliquer "Rafraichir Map" pour visualiser la destination ajouté.',
+  manag_step2_help: 'Pour supprimer une destination, cliquez sur un point existant de l\'image puis cliquez sur "Effacer une destination"',
+  manag_step3_help: 'Pour supprimer toutes les destination, cliquez juste sur "Effacer destinations"',
+  manag_step4_help: 'Le bouton "GO !", envoie une action avec le nombre de points au robot',
 };

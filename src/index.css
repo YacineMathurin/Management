@@ -29,4 +29,23 @@ code {
   #password-label {
     font-size: 2em;
   }
+  td,
+  th {
+    font-size: 1.65em !important;
+  }
+  #PageTableauDeBord span {
+    font-size: 1.6em;
+    width: fit-content;
+  }
+  #PageMaps span,
+  #PageTableauDeBordMaps span,
+  #PageAide span {
+    font-size: 1.85em;
+  }
+  #MapGestionButtons img {
+    /* width: 50px !important; */
+  }
+  #MapGestionButtons span {
+    /* font-size: 1.85em; */
+  }
 }

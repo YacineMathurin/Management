@@ -126,7 +126,7 @@ function SignIn({ callbackFunction }) {
   return (
     <Container
       component="main"
-      style={window.innerWidth < 1200 ? { width: "100%", padding:"0" } : window.innerWidth < 1280 ? { width: "85%" } : { width: "30%" }}
+      style={window.innerWidth < 1200 ? { width: "100%", padding:"0" } : { width: "30%" }}
     >
       <CssBaseline />
 
@@ -150,8 +150,7 @@ function SignIn({ callbackFunction }) {
               noValidate
             >
               <TextField
-                size="large"
-                margin="normal"
+                 margin="normal"
                 fullWidth
                 id="email"
                 placeholder=""
