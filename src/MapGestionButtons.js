@@ -192,7 +192,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
       </div>
       <div style={{borderBottom: "5px solid gold"}}></div>
         </div> 
-        <div style={{display:"flex", position:"relative"}}>
+        <div id='bar' style={{ position:"relative"}}>
           <div style={{margin:"3px 17px 0 17px"}}>
               <Tooltip title="Back to last page">
               <img onClick={()=>callBackRetourMaps()} src={"./images/go_back.png"} style={{width:"25px", marginRight:"1em"}}></img>
@@ -203,7 +203,7 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
               <Tooltip title="Zoom out">
               <img onClick={()=>handleZoomOut()} src={"./images/zoom-out.png"} style={{width:"25px", marginRight:"1em"}}></img>
               </Tooltip>
-              <span style={{ marginRight:"1em", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px"}}>{zoom}{"%"}</span>
+              <span id='zoom-percentage'>{zoom}{"%"}</span>
               <Tooltip title="Zoom in">
               <img onClick={()=>handleZoomIn()} src={"./images/zoom-in.png"} style={{width:"25px", marginRight:"1em"}}></img>
               </Tooltip>
@@ -218,13 +218,13 @@ const MapGestionButtons = ({showInfoMobile, zoom, handleZoomOut, handleZoomIn, s
               </Tooltip>
               {!show && (
               <span>
-                <span style={{color: "BLACK", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px", marginRight:"1em"}}>{mapName ? mapName:"- Map"}</span>
+                <span style={{color: "BLACK", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px", marginRight:"1em"}}>{mapName ? `${mapName} - Robot ${idRobot}`:"- Map"}</span>
                 {nbpts &&  <span style={{color: "BLACK", position:"relative", bottom:"7px", marginRight:"1em"}}>{nbpts} destinations</span>}
                 {status &&  <span style={{color: "BLACK", fontFamily: "Black Ops One, cursive", position:"relative", bottom:"7px", marginRight:"1em"}}>{status}</span>}
               </span>
               )}
           </div> 
-          <div style={{display:"flex", position:"absolute", right:"30px"}}>
+          <div id='legend' >
             <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_start_point_legend')}</span>
             <p style={{width:"15px", height:"15px", borderRadius:"50%", backgroundColor:"gold", margin: "0", position: "relative",top: "10px", marginRight:"1em"}}>{" "}</p>
             <span style={{position:"relative", top:"7px", marginRight:"1em"}}>{t('manag_intermediate_point_legend')}</span>

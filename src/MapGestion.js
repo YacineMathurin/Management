@@ -816,7 +816,7 @@ class MapGestion extends React.Component {
     var blob = fields[1];
     const { t } = this.props;
     return (
-      <div className={this.classes.root} style={{marginTop:window.innerWidth < 1200 ? "2em":"0"}}>
+      <div className={this.classes.root} style={{marginTop:window.innerWidth < 1200 ? "2em":"0" }}>
         {/* Old Scenario */}
         <Modal
           open={openModal}
@@ -930,7 +930,7 @@ class MapGestion extends React.Component {
         <MapGestionButtons showInfoMobile={()=>this.showInfoMobile()} zoom={zoom} handleZoomOut={()=>this.setState({zoom: this.state.zoom - 10})} handleZoomIn={()=>this.setState({zoom: this.state.zoom + 10})} handleShow={()=>this.setState({show:!this.state.show})} show={this.state.show} deletePoints={()=>this.deletePoints(this.state.actualID)} deleteOnePoint={()=>this.deleteOnePoint(this.state.actualPk)} editDestinations={()=>this.editDestinations()} provideCoordinates={()=>this.provideCoordinates()} StartMove={()=>this.StartMove()}   callBackRetourMaps={()=>this.props.callBackRetourMaps()} mapName={mapName} idRobot={idRobot} moving={moving} choosingDest={choosingDest} nbpts={this.state.nbpts} destination={this.state.destination} msg={this.state.msg} status={this.state.status}></MapGestionButtons>
            
         {/* Map Management */}
-        <Grid container spacing={2} style={{position:"relative", top: show ? "250px":"0"}}>
+        <Grid container spacing={2} style={{position:"relative", top: show ? "250px":"80px"}}>
           <Grid item xs={12} md={12} lg={12}>
             <Card style={{zoom:zoom+"%", backgroundColor: "rgb(238, 238, 238)"}}>
               <CardContent>

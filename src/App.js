@@ -528,7 +528,7 @@ export default function MiniDrawer() {
   };
   return (
     <div className={classes.root}>
-      {window.innerWidth < 1200 &&
+      {window.innerWidth < 992 &&
         <Helmet>
           <title>Mobile - Softrobot</title>
           <meta
