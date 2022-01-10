@@ -1,11 +1,13 @@
 export const TRANSLATIONS_EN = {
   /** Login Page */
   title: "Authentification",
-  username: "Username",
+  firstname: "Firstname",
+  username: "Email",
   password: "Password",
   question: "Having trouble, Any question ?",
   contact: "Contact our customer/technical team",
-  go_button: "Launch the qr_admin software",
+  go_button: "Launch Softrobot",
+  signup_button: "Create my account",
   copyright: "All right reserved © ",
   company: "QENVI ROBOTICS",
   translate_text: "Translate this site in ·",
@@ -14,6 +16,8 @@ export const TRANSLATIONS_EN = {
   login_ok: "login succeed",
   logout_ok: "logout succeed",
   login_ko: "Connexion failed, please try later",
+  no_account:"Create your account",
+  has_account:"I Already have an account",
 
   /** Side Bar */
   sidebar_robots:"LIST ALL ROBOTS",

@@ -14,11 +14,20 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import VpnKeyOutlinedIcon from "@material-ui/icons/VpnKeyOutlined";
 import React, { useState, Suspense } from "react";
 import Async from "react-async";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, NavLink, Route, Switch } from "react-router-dom";
 import DemandeComptePage from "./DemandeComptePage";
 import Toast from "./Toast";
 import * as Const from "./Constant";
 import { useTranslation } from "react-i18next";
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+
+
 // import i18n from "i18next";
 
 const useStyles = makeStyles((theme) => ({
@@ -115,6 +124,12 @@ function SignIn({ callbackFunction }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  
+  const [login, setLogin] = useState(true);
+  const [showPassword, handleClickShowPassword] = useState(false);
+
   function wantToCheckPassword() {
     if (checkPassword) setCheckPassword(false);
     else setCheckPassword(true);
@@ -144,10 +159,11 @@ function SignIn({ callbackFunction }) {
               {t("title")}
             </Typography>
 
-            <form
+            {login && <form
               style={{ marginTop: "5em" }}
               className={classes.form}
               noValidate
+              autoComplete="off"
             >
               <TextField
                  margin="normal"
@@ -156,7 +172,6 @@ function SignIn({ callbackFunction }) {
                 placeholder=""
                 label={t("username")}
                 name="email"
-                autoComplete="email"
                 autoFocus
                 onChange={(event) =>
                   localStorage.setItem("username", event.target.value)
@@ -193,6 +208,7 @@ function SignIn({ callbackFunction }) {
           /> */}
               <Router>
                 <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
+                  <center><NavLink to={"/"} onClick={()=>setLogin(false)}>{t('no_account')}</NavLink></center>
                   <center>
                     <span>{t("question")}</span>
                   </center>
@@ -269,7 +285,140 @@ function SignIn({ callbackFunction }) {
                   }}
                 </Async>
               )}
-            </form>
+            </form>}
+            {!login && <form
+              style={{ marginTop: "5em" }}
+              className={classes.form}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                margin="normal"
+                fullWidth
+                id="firstname"
+                placeholder=""
+                label={t("firstname")}
+                name="firstname"
+                autoFocus
+                onChange={(event) =>
+                  localStorage.setItem("username", event.target.value)
+                }
+                autoComplete="off"
+              />
+              <FormControl fullWidth style={{marginTop:"0.75em"}}>
+                <InputLabel htmlFor="standard-adornment-email">Email</InputLabel>
+                <Input
+                  id="standard-adornment-email"
+                  type={'email'}  
+                  value={signupEmail}
+                  onChange={(event) =>
+                    setSignupEmail(event.target.value)
+                  }
+                />
+              </FormControl>
+              <FormControl fullWidth style={{marginTop:"1em"}}>
+                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                <Input
+                  id="standard-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={signupPassword}
+                  onChange={(event) =>
+                    setSignupPassword(event.target.value)
+                  }
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => handleClickShowPassword(!showPassword)}
+                        // onMouseDown={handleMouseDownPassword}
+                      >
+                        {true ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+              <Router>
+                <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
+                  <center><NavLink to={"/"} onClick={()=>setLogin(true)}>{t('has_account')}</NavLink></center>
+                  <center>
+                    <span>{t("question")}</span>
+                  </center>
+
+                  <center>
+                    <span>
+                      {" "}
+                      <a
+                        style={{ color: "#3F51B5" }}
+                        href="mailto:support@qenvi.fr"
+                      >
+                        {t("contact")}
+                      </a>
+                    </span>
+                  </center>
+                </div>
+                <Switch>
+                  <Route path="/demande">
+                    <DemandeComptePage />
+                  </Route>
+                </Switch>
+              </Router>
+              <Button
+                style={{height:window.innerWidth < 1200 ? "100px":"50px", fontSize: window.innerWidth < 1200 ? "2em":"1em"}}
+                size="large"
+                fullWidth
+                variant="contained"
+                color="primary"
+                startIcon={<KeyboardArrowRightIcon />}
+                className={classes.submit}
+                onClick={() => {
+                  wantToCheckPassword();
+                }}
+              >
+                {t("signup_button")}
+              </Button>
+              {checkPassword && (
+                <Async promiseFn={loadKeyApi}>
+                  {({ data, error, isPending }) => {
+                    if (isPending)
+                      return (
+                        <center>
+                          <CircularProgress disableShrink />
+                        </center>
+                      );
+                    if (error)
+                      return (
+                        <Toast
+                          severity="error"
+                          message={t("login_ko")}
+                          callback={() => {
+                            var dummy = 1;
+                          }}
+                        ></Toast>
+                      ); // never called ?
+                    if (data == "ERROR") {
+                      return (
+                        <Toast
+                          severity="error"
+                          message={t("login_ko")}
+                          callback={() => {
+                            var dummy = 1;
+                          }}
+                        ></Toast>
+                      );
+                    } else {
+                      setApiKey(data.serial);
+                      setCheckPassword(false);
+                      console.log(data.serial);
+                      console.log(JSON.stringify(data));
+                      callbackFunction(data.serial, data.validite);
+                    }
+                    return null;
+                  }}
+                </Async>
+              )}
+            </form>}
+
           </div>
           <Box mt={3}>
             <Copyright translation={t} />
