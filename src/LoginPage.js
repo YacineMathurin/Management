@@ -126,9 +126,11 @@ function SignIn({ callbackFunction }) {
 
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
+  const [signinPassword, setSigninPassword] = useState("");
   
   const [login, setLogin] = useState(true);
-  const [showPassword, handleClickShowPassword] = useState(false);
+  const [showSigninPassword, handleClickShowSigninPassword] = useState(false);
+  const [showSignupPassword, handleClickShowSignupPassword] = useState(false);
 
   function wantToCheckPassword() {
     if (checkPassword) setCheckPassword(false);
@@ -182,30 +184,30 @@ function SignIn({ callbackFunction }) {
                     : ""
                 }
               />
-              <TextField
-                style={{marginTop: window.innerWidth < 1200 ? "100px":"30px"}}
-                margin="normal"
-                fullWidth
-                placeholder=""
-                name="password"
-                label={t("password")}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={(event) =>
-                  localStorage.setItem("password", event.target.value)
-                }
-                defaultValue={
-                  localStorage.getItem("password")
-                    ? localStorage.getItem("password")
-                    : ""
-                }
-                onKeyPress={(event)=>handleEnterTolog(event)}
-              />
-              {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Rester connecté"
-          /> */}
+              
+              <FormControl fullWidth id="signin_password_container">
+                <InputLabel htmlFor="signin_password" id="signin_password-label">{t("password")}</InputLabel>
+                <Input
+                  id="signin_password"
+                  type={showSigninPassword ? 'text' : 'password'}
+                  value={signinPassword}
+                  onChange={(event) =>
+                    setSigninPassword(event.target.value)
+                  }
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => handleClickShowSigninPassword(!showSigninPassword)}
+                        // onMouseDown={handleMouseDownPassword}
+                      >
+                        {showSigninPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  onKeyPress={(event)=>handleEnterTolog(event)}
+                />
+              </FormControl>
               <Router>
                 <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
                   <center><NavLink to={"/"} onClick={()=>setLogin(false)}>{t('no_account')}</NavLink></center>
@@ -295,20 +297,20 @@ function SignIn({ callbackFunction }) {
               <TextField
                 margin="normal"
                 fullWidth
-                id="firstname"
+                id="signup_firstname"
                 placeholder=""
                 label={t("firstname")}
                 name="firstname"
-                autoFocus
+                autoFocus 
                 onChange={(event) =>
                   localStorage.setItem("username", event.target.value)
                 }
                 autoComplete="off"
               />
-              <FormControl fullWidth style={{marginTop:"0.75em"}}>
-                <InputLabel htmlFor="standard-adornment-email">Email</InputLabel>
+              <FormControl fullWidth id="signup_email_container">
+                <InputLabel htmlFor="signup_email" id="signup_email-label">Email</InputLabel>
                 <Input
-                  id="standard-adornment-email"
+                  id="signup_email"
                   type={'email'}  
                   value={signupEmail}
                   onChange={(event) =>
@@ -316,11 +318,11 @@ function SignIn({ callbackFunction }) {
                   }
                 />
               </FormControl>
-              <FormControl fullWidth style={{marginTop:"1em"}}>
-                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+              <FormControl fullWidth id="signup_password_container">
+                <InputLabel htmlFor="signup_password" id="signup_password-label">{t("password")}</InputLabel>
                 <Input
-                  id="standard-adornment-password"
-                  type={showPassword ? 'text' : 'password'}
+                  id="signup_password"
+                  type={showSignupPassword ? 'text' : 'password'}
                   value={signupPassword}
                   onChange={(event) =>
                     setSignupPassword(event.target.value)
@@ -329,10 +331,10 @@ function SignIn({ callbackFunction }) {
                     <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
-                        onClick={() => handleClickShowPassword(!showPassword)}
+                        onClick={() => handleClickShowSignupPassword(!showSignupPassword)}
                         // onMouseDown={handleMouseDownPassword}
                       >
-                        {true ? <Visibility /> : <VisibilityOff />}
+                        {showSigninPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   }
