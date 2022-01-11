@@ -49,7 +49,6 @@ code {
   #signin_password_container {
     margin-top: 3em;
   }
-
   #email,
   #signin_password,
   #signup_firstname,
@@ -64,6 +63,12 @@ code {
   #signup_email-label,
   #signup_password-label {
     font-size: 2em;
+  }
+  #signup_email_container {
+    margin-top: 4em;
+  }
+  #signup_password_container {
+    margin-top: 5em;
   }
   td,
   th {

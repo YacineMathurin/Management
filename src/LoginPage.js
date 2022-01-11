@@ -178,7 +178,7 @@ function SignIn({ callbackFunction }) {
                 onChange={(event) =>
                   localStorage.setItem("username", event.target.value)
                 }
-                defaultValue={
+                defaultValue = {
                   localStorage.getItem("username")
                     ? localStorage.getItem("username")
                     : ""
@@ -191,8 +191,10 @@ function SignIn({ callbackFunction }) {
                   id="signin_password"
                   type={showSigninPassword ? 'text' : 'password'}
                   value={signinPassword}
-                  onChange={(event) =>
-                    setSigninPassword(event.target.value)
+                  onChange={(event) => {
+                    setSigninPassword(event.target.value);
+                    localStorage.setItem("password", event.target.value);
+                    }
                   }
                   endAdornment={
                     <InputAdornment position="end">

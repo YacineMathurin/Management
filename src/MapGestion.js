@@ -332,13 +332,15 @@ class MapGestion extends React.Component {
 
   clickedOutside(evt) {
     const { t } = this.props;
-    const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
+    const { zoom } = this.state;
+    const scale = zoom / 100; 
+    const coords = { x: Math.round(evt.nativeEvent.layerX / scale) , y: Math.round(evt.nativeEvent.layerY / scale) };
     this.setState({
       msg: `${t('manag_clicked')}  ${JSON.stringify(coords)}, ${t('manag_clicked_next_step')}`,
     });
     this.setState({
-      xCoord: evt.nativeEvent.layerX,
-      yCoord: evt.nativeEvent.layerY,
+      xCoord: Math.round(evt.nativeEvent.layerX / scale),
+      yCoord: Math.round(evt.nativeEvent.layerY / scale),
     });
     console.log("x " + this.state.xCoord);
     console.log("y " + this.state.yCoord);
