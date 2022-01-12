@@ -26,6 +26,8 @@ import LinearBuffer from "./PageTableauDeBordChargement";
 import CircularProgressWithLabel from "./PageTableauDeBordBattery";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "@material-ui/core";
+import jwt_decode from "jwt-decode";
+
 
 function PageTableauDeBord(props) {
   const { t, i18n } = useTranslation();
@@ -81,14 +83,10 @@ function PageTableauDeBord(props) {
 
   const provideMetrics = () => {
     var result = [];
-    fetch(
-      Const.URL_WS_ALL_ROBOTS + "?email=" + localStorage.getItem("username"),
-      { retry: 3, retryDelay: 1000 }
-    )
-      .then((res) => res.json())
-      .then((data) => {
+    var { idClient } = jwt_decode(apiKey);
+
         fetch(
-          Const.URL_GET_LAST_HEARTBEAT_MSG + "?idclient=" + data[0]["ID_CLIENT"],
+          Const.URL_GET_LAST_HEARTBEAT_MSG + "?idclient=" + idClient,
           { retry: 3, retryDelay: 1000 }
         )
           .then((res) => res.json())
@@ -106,10 +104,7 @@ function PageTableauDeBord(props) {
         .catch((error) => {
           console.error("Request failed", error);
         }); 
-    })
-    .catch((error) => {
-      console.error("Request failed", error);
-    }); 
+  
   }
 
   const handleCallbackOpenDetails = (idRobot) => {

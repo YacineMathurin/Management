@@ -52,22 +52,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const loadKeyApi = async ({ user }, { pass }) => {
-  user = localStorage.getItem("username")
-    ? localStorage.getItem("username")
-    : "";
-  pass = localStorage.getItem("password")
-    ? localStorage.getItem("password")
-    : "";
-
-  //https://docs.react-async.com/getting-started/usage
-  const res = await fetch(
-    Const.URL_WS_LOGIN + `?email=${user}&password=${pass}`
-  );
-  if (!res.ok) throw new Error("error");
-  return res.json();
-};
-
 function Copyright() {
   const { t, i18n } = useTranslation();
   const classes = useStyles();
@@ -136,10 +120,58 @@ function SignIn({ callbackFunction }) {
     if (checkPassword) setCheckPassword(false);
     else setCheckPassword(true);
   }
+
   function handleEnterTolog(e) {
     console.log("handleEnterTolog", e, e.which);
     if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.which==13) wantToCheckPassword();
   }
+
+  const loadKeyApi = () => { 
+    const user = localStorage.getItem("username")
+      ? localStorage.getItem("username")
+      : "";
+    const pass = localStorage.getItem("password")
+      ? localStorage.getItem("password")
+      : "";
+  
+    const data = {email:user, password:pass};
+    //https://docs.react-async.com/getting-started/usage
+    fetch(
+      Const.URL_WS_LOGIN,
+      {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }
+    )
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      setApiKey(data.token);
+      // setCheckPassword(false);
+      // console.log(data.serial);
+      // console.log(JSON.stringify(data));
+      callbackFunction(data.token, "");
+    })
+    .catch(error=> {
+      console.error(error);
+      return <Toast
+        severity="error"
+        message={t("login_ko")}
+        callback={() => {
+          var dummy = 1;
+        }}
+      />
+    });
+  
+  
+    // if (!res.ok) throw new Error("error");
+    // console.log(res);
+    // console.log(res.json());
+    // return res.json();
+  };
   return (
     <Container
       component="main"
@@ -244,51 +276,12 @@ function SignIn({ callbackFunction }) {
                 startIcon={<KeyboardArrowRightIcon />}
                 className={classes.submit}
                 onClick={() => {
-                  wantToCheckPassword();
+                  loadKeyApi();
                 }}
               >
                 {t("go_button")}
               </Button>
-              {checkPassword && (
-                <Async promiseFn={loadKeyApi}>
-                  {({ data, error, isPending }) => {
-                    if (isPending)
-                      return (
-                        <center>
-                          <CircularProgress disableShrink />
-                        </center>
-                      );
-                    if (error)
-                      return (
-                        <Toast
-                          severity="error"
-                          message={t("login_ko")}
-                          callback={() => {
-                            var dummy = 1;
-                          }}
-                        ></Toast>
-                      ); // never called ?
-                    if (data == "ERROR") {
-                      return (
-                        <Toast
-                          severity="error"
-                          message={t("login_ko")}
-                          callback={() => {
-                            var dummy = 1;
-                          }}
-                        ></Toast>
-                      );
-                    } else {
-                      setApiKey(data.serial);
-                      setCheckPassword(false);
-                      console.log(data.serial);
-                      console.log(JSON.stringify(data));
-                      callbackFunction(data.serial, data.validite);
-                    }
-                    return null;
-                  }}
-                </Async>
-              )}
+              
             </form>}
             {!login && <form
               style={{ marginTop: "5em" }}
@@ -376,51 +369,12 @@ function SignIn({ callbackFunction }) {
                 startIcon={<KeyboardArrowRightIcon />}
                 className={classes.submit}
                 onClick={() => {
-                  wantToCheckPassword();
+                  loadKeyApi();
                 }}
               >
                 {t("signup_button")}
               </Button>
-              {checkPassword && (
-                <Async promiseFn={loadKeyApi}>
-                  {({ data, error, isPending }) => {
-                    if (isPending)
-                      return (
-                        <center>
-                          <CircularProgress disableShrink />
-                        </center>
-                      );
-                    if (error)
-                      return (
-                        <Toast
-                          severity="error"
-                          message={t("login_ko")}
-                          callback={() => {
-                            var dummy = 1;
-                          }}
-                        ></Toast>
-                      ); // never called ?
-                    if (data == "ERROR") {
-                      return (
-                        <Toast
-                          severity="error"
-                          message={t("login_ko")}
-                          callback={() => {
-                            var dummy = 1;
-                          }}
-                        ></Toast>
-                      );
-                    } else {
-                      setApiKey(data.serial);
-                      setCheckPassword(false);
-                      console.log(data.serial);
-                      console.log(JSON.stringify(data));
-                      callbackFunction(data.serial, data.validite);
-                    }
-                    return null;
-                  }}
-                </Async>
-              )}
+              
             </form>}
 
           </div>

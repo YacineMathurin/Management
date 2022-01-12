@@ -40,6 +40,10 @@ import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
 import MapOverview from "./MapOverview";
 import { Tooltip } from "@material-ui/core";
 import {Helmet} from "react-helmet";
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
+import PersonIcon from '@material-ui/icons/Person';
+import PageUserManagement from "./PageUserManagement";
+
 
 const drawerWidth = 240;
 
@@ -143,6 +147,7 @@ export default function MiniDrawer() {
   const [showScreener, setShowScreener] = React.useState(-1);
   const [showBiblio, setShowBiblio] = React.useState(-1);
   const [showTableauDeBordMaps, setShowTableauDeBordMaps] = React.useState(-1); // default screen
+  const [showUserManagement, setShowUserManagement] = React.useState(-1); // default screen
   const [showTableauDeBord, setShowTableauDeBord] = React.useState(1); // default screen
 
   const handleDrawerOpen = () => {
@@ -187,6 +192,7 @@ export default function MiniDrawer() {
     setShowDetailsMapGestion(-1);
     setShowMaps(1);
     setShowTableauDeBordMaps(-1);
+    setShowUserManagement(-1);
     setMapGestion(-1);
   };
 
@@ -209,6 +215,7 @@ export default function MiniDrawer() {
     setShowTableauDeBord(-1);
     setShowMaps(-1);
     setShowTableauDeBordMaps(-1);
+    setShowUserManagement(-1);
     setMapOverview(1);
   };
 
@@ -423,6 +430,7 @@ export default function MiniDrawer() {
       setShowScreener(-1);
       setShowBiblio(1);
       setShowTableauDeBordMaps(-1);
+      setShowUserManagement(-1);
       setShowTableauDeBord(-1);
     } else if (name.includes("tableau")) {
       // Tableau de bord
@@ -440,6 +448,7 @@ export default function MiniDrawer() {
       setShowScreener(-1);
       setShowBiblio(-1);
       setShowTableauDeBordMaps(-1);
+      setShowUserManagement(-1);
       setShowTableauDeBord(1);
     } else if (name.includes("maps")) {
       // Tableau de bord
@@ -457,6 +466,7 @@ export default function MiniDrawer() {
       setShowScreener(-1);
       setShowBiblio(-1);
       setShowTableauDeBordMaps(1);
+      setShowUserManagement(-1);
       setShowTableauDeBord(-1);
     } else if (name.includes("maps_overview")) {
       // Tableau de bord
@@ -474,8 +484,47 @@ export default function MiniDrawer() {
       setShowScreener(-1);
       setShowBiblio(-1);
       setShowTableauDeBordMaps(-1);
+      setShowUserManagement(-1);
       setShowTableauDeBord(-1);
       setMapOverview(1);
+    } else if (name.includes("manage_users")) {
+      // Tableau de bord
+      setShowDetailsSelection(-1);
+      setShowClassementTrotteur(-1);
+      setShowRechercheSelections(-1);
+      setShowEcartFavoris(-1);
+      setShowStatsTrotteurs(-1);
+      setShowMonDossier(-1);
+      setShowAdmin(-1);
+      setShowAide(-1);
+      setShowMaps(-1);
+      setMapGestion(-1);
+      setMapOverview(-1);
+      setShowScreener(-1);
+      setShowBiblio(-1);
+      setShowTableauDeBordMaps(-1);
+      setShowTableauDeBord(-1);
+      setMapOverview(-1);
+      setShowUserManagement(1);
+    } else if (name.includes("user")) {
+      // Tableau de bord
+      setShowDetailsSelection(-1);
+      setShowClassementTrotteur(-1);
+      setShowRechercheSelections(-1);
+      setShowEcartFavoris(-1);
+      setShowStatsTrotteurs(-1);
+      setShowMonDossier(-1);
+      setShowAdmin(-1);
+      setShowAide(-1);
+      setShowMaps(-1);
+      setMapGestion(-1);
+      setMapOverview(-1);
+      setShowScreener(-1);
+      setShowBiblio(-1);
+      setShowTableauDeBordMaps(-1);
+      setShowTableauDeBord(-1);
+      setMapOverview(-1);
+      setShowUserManagement(-1);
     }
   };
 
@@ -513,10 +562,12 @@ export default function MiniDrawer() {
     setMapGestion(-1);
     setMapOverview(-1);
     setShowTableauDeBordMaps(-1);
+    setShowUserManagement(-1);
     setShowTableauDeBord(1);
   };
   const handleRetourTableauDeBordMaps = () => {
     setMapOverview(-1);
+    setShowUserManagement(-1);
     setShowTableauDeBordMaps(1);
   };
   const handleRetourTableauDeBordAide = () => {
@@ -537,15 +588,6 @@ export default function MiniDrawer() {
           />
         </Helmet>
       }
-      {/* {window.innerWidth < 1200 && showAide === 1 &&
-        <Helmet>
-          <title>Mobile - Details</title>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=0.27, maximum-scale=1"
-          />
-        </Helmet>
-      } */}
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -692,6 +734,36 @@ export default function MiniDrawer() {
                 <ListItemIcon>
                   {/* <img width="25" height="25" src="./images/maps.png" /> */}
                   <MapOutlinedIcon></MapOutlinedIcon>
+                </ListItemIcon>
+                <ListItemText primary="Journaux"></ListItemText>
+              </ListItem>
+            </Tooltip>
+            <Divider />
+            <Tooltip title={t("sidebar_manag")} placement="right">
+              <ListItem
+                button
+                onClick={() => {
+                  drawerButtonClicked("manage_users", 1);
+                }}
+              >
+                <ListItemIcon>
+                  {/* <img width="25" height="25" src="./images/maps.png" /> */}
+                  <PermContactCalendarIcon></PermContactCalendarIcon>
+                </ListItemIcon>
+                <ListItemText primary="Journaux"></ListItemText>
+              </ListItem>
+            </Tooltip>
+            <Divider />
+            <Tooltip title={t("sidebar_user")} placement="right">
+              <ListItem
+                button
+                onClick={() => {
+                  drawerButtonClicked("user", 1);
+                }}
+              >
+                <ListItemIcon>
+                  {/* <img width="25" height="25" src="./images/maps.png" /> */}
+                  <PersonIcon></PersonIcon>
                 </ListItemIcon>
                 <ListItemText primary="Journaux"></ListItemText>
               </ListItem>
@@ -843,6 +915,18 @@ export default function MiniDrawer() {
           />
         )}{" "}
         {/* pas besoinde callback - pas de bouton de retour */}
+        {showUserManagement > -1 && apiKey != null && (
+          <PageUserManagement
+            callbackNeedToLogin={handleCallbackNeedToLogin}
+            apiKey={apiKey}
+            callbackOpenDetails={handleCallbackOpenDetails}
+            callbackOpenMaps={handleCallbackOpenMaps}
+            callbackOpenMapOverview={handleCallbackOpenMapOverview}
+            callbackRetourDetails={handleCallbackRetourDetails}
+            callBackRetourTableauDeBord={handleRetourTableauDeBord}
+          />
+        )}{" "}
+        
       </main>
     </div>
   );

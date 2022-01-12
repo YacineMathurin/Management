@@ -21,6 +21,8 @@ export const TRANSLATIONS_FR = {
   /** Side Bar */
   sidebar_robots:"LISTER TOUT VOS ROBOTS",
   sidebar_maps:"LISTER TOUT VOS ENTREPOTS",
+  sidebar_manag:"GESTION DES COMPTES UTILISATEURS",
+  sidebar_user:"MODE UTILISATEUR",
 
   /** Page de Bord */
   dashboard_loading: "Chargement en cours ...",

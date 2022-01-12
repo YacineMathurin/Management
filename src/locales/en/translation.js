@@ -21,7 +21,9 @@ export const TRANSLATIONS_EN = {
 
   /** Side Bar */
   sidebar_robots:"LIST ALL ROBOTS",
-  sidebar_maps:"LIST ALL wAREHOUSES",
+  sidebar_maps:"LIST ALL WAREHOUSES",
+  sidebar_manag:"MANAGE USERS",
+  sidebar_user:"USER MODE",
 
   /** Page de Bord robots*/
   dashboard_loading: "Loading your content",
@@ -93,4 +95,9 @@ export const TRANSLATIONS_EN = {
   manag_step2_help: 'Pour supprimer une destination, cliquez sur un point existant de l\'image puis cliquez sur "Effacer une destination"',
   manag_step3_help: 'Pour supprimer toutes les destination, cliquez juste sur "Effacer destinations"',
   manag_step4_help: 'Le bouton "GO !", envoie une action avec le nombre de points au robot',
+
+  /** Manage Users */
+  users_col1: "Firstname",
+  users_col2: "Warehouses",
+  users_col3: "Robots",
 };

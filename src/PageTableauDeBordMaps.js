@@ -47,17 +47,6 @@ function PageTableauDeBordMaps(props) {
   const [moving, setMoving] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
-  const [batLevels, setBatLevels] = React.useState({
-    batLevel0: undefined,
-    batLevel1: undefined,
-    batLevel2: undefined,
-  });
-  const [batFilters, setBatFilters] = React.useState({
-    batFilter0: false,
-    batFilter1: false,
-    batFilter2: false,
-  });
-
   React.useEffect(() => {
     provideMetrics();
   }, []);
@@ -100,30 +89,13 @@ function PageTableauDeBordMaps(props) {
       });
   };
 
-  const handleCallbackOpenDetails = (idRobot) => {
-    console.log("send robot id to PageAide");
-    props.callbackOpenDetails(idRobot);
-    console.log(idRobot);
-    console.log(props.callbackOpenDetails(idRobot));
-  };
   const handleCallbackOpenMaps = (idRobot) => {
     console.log("send robot id to PageMaps");
     props.callbackOpenMaps(idRobot);
     console.log(idRobot);
     console.log(props.callbackOpenMaps(idRobot));
   };
-  const handlePrintTable = () => {
-    // this.setState({ printTable: "block" });
-    setprintTable("block");
-    // this.setState({ printCard: "none" });
-    setprintCard("none");
-  };
-  const handlePrintCard = () => {
-    // this.setState({ printTable: "none" });
-    // this.setState({ printCard: "block" });
-    setprintTable("none");
-    setprintCard("block");
-  };
+
   const searchFilterFunction = (text) => {
     if (!allData) {
       alert("Votre Flotte est vide !!!");
@@ -139,66 +111,7 @@ function PageTableauDeBordMaps(props) {
 
     setlisteMetrics(newData);
   };
-  const autoReset = (newBatLevels, movingFilter) => {
-    const { batLevel0, batLevel1, batLevel2 } = newBatLevels;
-    console.log("AutoReset", batLevel0, batLevel1, batLevel2, movingFilter);
-    if (movingFilter == null && !batLevel0 && !batLevel1 && !batLevel2) {
-      console.log("Fired !");
-      resetFilter();
-    }
-  };
-  const setFilteredBatLevel = (event, batLevel, index) => {
-    console.log("batLevel, index", batLevel, index);
-    setBatFilters({ ...batFilters, [event.target.name]: event.target.checked });
-
-    console.log("batLevels", batLevels);
-    var newBatLevels = batLevels;
-    newBatLevels["batLevel" + index] =
-      batLevels["batLevel" + index] != undefined ? undefined : batLevel;
-    console.log("newBatLevels", newBatLevels);
-
-    setBatLevels(newBatLevels);
-    autoReset(newBatLevels, moving);
-    console.log("batLevels", batLevels);
-  };
-  const setFiltMoving = (value) => {
-    const movingFilter = moving == null ? value : null;
-    setMoving(movingFilter);
-    autoReset(batFilters, movingFilter);
-  };
-
-  const handleFiltering = () => {
-    if (!defaultMetrics) {
-      alert("Votre Flotte est vide !!!");
-      return 0;
-    }
-
-    const { batLevel0, batLevel1, batLevel2 } = batLevels;
-    console.log(
-      "Filtering ... batLevel0, batLevel1, batLevel2 ",
-      batLevel0,
-      batLevel1,
-      batLevel2
-    );
-
-    var newData = defaultMetrics;
-
-    if (batLevel0 || batLevel1 || batLevel2) {
-      newData = defaultMetrics.filter(
-        (item) =>
-          (batLevel0 && item.BAT_LEVEL >= 0 && item.BAT_LEVEL < 45) ||
-          (batLevel1 && item.BAT_LEVEL > 45 && item.BAT_LEVEL < 55) ||
-          (batLevel2 && item.BAT_LEVEL > 55)
-      );
-    }
-
-    if (moving != null) {
-      console.log("Moving set !");
-      newData = newData.filter((item) => item.STATUS === moving);
-    }
-    console.log("New Data", newData);
-    setlisteMetrics(newData);
-  };
+ 
   const resetFilter = () => {
     console.log("Reseting ...");
     setsearch("");
