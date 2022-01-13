@@ -28,23 +28,84 @@ import { useTranslation } from "react-i18next";
 function PageUserManagement(props) {
   const { t } = useTranslation();
 
-  const [users, setUsers] = React.useState(null);
+  const [users, setUsers] = React.useState([]);
   const [search, setsearch] = React.useState("");
+  const [editing, setEditing] = React.useState(null);
+  const [warehouses, setWarehouses] = React.useState([]);
+  const [warehouseCheckboxs, setWarehouseCheckboxs] = React.useState([]);
+  const [robotCheckboxs, setRobotCheckboxs] = React.useState([]);
 
   React.useEffect(() => {
     fetchUsers();
-  }, []);
+    provideMetrics();
+   }, []);
 
   const fetchUsers = () => {
     fetch(Const.URL_WS_USERS+"/all")
     .then((res) => res.json())
-    .then((data) => {
-      setUsers(data)
+    .then(({users}) => {
+      console.log(users);
+      setUsers(users)
+      edit(users);
     })
     .catch(err => {
       console.error(err);
     })
   }
+
+  const provideMetrics = () => {
+    var result = [];
+    fetch(
+      Const.URL_GET_ALL_MAPS,
+      {
+        
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        //  console.log(data);
+         getAllRobots(data);
+         getAllWarehouses(data);
+        //  setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Request failed", error);
+      });
+  };
+
+  const getAllRobots = (data) => {
+    var allRobots = [];
+    data.map(item => allRobots.push(item.id_robot));
+    console.log("All Robots", allRobots); 
+  };
+
+  const getAllWarehouses = (data) => {  
+    var rows = [];
+    var result = [];
+    var allWarehouses = [];
+    rows.push(data[0]['id']);
+    result.push(data[0]);
+ 
+    data.map(dataItem => { 
+        if(!rows.includes(dataItem.id)) {
+          rows.push(dataItem.id);
+          result.push(dataItem);
+        }
+    });
+
+    result.map(item => allWarehouses.push(item.map_name));
+    console.log("All Warehouses", allWarehouses);
+    // setWarehouses(allWarehouses)
+  }
+  const handleWarehouses = (event) => {
+    setWarehouseCheckboxs([ ...warehouseCheckboxs, {[event.target.name]: event.target.checked} ]);
+  };
+  const edit = (users) => {
+    setWarehouses(users[0].warehouse);
+  }
+  const handleRobots = (event) => {
+    setRobotCheckboxs([ ...robotCheckboxs, {[event.target.name]: event.target.checked} ]);
+  };
   const searchFilterFunction = (text) => {
     
   };
@@ -52,6 +113,7 @@ function PageUserManagement(props) {
     
 
   };
+
   return (
     <div id="PageUserManagement">
         <Grid container spacing={2}>
@@ -73,7 +135,6 @@ function PageUserManagement(props) {
                       position: "relative",
                       bottom: "6.5em",
                 }}>
-                  {/* <img onClick={()=>callBackRetourMaps()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px"}}></img> */}
                   <img onClick={() => props.callBackRetourTableauDeBord()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px"}}></img>
                 </div>
                 <Table>
@@ -83,9 +144,52 @@ function PageUserManagement(props) {
                       <TableCell align="left">{t("users_col1")}</TableCell>
                       <TableCell align="center">{t("users_col2")}</TableCell>
                       <TableCell align="center">{t("users_col3")}</TableCell>
+                      <TableCell align="center"></TableCell>
                     </TableRow>
                   </TableHead>
+                    
                   
+                  <TableBody>
+                    {users.map(({name, robot}, idx) => (
+                      <TableRow key={idx}>
+                        <TableCell align="left">{name}</TableCell>
+                        <TableCell align="center"> {
+                          warehouses.map((item, index) => {
+                            if (editing) 
+                            return (
+                              <FormControlLabel
+                                key={index}
+                                control={
+                                  <Checkbox
+                                    checked={item[Object.keys(item)]}
+                                    onChange={handleWarehouses}
+                                    name={Object.keys(item)}
+                                    color="primary"
+                                  />
+                                }
+                                label={Object.keys(item)}
+                              />            
+                            )
+                            else {
+                              var allowedWarehouse = Object.values(item);
+                              allowedWarehouse = allowedWarehouse[0];
+                              var warehouseName = Object.keys(item);
+                              warehouseName = warehouseName[0];
+                              return allowedWarehouse ? <Button style={{margin: "0.5em"}} variant="outlined" color="primary" key={index} className="allowedWarehouse">{warehouseName}</Button>:"";
+                            }
+                          })
+                        } </TableCell>
+                        <TableCell align="center"></TableCell>
+                        <TableCell align="center">
+                          <Button onClick={ () => {
+                              console.log("warehouseCheckboxs", JSON.stringify(warehouseCheckboxs))
+                              console.log("warehouseCheckboxs", JSON.parse(JSON.stringify(warehouseCheckboxs)))
+                          }}
+                          >Save</Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
                 </Table>
               </CardContent>
             </Card>
