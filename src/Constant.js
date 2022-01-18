@@ -15,8 +15,11 @@ export const URL_FETCH_LAST_HEARTBEAT_MSG =
 
 export const URL_UPD_STATUS_MAP_PAGE =
   "http://qenvi.space:8081/updateMsgMapStatusByMapIdWS";
+
 export const URL_WS_LOGIN = "http://127.0.0.1:5000/api/signin";
 export const URL_WS_USERS = "http://127.0.0.1:5000/api/user";
+export const URL_WS_MANAGE_USERS = "http://127.0.0.1:5000/api/user/autorize";
+
 export const URL_WS_PROVIDE_METRICS =
   "http://193.70.86.40:8081/getAllMetricsWS";
 export const URL_WS_PROVIDE_DETAILS =

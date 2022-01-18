@@ -43,6 +43,7 @@ import {Helmet} from "react-helmet";
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
 import PersonIcon from '@material-ui/icons/Person';
 import PageUserManagement from "./PageUserManagement";
+import jwt_decode from "jwt-decode";
 
 
 const drawerWidth = 240;
@@ -577,6 +578,10 @@ export default function MiniDrawer() {
       setMapOverview(-1);
     setShowTableauDeBord(1);
   };
+  const getFirstname = () => {
+    var { firstname } = jwt_decode(apiKey);
+    return firstname;
+  }
   return (
     <div className={classes.root}>
       {window.innerWidth < 992 &&
@@ -631,11 +636,10 @@ export default function MiniDrawer() {
                   color: "WHITE",
                   fontFamily: "Black Ops One, cursive",
                   fontSize: "1em",
+                  textTransform:"capitalize"
                 }}
               >
-                {localStorage.getItem("username")
-                  ? localStorage.getItem("username").split("@")[0]
-                  : ""}
+                {getFirstname()}
               </Typography>
             </div>
           )}
@@ -648,13 +652,13 @@ export default function MiniDrawer() {
               </IconButton>
             </div>
           )}
-          {apiKey != null && (
+          {/* {apiKey != null && (
             <div style={{ marginRight: "2em" }}>
               <IconButton color="inherit" edge="end">
                 <FaceIcon />
               </IconButton>
             </div>
-          )}
+          )} */}
 
           {/* Icon logout */}
           {apiKey != null && (

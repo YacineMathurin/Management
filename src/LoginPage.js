@@ -105,13 +105,16 @@ function SignIn({ callbackFunction }) {
 
   const [checkPassword, setCheckPassword] = useState(false);
   const [apiKey, setApiKey] = useState("000");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  
+  const [signupUsername, setSignupUsername] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
+  
+  const [signinEmail, setSigninEmail] = useState("");
   const [signinPassword, setSigninPassword] = useState("");
   
+  const [loginError, setLoginError] = useState(false);
   const [login, setLogin] = useState(true);
   const [showSigninPassword, handleClickShowSigninPassword] = useState(false);
   const [showSignupPassword, handleClickShowSignupPassword] = useState(false);
@@ -123,16 +126,12 @@ function SignIn({ callbackFunction }) {
 
   function handleEnterTolog(e) {
     console.log("handleEnterTolog", e, e.which);
-    if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.which==13) wantToCheckPassword();
+    if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.which==13) loadKeyApi();
   }
 
-  const loadKeyApi = () => { 
-    const user = localStorage.getItem("username")
-      ? localStorage.getItem("username")
-      : "";
-    const pass = localStorage.getItem("password")
-      ? localStorage.getItem("password")
-      : "";
+  const loadKeyApi = () => {   
+    const user = signinEmail || localStorage.getItem("email");
+    const pass = signinPassword;
   
     const data = {email:user, password:pass};
     //https://docs.react-async.com/getting-started/usage
@@ -156,14 +155,8 @@ function SignIn({ callbackFunction }) {
       callbackFunction(data.token, "");
     })
     .catch(error=> {
-      console.error(error);
-      return <Toast
-        severity="error"
-        message={t("login_ko")}
-        callback={() => {
-          var dummy = 1;
-        }}
-      />
+      // console.error(error);
+      setLoginError(true);
     });
   
   
@@ -178,7 +171,13 @@ function SignIn({ callbackFunction }) {
       style={window.innerWidth < 1200 ? { width: "100%", padding:"0" } : { width: "30%" }}
     >
       <CssBaseline />
-
+      {loginError && <Toast
+        severity="error"
+        message={t("login_ko")}
+        callback={() => {
+          setLoginError(false);
+        }}
+      />}
       <Card style={{ width: "100%", marginTop: "3em" }}>
         <CardContent>
           <div className={classes.paper}>
@@ -207,12 +206,14 @@ function SignIn({ callbackFunction }) {
                 label={t("username")}
                 name="email"
                 autoFocus
-                onChange={(event) =>
-                  localStorage.setItem("username", event.target.value)
+                onChange={(event) => {
+                  setSigninEmail(event.target.value);
+                  localStorage.setItem("email", event.target.value)
+                }
                 }
                 defaultValue = {
-                  localStorage.getItem("username")
-                    ? localStorage.getItem("username")
+                  localStorage.getItem("email")
+                    ? localStorage.getItem("email")
                     : ""
                 }
               />
@@ -225,7 +226,7 @@ function SignIn({ callbackFunction }) {
                   value={signinPassword}
                   onChange={(event) => {
                     setSigninPassword(event.target.value);
-                    localStorage.setItem("password", event.target.value);
+                    setSigninPassword(event.target.value);
                     }
                   }
                   endAdornment={
