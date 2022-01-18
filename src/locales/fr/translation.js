@@ -15,6 +15,7 @@ export const TRANSLATIONS_FR = {
   login_ok: "Connexion réussie",
   logout_ok: "Vous êtes déconnecté",
   login_ko: "Identifiant de connexion incorrect",
+  reset_password:"Mot de passe oublié",
   no_account:"Creer votre compte",
   has_account:"J'ai déjà un compte",
 

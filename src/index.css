@@ -42,7 +42,7 @@ code {
 #signup_email_container {
   margin-top: 1em;
 }
-#signup_password_container {
+.signup_password_container {
   margin-top: 2em;
 }
 /**/
@@ -73,21 +73,21 @@ code {
   #signin_password,
   #signup_firstname,
   #signup_email,
-  #signup_password {
+  .signup_password {
     height: 50px;
     font-size: 2.5em;
   }
   #email-label,
-  #signin_password-label,
+  .signin_password-label,
   #signup_firstname-label,
   #signup_email-label,
-  #signup_password-label {
+  .signup_password-label {
     font-size: 2em;
   }
   #signup_email_container {
     margin-top: 4em;
   }
-  #signup_password_container {
+  .signup_password_container {
     margin-top: 5em;
   }
   td,

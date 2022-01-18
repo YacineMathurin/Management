@@ -26,6 +26,7 @@ import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import formatRelativeWithOptions from "date-fns/esm/fp/formatRelativeWithOptions";
 
 
 // import i18n from "i18next";
@@ -113,11 +114,18 @@ function SignIn({ callbackFunction }) {
   
   const [signinEmail, setSigninEmail] = useState("");
   const [signinPassword, setSigninPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   
   const [loginError, setLoginError] = useState(false);
+  const [signup, setSignup] = useState(false);
   const [login, setLogin] = useState(true);
+  const [reset, setReset] = useState(false);
+  const [emailResetPass, setEmailResetPass] = useState("");
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [resetCode, setResetCode] = useState(null);
   const [showSigninPassword, handleClickShowSigninPassword] = useState(false);
   const [showSignupPassword, handleClickShowSignupPassword] = useState(false);
+  const [showResetPassword, handleClickShowResetPassword] = useState(false);
 
   function wantToCheckPassword() {
     if (checkPassword) setCheckPassword(false);
@@ -165,6 +173,49 @@ function SignIn({ callbackFunction }) {
     // console.log(res.json());
     // return res.json();
   };
+  const handleSignup = () => {
+
+  }
+  const handleResetPass = () => {
+    fetch(Const.URL_WS_RESET_PASS,
+      {
+        method:"POST",
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email:emailResetPass})
+      }
+    )
+    .then(res => res.json())
+    .then(data =>  {
+      setConfirmReset(true);
+    })
+    .catch(err => {
+
+    })
+  }
+  const handleConfirmResetPass = () => {
+    const body = { email: emailResetPass, code: resetCode, password: newPassword };
+    console.log(body);
+    fetch(Const.URL_WS_CONFIRM_RESET_PASS,
+      {
+        method:"POST",
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+      }
+    )
+    .then(res => res.json())
+    .then(data =>  {
+      console.log("OK - NewPassword");
+      setApiKey(data.token);
+      callbackFunction(data.token, "");
+    })
+    .catch(err => {
+
+    })
+  }
   return (
     <Container
       component="main"
@@ -245,7 +296,8 @@ function SignIn({ callbackFunction }) {
               </FormControl>
               <Router>
                 <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
-                  <center><NavLink to={"/"} onClick={()=>setLogin(false)}>{t('no_account')}</NavLink></center>
+                  <center><NavLink to={"/"} onClick={()=>{setLogin(false);setSignup(false);setReset(true)}}>{t('reset_password')}</NavLink></center>
+                  <center><NavLink to={"/"} onClick={()=>{setLogin(false);setSignup(true);setReset(false)}}>{t('no_account')}</NavLink></center>
                   <center>
                     <span>{t("question")}</span>
                   </center>
@@ -284,7 +336,7 @@ function SignIn({ callbackFunction }) {
               </Button>
               
             </form>}
-            {!login && <form
+            {signup && <form
               style={{ marginTop: "5em" }}
               className={classes.form}
               noValidate
@@ -314,10 +366,10 @@ function SignIn({ callbackFunction }) {
                   }
                 />
               </FormControl>
-              <FormControl fullWidth id="signup_password_container">
-                <InputLabel htmlFor="signup_password" id="signup_password-label">{t("password")}</InputLabel>
+              <FormControl fullWidth className="signup_password_container">
+                <InputLabel htmlFor="signup_password" className="signup_password-label">{t("password")}</InputLabel>
                 <Input
-                  id="signup_password"
+                  className="signup_password"
                   type={showSignupPassword ? 'text' : 'password'}
                   value={signupPassword}
                   onChange={(event) =>
@@ -330,7 +382,7 @@ function SignIn({ callbackFunction }) {
                         onClick={() => handleClickShowSignupPassword(!showSignupPassword)}
                         // onMouseDown={handleMouseDownPassword}
                       >
-                        {showSigninPassword ? <Visibility /> : <VisibilityOff />}
+                        {showSignupPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   }
@@ -338,7 +390,8 @@ function SignIn({ callbackFunction }) {
               </FormControl>
               <Router>
                 <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
-                  <center><NavLink to={"/"} onClick={()=>setLogin(true)}>{t('has_account')}</NavLink></center>
+                  <center><NavLink to={"/"} onClick={()=>{setLogin(false);setSignup(false);setReset(true)}}>{t('reset_password')}</NavLink></center>
+                  <center><NavLink to={"/"} onClick={()=>{setLogin(true);setSignup(false);setReset(false)}}>{t('has_account')}</NavLink></center>
                   <center>
                     <span>{t("question")}</span>
                   </center>
@@ -370,10 +423,110 @@ function SignIn({ callbackFunction }) {
                 startIcon={<KeyboardArrowRightIcon />}
                 className={classes.submit}
                 onClick={() => {
-                  loadKeyApi();
+                  handleSignup();
                 }}
               >
                 {t("signup_button")}
+              </Button>
+              
+            </form>}
+            {reset && <form
+              style={{ marginTop: "5em" }}
+              className={classes.form}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                margin="normal"
+                fullWidth
+                id="signup_firstname"
+                placeholder=""
+                label={t("username")}
+                name="firstname"
+                autoFocus 
+                onChange={(event) =>
+                  setEmailResetPass(event.target.value)
+                }
+                autoComplete="off"
+              />
+              {confirmReset &&
+              <React.Fragment>
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  id="signup_firstname"
+                  placeholder=""
+                  label={t("rest_code")}
+                  name="rest_code"
+                  autoFocus 
+                  onChange={(event) =>
+                    setResetCode(event.target.value)
+                  }
+                  autoComplete="off"
+                />
+                <FormControl fullWidth className="signup_password_container">
+                  <InputLabel htmlFor="signup_password" className="signup_password-label">{t("newPassword")}</InputLabel>
+                  <Input
+                    className="signup_password"
+                    type={showResetPassword ? 'text' : 'password'}
+                    value={newPassword}
+                    onChange={(event) =>
+                      setNewPassword(event.target.value)
+                    }
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => handleClickShowResetPassword(!showResetPassword)}
+                        >
+                          {showResetPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </React.Fragment>
+              }
+              
+              <Router>
+                <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
+                  <center><NavLink to={"/"} onClick={()=>{setLogin(false);setSignup(true);setReset(false)}}>{t('no_account')}</NavLink></center>
+                  <center><NavLink to={"/"} onClick={()=>{setLogin(true);setSignup(false);setReset(false)}}>{t('has_account')}</NavLink></center>
+                  <center>
+                    <span>{t("question")}</span>
+                  </center>
+
+                  <center>
+                    <span>
+                      {" "}
+                      <a
+                        style={{ color: "#3F51B5" }}
+                        href="mailto:support@qenvi.fr"
+                      >
+                        {t("contact")}
+                      </a>
+                    </span>
+                  </center>
+                </div>
+                <Switch>
+                  <Route path="/demande">
+                    <DemandeComptePage />
+                  </Route>
+                </Switch>
+              </Router>
+              <Button
+                style={{height:window.innerWidth < 1200 ? "100px":"50px", fontSize: window.innerWidth < 1200 ? "2em":"1em"}}
+                size="large"
+                fullWidth
+                variant="contained"
+                color="primary"
+                startIcon={<KeyboardArrowRightIcon />}
+                className={classes.submit}
+                onClick={() => {
+                  !confirmReset ? handleResetPass():handleConfirmResetPass();
+                }}
+              >
+                {t("reset_button")}
               </Button>
               
             </form>}
