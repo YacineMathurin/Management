@@ -39,11 +39,11 @@ code {
 #signin_password_container {
   margin-top: 1.5em;
 }
-#signup_email_container {
-  margin-top: 1em;
+.signup_email_container {
+  margin-top: 1em !important;
 }
 .signup_password_container {
-  margin-top: 2em;
+  margin-top: 2em !important;
 }
 /**/
 .pageUserManagement-status {

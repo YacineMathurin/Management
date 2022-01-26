@@ -27,6 +27,8 @@ import CircularProgressWithLabel from "./PageTableauDeBordBattery";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "@material-ui/core";
 import jwt_decode from "jwt-decode";
+import { getAllWarehouses } from "./commonFunctions/functions";
+
 
 
 function PageTableauDeBord(props) {
@@ -66,7 +68,7 @@ function PageTableauDeBord(props) {
   }, []);
 
   const provideMaps = () => {
-    var result = [];
+    var allWarehouses = [];
     fetch(
       Const.URL_GET_ALL_MAPS,
       { retry: 3, retryDelay: 1000 }
@@ -74,6 +76,8 @@ function PageTableauDeBord(props) {
       .then((res) => res.json())
       .then((data) => {
          console.log(data);
+         allWarehouses = getAllWarehouses(data);
+         localStorage.setItem("allWarehouses",JSON.stringify(allWarehouses));
          setMapsNames(data);
       })
       .catch((error) => {
@@ -293,15 +297,15 @@ function PageTableauDeBord(props) {
               </div>
 
               <CardContent style={{ display: printTable }}>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead style={{backgroundColor:"black"}}>
+                <Table>
+                  <TableHead style={{backgroundColor: "rgb(75, 75, 75)"}}>
                     <TableRow>
-                      <TableCell align="left" style={{fontSize: "1.75em"}}>{t('dashboard_id_client')}</TableCell>
-                      <TableCell align="center">ID Robot</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left" style={{fontSize: "1.75em", color:"white"}}>{t('dashboard_id_client')}</TableCell>
+                      <TableCell align="center" style={{ color:"white"}}>ID Robot</TableCell>
+                      <TableCell align="center" style={{ color:"white"}}>
                         {t("dashboard_moving")}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="center" style={{ color:"white"}}>
                         {t("dashboard_autonomy")}
                       </TableCell>
                       <TableCell align="center"></TableCell>

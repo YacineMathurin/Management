@@ -20,15 +20,17 @@ export const TRANSLATIONS_EN = {
   login_ok: "login succeed",
   logout_ok: "logout succeed",
   login_ko: "Connexion failed, please try later",
+  login_ko_reset: "Check your email is correct, if so You've alreaady received by email your code",
   reset_password:"Password Forgotten",
   no_account:"Create your account",
   has_account:"I Already have an account",
 
   /** Side Bar */
-  sidebar_robots:"LIST ALL ROBOTS",
-  sidebar_maps:"LIST ALL WAREHOUSES",
-  sidebar_manag:"MANAGE USERS",
-  sidebar_user:"USER MODE",
+  sidebar_robots:"List All Robots",
+  sidebar_maps:"List All Warehouses",
+  sidebar_create:"Add Warehouses and robots",
+  sidebar_manag:"Manage Users",
+  sidebar_user:"User Mode",
 
   /** Page de Bord robots*/
   dashboard_loading: "Loading your content",
@@ -57,19 +59,22 @@ export const TRANSLATIONS_EN = {
   dashboard_maps_filter_reset: "RESET Search",
   
   /** Page Maps */
-  maps_title: "Click to select your desired map",
+  maps_title: "Click on the map to plan destinations",
   maps_map: "Map",
   maps_moving_status: " - Movement detected -",
-  maps_edit_btn: "EDIT",
+  maps_edit_btn: "EDIT robot details",
+  maps_switch_btn: "switch warehouse",
+  maps_switch_res_ok:"Great, robot changed warehouse",
+  maps_switch_res_ko:"Oups, something went wrong",
   maps_filter: "Filter",
   maps_filter_sub: "Filter by map name",
   maps_search: "Search by map name",
-  maps_mapping: "Remake Mapping",
-  maps_mapping_sub: "Order map remaking command",
-  maps_mapping_btn: "Remake Mapping",
+  maps_mapping: "Mapping",
+  maps_mapping_sub: "Order map creation command",
+  maps_mapping_btn: "Launch Mapping",
   maps_delete: "Delete all the maps",
   maps_delete_sub: "Delete all data about this map",
-  maps_delete_btn: "Delete all the maps",
+  maps_delete_btn: "Delete the map",
   maps_mapping_modal_title: "Name your new map",
   maps_mapping_modal_search: "Entrepot 1",
   maps_mapping_modal_cancel_btn: "Cancel",
@@ -102,7 +107,15 @@ export const TRANSLATIONS_EN = {
   manag_step4_help: 'Le bouton "GO !", envoie une action avec le nombre de points au robot',
 
   /** Manage Users */
+  users_title: "User Management Panel",
+  users_subtitle: "Create user and affect rights",
   users_col1: "Firstname",
   users_col2: "Warehouses",
   users_col3: "Robots",
+  users_add_user: "+ New user",
+  users_add_warehouse: "+ New warehouse",
+  users_toast_ok: "Great, Operation succeeded !",
+  users_toast_ko: "Oups, something went wrong !",
+  users_select_warehouse:"Click on a warehouse name to assign it",
+  users_select_robot:"Click on a robot ID to assign it"
 };

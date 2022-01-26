@@ -160,18 +160,18 @@ function PageTableauDeBordMaps(props) {
                   <img onClick={() => props.callBackRetourTableauDeBord()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px"}}></img>
                 </div>
                 <Table>
-                  <TableHead>
+                  <TableHead style={{backgroundColor: "rgb(75, 75, 75)", color:"white"}}>
                     <TableRow>
                       {/* <TableCell align="center">ID Client </TableCell> */}
-                      <TableCell align="center">ID Map</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="center" style={{ color:"white"}}>ID Map</TableCell>
+                      <TableCell align="left" style={{ color:"white"}}>
                         {t("dashboard_maps_name")}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left" style={{ color:"white"}}>
                         {t("dashboard_maps_comment")}
                       </TableCell>
                       {/* <TableCell align="center"><img  width="24" src="./images/microchip.svg"/></TableCell>*/}
-                      <TableCell align="center">
+                      <TableCell align="left" style={{ color:"white"}}>
                         {t("dashboard_maps_robots")}{" "}
                       </TableCell>
                       <TableCell align="center"></TableCell>
@@ -185,8 +185,8 @@ function PageTableauDeBordMaps(props) {
                           <TableRow>
                             {/* <TableCell align="center">{s.ID_CLIENT}</TableCell> */}
                             <TableCell align="center">{s.id}</TableCell>
-                            <TableCell align="center">{s.map_name}</TableCell>
-                            <TableCell align="center" dangerouslySetInnerHTML={{ __html: getComment(s.user_comment)}}></TableCell> 
+                            <TableCell align="left">{s.map_name}</TableCell>
+                            <TableCell align="left" dangerouslySetInnerHTML={{ __html: getComment(s.user_comment)}}></TableCell> 
                             <TableCell >{allData.map((item, index) => item.id === s.id ? 
                               <Button
                                 key={index}
@@ -199,9 +199,9 @@ function PageTableauDeBordMaps(props) {
                                 {item.id_robot}
                               </Button>: "")}
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell align="left">
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell align="left">
                               <Button
                                 fullWidth={false}
                                 width="2em"

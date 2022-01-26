@@ -1,5 +1,7 @@
 /** DEPLOIEMENT LOCAL POUR DEBUG SERVEUR API **/
 /** PERMET DE PASSER PAR LE SERVEUR API DEPLOYE EN LOCAL **/
+// const env = "193.70.86.40";
+const env = "127.0.0.1";
 
 export const URL_GET_LAST_HEARTBEAT_MSG =
   "http://qenvi.space:8081/GetDashboardReqByClientWS";
@@ -16,12 +18,16 @@ export const URL_FETCH_LAST_HEARTBEAT_MSG =
 export const URL_UPD_STATUS_MAP_PAGE =
   "http://qenvi.space:8081/updateMsgMapStatusByMapIdWS";
 
-export const URL_WS_LOGIN = "http://127.0.0.1:5000/api/signin";
-export const URL_WS_USERS = "http://127.0.0.1:5000/api/user";
-export const URL_WS_MANAGE_USERS = "http://127.0.0.1:5000/api/user/autorize";
-export const URL_WS_RESET_PASS = "http://127.0.0.1:5000/api/reset";
-export const URL_WS_CONFIRM_RESET_PASS = "http://127.0.0.1:5000/api/reset/confirm";
+export const URL_WS_LOGIN = "http://"+env+":5000/api/signin";
+export const URL_WS_USERS = "http://"+env+":5000/api/user";
+export const URL_WS_MANAGE_USERS = "http://"+env+":5000/api/user/autorize";
+export const URL_WS_DELETE_USER = "http://"+env+":5000/api/user/delete";
+export const URL_WS_RESET_PASS = "http://"+env+":5000/api/reset";
+export const URL_WS_CONFIRM_RESET_PASS = "http://"+env+":5000/api/reset/confirm";
+export const URL_WS_SIGNUP = "http://"+env+":5000/api/signup";
 
+export const URL_WS_SWITCH_WAREHOUSE =
+  "http://193.70.86.40:8081/updateMsgMapChangeWarehouseWS";
 export const URL_WS_PROVIDE_METRICS =
   "http://193.70.86.40:8081/getAllMetricsWS";
 export const URL_WS_PROVIDE_DETAILS =

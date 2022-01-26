@@ -1,6 +1,7 @@
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
+import Paper from '@material-ui/core/Paper';
 import React from "react";
 import * as Const from "./Constant";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -17,7 +18,16 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TuneOutlinedIcon from "@material-ui/icons/TuneOutlined";
 import TextField from "@material-ui/core/TextField";
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
 import { useTranslation, withTranslation } from "react-i18next";
+import Toast from "./Toast";
+import { getAllWarehouses } from "./commonFunctions/functions";
+
 
 class PageUserManagement extends React.Component {
   constructor(props) {
@@ -26,8 +36,11 @@ class PageUserManagement extends React.Component {
       users: [],
       editing: false,
       allWarehouses: [],
+      allRobots: [],
       userWarehouses: [],
       editableUserWarehouses: [],
+      allowedWarehouseOnSignup: [],
+      allowedRobotOnSignup: [],
     }
   }
   componentDidMount() {
@@ -47,7 +60,7 @@ class PageUserManagement extends React.Component {
     })
   }
   provideMetrics = () => {
-    var result = [];
+    var allWarehouses = [];
     fetch(
       Const.URL_GET_ALL_MAPS,
       {
@@ -56,39 +69,45 @@ class PageUserManagement extends React.Component {
     )
       .then((res) => res.json())
       .then((data) => {
-        //  console.log(data);
-         this.getAllRobots(data);
-         this.getAllWarehouses(data);
-        //  setLoading(false);
+        console.log(data);
+         this.setState({metrics:data})
+        //  this.getAllWarehouses(data);
+        allWarehouses = getAllWarehouses(data);
+        this.setState({allWarehouses})
       })
       .catch((error) => {
         console.error("Request failed", error);
       });
   };
-  getAllRobots = (data) => {
-    var allRobots = [];
-    data.map(item => allRobots.push({id:item.id_robot}));
-    console.log("All Robots", allRobots); 
-    this.setState({allRobots})
-  };
-  getAllWarehouses = (data) => {  
-    var rows = [];
-    var result = [];
-    var allWarehouses = [];
-    rows.push(data[0]['id']);
-    result.push(data[0]);
- 
-    data.map(dataItem => { 
-        if(!rows.includes(dataItem.id)) {
-          rows.push(dataItem.id);
-          result.push(dataItem);
+  getAvailableRobotsOnSignup = () => {
+    const { allowedWarehouseOnSignup, metrics } = this.state;
+    var res = [];
+    if (allowedWarehouseOnSignup.length === 0) return res;
+    allowedWarehouseOnSignup.map(({id:warehouseId, value}) => {
+      metrics.filter(({id, id_robot}) => {
+        if (warehouseId === id && value){
+          console.log(id_robot);
+          res.push({id: id_robot, from:warehouseId})
         }
-    });
-
-    result.map(item => allWarehouses.push({name:item.map_name, id:item.id}));
-    console.log("All Warehouses", allWarehouses);
-    this.setState({allWarehouses});
-  }
+      })
+    })
+    return res;
+  };
+  getAvailableRobots = () => {
+    // console.log("getAvailableRobots");
+    const { editableUserWarehouses, metrics } = this.state;
+    var res = [];
+    if (editableUserWarehouses.length === 0) return res;
+    editableUserWarehouses.map(({id:warehouseId, value}) => {
+      metrics.filter(({id, id_robot}) => {
+        if (warehouseId === id && value){
+          res.push({id: id_robot, from:warehouseId})
+        }
+      })
+    })
+    // console.log("getAvailableRobots", res);
+    return res;
+  };
   edit = (users) => {
     this.setState({userWarehouses: users[0].warehouse});
     this.setState({editableUserWarehouses: users[0].warehouse});
@@ -101,17 +120,15 @@ class PageUserManagement extends React.Component {
 
   };
   handleDisplayWarehouses = (idx) => {
-    const { editing, allWarehouses, users, fetchedUser } = this.state;
-    const usersClone = [...users];
+    const { allWarehouses, users, fetchedUser } = this.state;
     const userWarehouses = fetchedUser[idx]["warehouse"];
-    if(editing) {
+    if(this.state["editing"+idx]) {
       return allWarehouses.map(({name, id}, index) => {
         const value = this.IsWarehouseAllowed(idx, id);
         return (
           <p
            key={index}
            className="pageUserManagement-edition-btn"
-          //  style={{margin:"1em", cursor:"pointer"}}
            onClick={()=>this.handleWarehouses(idx, name, id, value)}
            style={{
             backgroundColor: this.IsWarehouseAllowed(idx, id) ? "goldenrod":"unset", 
@@ -120,11 +137,10 @@ class PageUserManagement extends React.Component {
             border:"1px solid white"
            }}
           >
-            {/* {this.IsWarehouseAllowed(idx, id) && <span className="pageUserManagement-status">Allowed</span>} */}
             <span>{name}</span>
           </p>
         )
-    })
+      })
     }
     return userWarehouses.map((item, index) => {
      if(item.value)
@@ -144,22 +160,32 @@ class PageUserManagement extends React.Component {
     })
   };
   handleWarehouses = (idx, name, id, value) => {
-    const { users, fetchedUser } = this.state;
+    const { users, fetchedUser, editableUserRobots } = this.state;
     const usersClone = [...users];
     var editableUserWarehouses = fetchedUser[idx]["warehouse"];
+    var newEditableUserRobots = [];
+    console.log("unchoosed warehouse id & editableUserRobots ", id, editableUserRobots);
 
-    console.log("name - value", name, value);
+    // console.log("name - value", name, value);
 
     const res = editableUserWarehouses.filter(item => item.id === id);
-    console.log("res", res);
+    // console.log("res", res);
     
     if (res.length === 0) {
       editableUserWarehouses.push({name, id, value: !value});
     } else {
       editableUserWarehouses.map(item => {
         if(item.id === id)
-        item.value = !value;
+          item.value = !value;
       });
+      // After unchoosing a warehouse
+      if (value) {
+        console.log("unchoosed warehouse id & editableUserRobots ", id, editableUserRobots);
+        newEditableUserRobots = editableUserRobots.filter(item => {
+          return item.from !== id
+        })
+        this.setState({editableUserRobots:newEditableUserRobots});
+      }
     }
     
     console.log("editableUserWarehouses", editableUserWarehouses);
@@ -179,16 +205,21 @@ class PageUserManagement extends React.Component {
     return false ;
   }
   handleDisplayRobots = (idx) => {
-    const { editing, allRobots, users, fetchedUser } = this.state;
+    const { editableUserWarehouses, fetchedUser } = this.state;
     const userRobots = fetchedUser[idx]["robot"];
-    if(editing) { 
-      return allRobots.map(({id}, index) => {
+    var availableRobots = [];
+    availableRobots = this.getAvailableRobots();
+    availableRobots = availableRobots.sort((a, b) => a.id - b.id);
+
+ 
+    if(this.state["editing"+idx]) { 
+      return availableRobots.map(({id, from}, index) => {
         const value = this.isRobotAllowed(idx,id);
         return (
           <p
              key={index}
              className="pageUserManagement-edition-btn"
-             onClick={()=>this.handleAllowRobots(idx, id, value)}
+             onClick={()=>this.handleAllowRobots(idx, id, from, value)}
              style={{
               backgroundColor: this.isRobotAllowed(idx, id) ? "#35bdd0":"unset", 
               color: this.isRobotAllowed(idx, id) ? "white":"unset",
@@ -218,7 +249,7 @@ class PageUserManagement extends React.Component {
       </p>
     })
   };
-  handleAllowRobots = (idx, id, value) => {
+  handleAllowRobots = (idx, id, from, value) => {
     const { users, fetchedUser } = this.state;
     var editableUserRobots = fetchedUser[idx]["robot"];
 
@@ -228,7 +259,7 @@ class PageUserManagement extends React.Component {
     console.log("res", res);
     
     if (res.length === 0) {
-      editableUserRobots.push({id, value: !value});
+      editableUserRobots.push({id, value: !value, from});
     } else {
       editableUserRobots.map(item => {
         if(item.id === id)
@@ -250,13 +281,13 @@ class PageUserManagement extends React.Component {
     }
     return false ;
   }
-  save = () => {
+  save = (idx) => {
     const {email, editableUserWarehouses, editableUserRobots} = this.state;
     const body = {email, warehouse:editableUserWarehouses, robot:editableUserRobots}
 
     console.log("request body", JSON.stringify(body));
 
-    fetch("http://127.0.0.1:5000/api/user/autorize", {
+    fetch(Const.URL_WS_MANAGE_USERS, {
       method:"POST",
       headers: {
         'Content-Type': 'application/json',
@@ -266,32 +297,276 @@ class PageUserManagement extends React.Component {
     .then(res => res.json())
     .then(data => {
       // console.log(data);
-      this.setState({editing: false, userWarehouses: editableUserWarehouses});
+      this.setState({["editing"+idx]: false, userWarehouses: editableUserWarehouses});
+      this.fetchUsers();
+      this.editMode();
     })
     .catch(err=> console.log(err))
   };
   editMode = (idx) => {
     const { users, fetchedUser } = this.state;
-    const usersClone = JSON.parse(JSON.stringify(users));
-    usersClone[idx]["robot"] = [];
-    usersClone.clone = true;
-    console.log(usersClone, users, fetchedUser );
+    console.log("Edition mode");
 
     this.setState({
-      editing: true, 
-      email: usersClone[idx]["email"],
-      editableUserWarehouses: usersClone[idx]["warehouse"],
-      editableUserRobots: usersClone[idx]["robot"]
+      ["editing"+idx]: true, 
+      email: fetchedUser[idx]["email"],
+      editableUserWarehouses: fetchedUser[idx]["warehouse"],
+      editableUserRobots: fetchedUser[idx]["robot"]
     })
   }
   handleCancelation = (idx) => {
     const {fetchedUser, users} = this.state;
     console.log("users", users);
-    this.setState({editing: false, fetchedUser: JSON.parse(JSON.stringify(users))})
+    this.setState({["editing"+idx]: false, fetchedUser: JSON.parse(JSON.stringify(users))})
+  }
+  getFirstnameField = () => {
+    const { t } = this.props;
+    const {firstname} = this.state;
+    return (
+      <FormControl fullWidth>
+      <InputLabel htmlFor="signup_email">Firstname</InputLabel>
+      <Input
+        autoFocus
+        className="signup_email"
+        type={'email'}  
+        value={firstname}
+        onChange={(event) => this.setState({firstname: event.target.value})}
+      />
+    </FormControl>
+  )}
+  getEmailField = () => {
+    const {signupEmail} = this.state;
+    return (
+    <FormControl fullWidth>
+      <InputLabel htmlFor="signup_email">Email</InputLabel>
+      <Input
+        className="signup_email"
+        type={'email'}  
+        value={signupEmail}
+        onChange={(event) => this.setState({signupEmail: event.target.value})}
+      />
+    </FormControl>
+  )}
+  getPasswordField = () => {
+    const { t } = this.props;
+    const { showSignupPassword, signupPassword } = this.state;
+    return (
+    <FormControl fullWidth className="">
+      <InputLabel htmlFor="signup_password" className="signup_password-label">{t("password")}</InputLabel>
+      <Input
+        className=""
+        type={showSignupPassword ? 'text' : 'password'}
+        value={signupPassword}
+        onChange={(event) => this.setState({signupPassword: event.target.value})}
+        endAdornment={
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={() => this.setState({showSignupPassword: !this.state.showSignupPassword})}
+              // onMouseDown={handleMouseDownPassword}
+            >
+              {showSignupPassword ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          </InputAdornment>
+        }
+      />
+    </FormControl>
+  )}
+  getWarehousesField = () => {
+    const { t } = this.props;
+    const { allWarehouses, signupPassword } = this.state;
+    return allWarehouses.map(({name, id}, index) => {
+      const value = this.IsWarehouseAllowedOnSignup(id);
+      return (
+        <p
+         key={index}
+         className="pageUserManagement-edition-btn"
+         onClick={()=>this.AllowWarehousesOnSignup(name, id, value)}
+         style={{
+          backgroundColor: this.IsWarehouseAllowedOnSignup(id) ? "goldenrod":"unset", 
+          color: this.IsWarehouseAllowedOnSignup(id) ? "white":"unset",
+          width:"fit-content",
+          border:"1px solid white"
+         }}
+        >
+          <span>{name}</span>
+        </p>
+      )
+    })
+  }
+  AllowWarehousesOnSignup = (name, id, value) => {
+    const {allowedWarehouseOnSignup, allowedRobotOnSignup} = this.state;
+    /** If not included in  allowedWarehouseOnSignup add it else remove it */
+    const res = allowedWarehouseOnSignup.filter(item => item.id === id);
+    var newEditableUserRobotsOnSignup = [];
+    // console.log("res", res);
+    
+    if (res.length === 0) {
+      allowedWarehouseOnSignup.push({name, id, value: !value});
+    } else {
+      allowedWarehouseOnSignup.map(item => {
+        if(item.id === id)
+        item.value = !value;
+      });
+    }
+    // After unchoosing a warehouse
+    if (value) {
+      console.log("unchoosed warehouse id & allowedRobotOnSignup ", id, allowedRobotOnSignup);
+      newEditableUserRobotsOnSignup = allowedRobotOnSignup.filter(item => {
+        return item.from !== id
+      })
+      console.log("newEditableUserRobotsOnSignup", newEditableUserRobotsOnSignup);
+      this.setState({allowedRobotOnSignup:newEditableUserRobotsOnSignup});
+    }
+    
+    console.log("allowedWarehouseOnSignup", allowedWarehouseOnSignup);
+    
+    this.setState({allowedWarehouseOnSignup});
+  }
+  IsWarehouseAllowedOnSignup = (id) => {
+    const {allowedWarehouseOnSignup} = this.state;
+    /** If not included in  allowedWarehouseOnSignup return false else return true */
+    const res = allowedWarehouseOnSignup.filter(item => item.id === id);
+    if (res.length > 0) {
+      return res[0]["value"];
+    }
+    return false ;
+  }
+  getRobotsField = () => {
+    const { t } = this.props;
+    const { allRobots } = this.state;
+    var availableRobotsOnSignup = [];
+    availableRobotsOnSignup = this.getAvailableRobotsOnSignup();
+
+    return availableRobotsOnSignup.map(({id, name, from}, index) => {
+      const value = this.IsRobotAllowedOnSignup(id);
+      return (
+        <p
+           key={index}
+           className="pageUserManagement-edition-btn"
+           onClick={()=>this.AllowRobotOnSignup(id, name, from, value)}
+           style={{
+            backgroundColor: this.IsRobotAllowedOnSignup(id) ? "#35bdd0":"unset", 
+            color: this.IsRobotAllowedOnSignup(id) ? "white":"unset",
+            border: "1px solid",
+            left:"10px"
+           }}
+        >
+          <span>{id}</span>
+        </p>
+      )
+    })
+  }
+  AllowRobotOnSignup = (id, name, from, value) => {
+    const {allowedRobotOnSignup} = this.state;
+    /** If not included in  allowedWarehouseOnSignup add it else remove it */
+    const res = allowedRobotOnSignup.filter(item => item.id === id);
+    console.log("res", res);
+    
+    if (res.length === 0) {
+      allowedRobotOnSignup.push({id, value: !value, from});
+    } else {
+      allowedRobotOnSignup.map(item => {
+        if(item.id === id)
+        item.value = !value;
+      });
+    }
+    
+    console.log("allowedRobotOnSignup", allowedRobotOnSignup);
+    
+    this.setState({allowedRobotOnSignup});
+  }
+  IsRobotAllowedOnSignup = (id) => {
+    const {allowedRobotOnSignup} = this.state;
+    /** If not included in  allowedRobotOnSignup return false else return true */
+    const res = allowedRobotOnSignup.filter(item => item.id === id);
+    if (res.length > 0) {
+      return res[0]["value"];
+    }
+    return false ;
+  }
+  getButtons = () => {
+    const { t } = this.props;
+    const { showSignupPassword, signupPassword } = this.state;
+    return (
+    <div>
+      <Button 
+        size="small" 
+        variant="outlined" 
+        color="primary" 
+        style={{marginRight:"1em"}}
+        onClick={() => this.addUser()}
+      ><span>CREATE</span></Button>
+      <Button  size="small" variant="outlined" color="default"onClick={() => this.setState({addUserMode: false})}>CLOSE</Button>
+    </div>
+  )}
+  addUser = () => {
+    const {firstname, signupEmail, signupPassword, allowedWarehouseOnSignup, allowedRobotOnSignup} = this.state;
+    const body = {
+      name:firstname,
+      email: signupEmail,
+      password: signupPassword,
+      warehouse:allowedWarehouseOnSignup,
+      robot: allowedRobotOnSignup
+    }
+    console.log("body", body);
+    fetch(Const.URL_WS_SIGNUP,
+    {
+      method:"POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body)
+    })
+    .then(res => res.json())
+    .then(data => {
+      this.setState({
+        firstname:"", signupEmail:"", signupPassword:"",
+        allowedWarehouseOnSignup: [], allowedRobotOnSignup: [],
+        success: true
+      });
+      this.fetchUsers();
+    })
+    .catch( err =>{
+      console.error(err);
+    })
+  }
+  deleteIcon = (idx)=> { 
+    const {fetchedUser} = this.state;
+    const body = {email: fetchedUser[idx]["email"]};
+    const handleDelete = () => {
+      const result = window.confirm("Do you confirm deletion ?");
+      if(result) confirmDelete();
+    }
+    const confirmDelete = () => {
+      console.log(body);
+      fetch(Const.URL_WS_DELETE_USER,{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify(body) 
+      })
+      .then(res=>res.json())
+      .then((data)=> {
+        console.log(data);
+          this.setState({success: true, ["editing"+idx]:false})
+          this.fetchUsers()
+      })
+      .catch(err => {
+        this.setState({error: true})
+      })
+    }
+    return (
+      <span 
+        style={{cursor:"pointer", borderRadius:"3px",marginLeft:"0.3em", border:"1px solid #E03B8B", color:"#E03B8B", padding:"0.3em"}}
+        onClick={()=>handleDelete()}
+      >Delete</span>
+    )
   }
   render() { 
     const { t, callBackRetourTableauDeBord } = this.props;
-    const {users, editing, search} = this.state;
+    const {users, success, error, search, addUserMode, allowedWarehouseOnSignup} = this.state;
     return (
       <div id="PageUserManagement">
           <Grid container spacing={2}>
@@ -303,8 +578,8 @@ class PageUserManagement extends React.Component {
                       <img width="32" src="./images/carrier.svg" />
                     </div>
                   }
-                  title={t("dashboard_maps_title")}
-                  subheader={t("dashboard_maps_subtitle")}
+                  title={t("users_title")}
+                  subheader={t("users_subtitle")}
                 />
                 <CardContent >
                   <div style={{
@@ -313,15 +588,77 @@ class PageUserManagement extends React.Component {
                         position: "relative",
                         bottom: "6.5em",
                   }}>
-                    <img onClick={() => callBackRetourTableauDeBord()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px"}}></img>
+                    <img onClick={() => callBackRetourTableauDeBord()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px", left:"17px"}}></img>
                   </div>
+                  {success && <Toast
+                    severity="success"
+                    message={t("users_toast_ok")}
+                    callback={() => {
+                      this.setState({success: false})
+                    }}
+                  />}
+                  {error && <Toast
+                    severity="error"
+                    message={t("users_toast_ko")}
+                    callback={() => {
+                      this.setState({error: false})
+                    }}
+                  />}
+                  <Button 
+                    style={{marginBottom:"1em"}} 
+                    size="small" variant="outlined" 
+                    color="primary"
+                    onClick={() => this.setState({addUserMode: true})}
+                  >{t("users_add_user")}</Button>
+                  <Button 
+                    style={{margin:"0 0 1em 1em"}} 
+                    size="small" variant="outlined" 
+                    color="primary"
+                    // onClick={() => this.setState({addUserMode: true})}
+                  >{t("users_add_warehouse")}</Button>
+                  {addUserMode && <Grid container spacing={3} style={{boxShadow:"-10px 10px 50px rgb(0,0,0,0.3)",width:"100%", margin:"0", paddingRight:"0.5em" }}>
+                    <Grid item xs={12} lg={4}>
+                      {this.getFirstnameField()}
+                    </Grid>
+                    <Grid item xs={12} lg={4}>
+                      {this.getEmailField()}
+                    </Grid>
+                    <Grid item xs={12} lg={4}>
+                      {this.getPasswordField()}
+                    </Grid>
+                    <Grid item xs={12} lg={4}>
+                      <p
+                        style={{color:"mediumblue", fontSize:"0.8em"}}
+                      >
+                        {t("users_select_warehouse")}
+                      </p>
+                      {this.getWarehousesField()}
+                    </Grid>
+                    <Grid item xs={12} lg={4}> 
+                      {allowedWarehouseOnSignup.length > 0 &&
+                        <p style={{color:"mediumblue", fontSize:"0.8em"}}>{t("users_select_robot")}</p>
+                      }
+                      <div
+                        style={{
+                          display:"grid",
+                          gridTemplateColumns: "1fr 1fr 1fr 1fr"
+                        }}
+                      >
+                        {this.getRobotsField()}
+                      </div>
+                    </Grid>
+                    <Grid item xs={12} lg={4} style={{display:"flex", alignItems:"flex-end", justifyContent:"flex-end"}}>
+                      {this.getButtons()}
+                    </Grid>
+                  </Grid>}
+                  <br></br>
                   <Table>
-                    <TableHead>
+                    <TableHead style={{backgroundColor: "rgb(75, 75, 75)", color:"white"}}>
                       <TableRow>
                         {/* <TableCell align="center">ID Client </TableCell> */}
-                        <TableCell align="left">{t("users_col1")}</TableCell>
-                        <TableCell align="left">{t("users_col2")}</TableCell>
-                        <TableCell align="left">{t("users_col3")}</TableCell>
+                        <TableCell align="left" style={{padding:"16px 3px", color:"white"}}>{" "}{t("users_col1")}</TableCell>
+                        <TableCell align="left"style={{ color:"white"}}>{t("users_col2")}</TableCell>
+                        <TableCell align="left"style={{ color:"white"}}>{t("users_col3")}</TableCell>
                         <TableCell align="center"></TableCell>
                       </TableRow>
                     </TableHead>
@@ -330,7 +667,9 @@ class PageUserManagement extends React.Component {
                     <TableBody>
                       {users.map(({name, robot, email}, idx) => (
                         <TableRow key={idx}>
-                          <TableCell align="left">{name}</TableCell>
+                          <TableCell align="left" style={{textTransform:"capitalize"}}>
+                            {name}{this.state["editing"+idx] ? this.deleteIcon(idx):""}
+                          </TableCell>
                           <TableCell align="left"> {this.handleDisplayWarehouses(idx)} </TableCell>
                           <TableCell align="left">
                             <div style={{
@@ -341,10 +680,10 @@ class PageUserManagement extends React.Component {
                             </div>
                           </TableCell>
                           <TableCell align="center">
-                            <Button style={{width:"5em"}} variant="outlined" color="primary" size="small" onClick={ () => editing ? this.save():this.editMode(idx)}
-                            >{editing ? "SAVE":"EDIT"}</Button>
+                            <Button style={{width:"5em"}} variant="outlined" color="primary" size="small" onClick={ () => this.state["editing"+idx] ? this.save(idx):this.editMode(idx)}
+                            >{this.state["editing"+idx] ? "SAVE":"EDIT"}</Button>
                             <br></br>
-                            {editing && <Button
+                            {this.state["editing"+idx] && <Button
                                style={{margin:"1em 0", width:"5em"}}
                                variant="outlined" 
                                color="secondary" 
@@ -413,8 +752,5 @@ class PageUserManagement extends React.Component {
       </div>
     );
   }
-}
- 
+}                                                         
 export default withTranslation()(PageUserManagement);
-
-

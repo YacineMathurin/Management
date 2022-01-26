@@ -23,12 +23,15 @@ import Button from "@material-ui/core/Button";
 import { Modal } from "@material-ui/core";
 import "./PageMaps.css";
 import { useTranslation, withTranslation } from "react-i18next";
+import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
+import Toast from "./Toast";
 
 class PageMaps extends React.Component {
   constructor(props) {
     // const { t, i18n } = useTranslation();
-
+    
     super(props);
+    // console.log("allWarehouses", JSON.parse(localStorage.getItem("allWarehouses")));
     this.state = {
       apiKey: props.apiKey,
       maps: null,
@@ -41,6 +44,8 @@ class PageMaps extends React.Component {
       mapsErased: false,
       actionAdded: false,
       mapName: "",
+      allWarehouses: JSON.parse(localStorage.getItem("allWarehouses")),
+      switchWarehouse:false
     };
   }
 
@@ -213,9 +218,10 @@ class PageMaps extends React.Component {
   };
   openEditingMapArea = (index, pk, comment, mapName) =>
     this.setState({
-      ["editingMapDetails" + index]: true,
+      ["editingMapDetails" + index]: this.state["editingMapDetails" + index] ? false:true,
       ["userComment" + pk]: comment,
       ["mapName" + pk]: mapName,
+      switchWarehouse: false
     });
   closeEditingMapArea = (index) =>
     this.setState({ ["editingMapDetails" + index]: false });
@@ -241,13 +247,38 @@ class PageMaps extends React.Component {
     console.log(mapName);
     this.setState({ ["mapName" + pk]: mapName });
   };
+  handleSwitchWarehouse = (id_robot,id, name, comment) => {
+    fetch(`${Const.URL_WS_SWITCH_WAREHOUSE}?id_robot=${id_robot}&id=${id}&name=${name}&comment=${comment}`)
+    .then(res => res.json())
+    .then(() => {
+      this.setState({success: true, switchWarehouse: false});
+      this.provideMaps();
+    })
+    .catch(() =>{
+      this.setState({error: true})
+    })
+  }
 
   render() {
     // console.log("State", this.state);
     const { t } = this.props;
-    const { open, openDeleteModal, editingMapDetails } = this.state;
+    const { open, openDeleteModal, success,error, allWarehouses, switchWarehouse } = this.state;
     return (
       <div className={this.classes.root} id="PageMaps">
+        {success && <Toast
+          severity="success"
+          message={t("maps_switch_res_ok")}
+          callback={() => {
+            this.setState({success: false})
+          }}
+        />}
+        {error && <Toast
+          severity="error"
+          message={t("maps_switch_res_ko")}
+          callback={() => {
+            this.setState({error: false})
+          }}
+        />}
         {/* Rebuild Maps */}
         <Modal
           open={open}
@@ -325,53 +356,24 @@ class PageMaps extends React.Component {
         <Grid container spacing={3}>
           <Grid item xs={12} md={8} lg={9}>
             <Card>
+            <CardHeader
+                avatar={
+                  <div>
+                    <img width="32" src="./images/carrier.svg" />
+                  </div>
+                }
+                title={`Robot ${this.state.map}`}
+                subheader={t("maps_title")}
+              />
               <CardContent>
-                <div>
-                  <img
-                    style={{ float: "left", marginTop: "0.5em" }}
-                    width="40"
-                    src="./images/carrier.svg"
-                  />
-                  <img
-                    style={{
-                      float: "right",
-                      marginTop: "0.5em",
-                      position: "relative",
-                      bottom: "0.5em",
-                    }}
-                    width="50"
-                    src="./images/go_back.png"
-                    onClick={() => this.props.callBackRetourTableauDeBord()}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    marginLeft: "3.5em",
-                  }}
-                >
-                  <Typography
-                    style={{
-                      color: "BLACK",
-                      fontFamily: "Black Ops One, cursive",
-                      transform: "translateY(10px)",
+              <div style={{
                       display: "flex",
-                    }}
-                    component="h5"
-                    variant="h5"
-                  >
-                    Robot {this.state.map}
-                  </Typography>
+                      justifyContent: "flex-end",
+                      position: "relative",
+                      bottom: "6.5em",
+                }}>
+                  <img onClick={() => this.props.callBackRetourTableauDeBord()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px"}}></img>
                 </div>
-                <span>&nbsp;</span>
-                <h1>
-                  <Typography
-                    variant="h5"
-                    style={{ fontFamily: "Josefin Slab, serif" }}
-                  >
-                    {t("maps_title")}
-                  </Typography>{" "}
-                </h1>
                 <Table>
                   <TableBody>
                     {this.state.maps != null &&
@@ -379,54 +381,6 @@ class PageMaps extends React.Component {
                         return (
                           <TableRow key={s.pk}>
                             <TableCell align="center">
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                }}
-                              >
-                                <h3 style={{ textAlign: "left" }}>
-                                  {" "}
-                                  <Typography
-                                    variant="overline"
-                                    style={{
-                                      textTransform: "inherit",
-                                      fontFamily: "Josefin Slab, serif",
-                                      color: "darkblue",
-                                      fontSize: "15px",
-                                    }}
-                                  >
-                                    Map: <span>{s.map_name}</span>
-                                    <span
-                                      style={{
-                                        color: "#03C6C7",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {s.is_moving
-                                        ? t("maps_moving_status")
-                                        : ""}
-                                    </span>
-                                  </Typography>
-                                </h3>
-                                <Button
-                                  style={{ height: "30px" }}
-                                  variant="outlined"
-                                  color="primary"
-                                  size="small"
-                                  startIcon={<MoreVertSharpIcon />}
-                                  onClick={() =>
-                                    this.openEditingMapArea(
-                                      index,
-                                      s.pk,
-                                      s.user_comment,
-                                      s.map_name
-                                    )
-                                  }
-                                >
-                                  {t("maps_edit_btn")}
-                                </Button>
-                              </div>
                               <div>
                                 <Grid
                                   container
@@ -434,6 +388,7 @@ class PageMaps extends React.Component {
                                   style={{ justifyContent: "center" }}
                                 >
                                   <Grid item xs={12} md={6}>
+                                    <span>{s.map_name}</span>
                                     <figure
                                       style={{
                                         display: "flex",
@@ -462,34 +417,40 @@ class PageMaps extends React.Component {
                                         }
                                       />
                                     </figure>
-                                    {!this.state["editingMapDetails" + index] &&
-                                      s["user_comment"] !== "" && (
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                          }}
-                                        >
-                                          <p>
-                                            <Typography
-                                              variant="overline"
-                                              style={{
-                                                textTransform: "inherit",
-                                                fontFamily:
-                                                  "Josefin Slab, serif",
-                                                color: "darkblue",
-                                                fontSize: "15px",
-                                              }}
-                                            >
-                                              {s["user_comment"]}
-                                            </Typography>
-                                          </p>
-                                        </div>
-                                      )}
+                                    <span>{s["user_comment"]}</span>
+                                    <div style={{display: "flex", justifyContent: "center", marginTop:"1em"}}>
+                                      <Button
+                                        // style={{ marginLeft: "1em" }}
+                                        variant="outlined"
+                                        color="primary"
+                                        size="small"
+                                        endIcon={<DoubleArrowIcon />}
+                                        onClick={() =>
+                                          this.openEditingMapArea(
+                                            index,
+                                            s.pk,
+                                            s.user_comment,
+                                            s.map_name
+                                          )
+                                        }
+                                      >
+                                        {t("maps_edit_btn")}
+                                      </Button>
+                                      <Button
+                                        style={{ marginLeft: "1em" }}
+                                        variant="outlined"
+                                        color="primary"
+                                        size="small"
+                                        endIcon={<DoubleArrowIcon />}
+                                        onClick={() => this.setState({switchWarehouse: !this.state.switchWarehouse, ["editingMapDetails" + index]:false})}
+                                      >
+                                        {t("maps_switch_btn")}
+                                      </Button>
+                                    </div>
                                   </Grid>
                                   <Grid
                                     style={{
-                                      padding: "17px",
+                                      padding: "10px", 
                                     }}
                                   >
                                     {this.state[
@@ -500,13 +461,16 @@ class PageMaps extends React.Component {
                                           width: "300px",
                                         }}
                                       >
+                                        <div style={{textAlign:"right", paddingBottom:"1em"}}>
+                                          <span>L'entrepôt actuel</span>
+                                        </div>
                                         <TextField
                                           autoFocus
                                           style={{
                                             width: "100%",
                                             marginBottom: "20px",
                                           }}
-                                          label="Nom de la carte"
+                                          label="Nom de l'entrepôt"
                                           defaultValue={s["map_name"]}
                                           variant="outlined"
                                           onChange={(event) =>
@@ -522,12 +486,12 @@ class PageMaps extends React.Component {
                                             width: "100%",
                                           }}
                                           id="outlined-multiline-static"
-                                          label="Concernant cette carte"
+                                          label="Concernant l'entrepôt"
                                           multiline
                                           rows={4}
                                           defaultValue={s["user_comment"]}
                                           variant="outlined"
-                                          helperText="Votre descriptif s'affichera juste en dessous de votre carte une fois enregisté"
+                                          helperText="Votre descriptif s'affichera juste en dessous de votre carte une fois enregistré"
                                           onChange={(event) =>
                                             this.handleComment(
                                               event.target.value,
@@ -537,12 +501,13 @@ class PageMaps extends React.Component {
                                         />
                                         <div
                                           style={{
-                                            marginTop: "1em",
+                                            marginTop: "2em",
                                             display: "flex",
                                             justifyContent: "flex-end",
                                           }}
                                         >
                                           <Button
+                                            size="small"
                                             variant="contained"
                                             onClick={() =>
                                               this.closeEditingMapArea(index)
@@ -551,7 +516,8 @@ class PageMaps extends React.Component {
                                             Annuler
                                           </Button>
                                           <Button
-                                            variant="contained"
+                                            size="small"
+                                            variant="outlined"
                                             color="primary"
                                             style={{ marginLeft: "1em" }}
                                             onClick={() =>
@@ -562,6 +528,43 @@ class PageMaps extends React.Component {
                                           </Button>
                                         </div>
                                       </div>
+                                    )}
+                                    {switchWarehouse && (
+                                    <div>
+                                      <div style={{textAlign:"right", paddingTop:"1em", marginTop:"1em"}}>
+                                        <p style={{borderBottom:"2px solid gray", margin:"0"}}>Changer d'entrepôt à ce robot</p>
+                                        <span style={{fontSize:"0.8em", color:"gray"}}>Liste d'entrepôt disponible</span>
+                                      </div>
+                                      <div
+                                        style={{
+                                          margin: "1em 0",
+                                          display: "flex",
+                                          justifyContent: "flex-end",
+                                          
+                                        }}
+                                      >
+                                        {allWarehouses.map(({name, id, comment}, index) => {
+                                          if(name !== s.map_name)  return (
+                                            <Button
+                                              key={index}
+                                              variant="outlined"
+                                              color="primary"
+                                              style={{ marginLeft: "1em" }}
+                                              onClick={() =>this.handleSwitchWarehouse(s.id_robot,id, name, comment)}
+                                              size="small"
+                                            >
+                                              {name}
+                                            </Button>
+                                          )}
+                                        )}
+                                      </div>
+                                      <Button
+                                          style={{float:"right"}}
+                                          size="small"
+                                          variant="contained"
+                                          onClick={() => this.setState({switchWarehouse: false})}
+                                        >Annuler</Button>
+                                    </div>
                                     )}
                                   </Grid>
                                 </Grid>

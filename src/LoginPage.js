@@ -117,6 +117,7 @@ function SignIn({ callbackFunction }) {
   const [newPassword, setNewPassword] = useState("");
   
   const [loginError, setLoginError] = useState(false);
+  const [resetError, setResetError] = useState(false);
   const [signup, setSignup] = useState(false);
   const [login, setLogin] = useState(true);
   const [reset, setReset] = useState(false);
@@ -136,12 +137,22 @@ function SignIn({ callbackFunction }) {
     console.log("handleEnterTolog", e, e.which);
     if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.which==13) loadKeyApi();
   }
+  function handleEnterToReset(e) {
+    // console.log("handleEnterTolog", e, e.which);
+    if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.which==13) handleResetPass();
+    // setEmailResetPass(e.target.value)
+    // e.preventDefault();
+  }
+  function handleEnterToConfirmReset(e) {
+    console.log("handleEnterTolog", e, e.which);
+    if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.which==13) handleConfirmResetPass();
+  }
 
   const loadKeyApi = () => {   
     const user = signinEmail || localStorage.getItem("email");
     const pass = signinPassword;
   
-    const data = {email:user, password:pass};
+    const data = {email:user.toLowerCase(), password:pass};
     //https://docs.react-async.com/getting-started/usage
     fetch(
       Const.URL_WS_LOGIN,
@@ -191,7 +202,7 @@ function SignIn({ callbackFunction }) {
       setConfirmReset(true);
     })
     .catch(err => {
-
+      setResetError(true);
     })
   }
   const handleConfirmResetPass = () => {
@@ -213,7 +224,7 @@ function SignIn({ callbackFunction }) {
       callbackFunction(data.token, "");
     })
     .catch(err => {
-
+      setLoginError(true);
     })
   }
   return (
@@ -223,10 +234,19 @@ function SignIn({ callbackFunction }) {
     >
       <CssBaseline />
       {loginError && <Toast
+        variant="outlined"
         severity="error"
         message={t("login_ko")}
         callback={() => {
           setLoginError(false);
+        }}
+      />}
+      {resetError && <Toast
+        variant="outlined"
+        severity="error"
+        message={t("login_ko_reset")}
+        callback={() => {
+          setResetError(false);
         }}
       />}
       <Card style={{ width: "100%", marginTop: "3em" }}>
@@ -297,7 +317,6 @@ function SignIn({ callbackFunction }) {
               <Router>
                 <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
                   <center><NavLink to={"/"} onClick={()=>{setLogin(false);setSignup(false);setReset(true)}}>{t('reset_password')}</NavLink></center>
-                  <center><NavLink to={"/"} onClick={()=>{setLogin(false);setSignup(true);setReset(false)}}>{t('no_account')}</NavLink></center>
                   <center>
                     <span>{t("question")}</span>
                   </center>
@@ -336,100 +355,6 @@ function SignIn({ callbackFunction }) {
               </Button>
               
             </form>}
-            {signup && <form
-              style={{ marginTop: "5em" }}
-              className={classes.form}
-              noValidate
-              autoComplete="off"
-            >
-              <TextField
-                margin="normal"
-                fullWidth
-                id="signup_firstname"
-                placeholder=""
-                label={t("firstname")}
-                name="firstname"
-                autoFocus 
-                onChange={(event) =>
-                  localStorage.setItem("username", event.target.value)
-                }
-                autoComplete="off"
-              />
-              <FormControl fullWidth id="signup_email_container">
-                <InputLabel htmlFor="signup_email" id="signup_email-label">Email</InputLabel>
-                <Input
-                  id="signup_email"
-                  type={'email'}  
-                  value={signupEmail}
-                  onChange={(event) =>
-                    setSignupEmail(event.target.value)
-                  }
-                />
-              </FormControl>
-              <FormControl fullWidth className="signup_password_container">
-                <InputLabel htmlFor="signup_password" className="signup_password-label">{t("password")}</InputLabel>
-                <Input
-                  className="signup_password"
-                  type={showSignupPassword ? 'text' : 'password'}
-                  value={signupPassword}
-                  onChange={(event) =>
-                    setSignupPassword(event.target.value)
-                  }
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => handleClickShowSignupPassword(!showSignupPassword)}
-                        // onMouseDown={handleMouseDownPassword}
-                      >
-                        {showSignupPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <Router>
-                <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
-                  <center><NavLink to={"/"} onClick={()=>{setLogin(false);setSignup(false);setReset(true)}}>{t('reset_password')}</NavLink></center>
-                  <center><NavLink to={"/"} onClick={()=>{setLogin(true);setSignup(false);setReset(false)}}>{t('has_account')}</NavLink></center>
-                  <center>
-                    <span>{t("question")}</span>
-                  </center>
-
-                  <center>
-                    <span>
-                      {" "}
-                      <a
-                        style={{ color: "#3F51B5" }}
-                        href="mailto:support@qenvi.fr"
-                      >
-                        {t("contact")}
-                      </a>
-                    </span>
-                  </center>
-                </div>
-                <Switch>
-                  <Route path="/demande">
-                    <DemandeComptePage />
-                  </Route>
-                </Switch>
-              </Router>
-              <Button
-                style={{height:window.innerWidth < 1200 ? "100px":"50px", fontSize: window.innerWidth < 1200 ? "2em":"1em"}}
-                size="large"
-                fullWidth
-                variant="contained"
-                color="primary"
-                startIcon={<KeyboardArrowRightIcon />}
-                className={classes.submit}
-                onClick={() => {
-                  handleSignup();
-                }}
-              >
-                {t("signup_button")}
-              </Button>
-              
-            </form>}
             {reset && <form
               style={{ marginTop: "5em" }}
               className={classes.form}
@@ -440,22 +365,24 @@ function SignIn({ callbackFunction }) {
                 margin="normal"
                 fullWidth
                 id="signup_firstname"
-                placeholder=""
+                placeholder="You'll receive an email at this address"
                 label={t("username")}
                 name="firstname"
                 autoFocus 
-                onChange={(event) =>
+                onChange={(event) => 
                   setEmailResetPass(event.target.value)
                 }
                 autoComplete="off"
+                onKeyPress={(event)=>handleEnterToReset(event)}
               />
-              {confirmReset &&
-              <React.Fragment>
+              {1 &&  
+              <div style={{display: confirmReset ? "block":"none"}}>
                 <TextField
+                  disabled={confirmReset ? false:true}
                   margin="normal"
                   fullWidth
-                  id="signup_firstname"
-                  placeholder=""
+                  className="signup_email_container"
+                  placeholder="Reset Code Received By Email"
                   label={t("rest_code")}
                   name="rest_code"
                   autoFocus 
@@ -464,7 +391,7 @@ function SignIn({ callbackFunction }) {
                   }
                   autoComplete="off"
                 />
-                <FormControl fullWidth className="signup_password_container">
+                <FormControl fullWidth className="signup_email_container" disabled={confirmReset ? false:true}>
                   <InputLabel htmlFor="signup_password" className="signup_password-label">{t("newPassword")}</InputLabel>
                   <Input
                     className="signup_password"
@@ -483,14 +410,14 @@ function SignIn({ callbackFunction }) {
                         </IconButton>
                       </InputAdornment>
                     }
+                    onKeyPress={(event)=>handleEnterToConfirmReset(event)}
                   />
                 </FormControl>
-              </React.Fragment>
+              </div>
               }
               
               <Router>
                 <div style={{ marginTop: "1em", fontSize: window.innerWidth < 1200 ? "2.5em":"1em" }}>
-                  <center><NavLink to={"/"} onClick={()=>{setLogin(false);setSignup(true);setReset(false)}}>{t('no_account')}</NavLink></center>
                   <center><NavLink to={"/"} onClick={()=>{setLogin(true);setSignup(false);setReset(false)}}>{t('has_account')}</NavLink></center>
                   <center>
                     <span>{t("question")}</span>
@@ -523,7 +450,7 @@ function SignIn({ callbackFunction }) {
                 startIcon={<KeyboardArrowRightIcon />}
                 className={classes.submit}
                 onClick={() => {
-                  !confirmReset ? handleResetPass():handleConfirmResetPass();
+                  !resetCode ? handleResetPass():handleConfirmResetPass();
                 }}
               >
                 {t("reset_button")}

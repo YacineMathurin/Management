@@ -41,8 +41,9 @@ import MapOverview from "./MapOverview";
 import { Tooltip } from "@material-ui/core";
 import {Helmet} from "react-helmet";
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
-import PersonIcon from '@material-ui/icons/Person';
+import DeviceHubIcon from '@material-ui/icons/DeviceHub';
 import PageUserManagement from "./PageUserManagement";
+import PersonIcon from '@material-ui/icons/Person';
 import jwt_decode from "jwt-decode";
 
 
@@ -147,9 +148,11 @@ export default function MiniDrawer() {
   const [showMapOverview, setMapOverview] = React.useState(-1);
   const [showScreener, setShowScreener] = React.useState(-1);
   const [showBiblio, setShowBiblio] = React.useState(-1);
-  const [showTableauDeBordMaps, setShowTableauDeBordMaps] = React.useState(-1); // default screen
-  const [showUserManagement, setShowUserManagement] = React.useState(-1); // default screen
   const [showTableauDeBord, setShowTableauDeBord] = React.useState(1); // default screen
+  const [showTableauDeBordMaps, setShowTableauDeBordMaps] = React.useState(-1); 
+  const [showWarehouseManagement, setShowWarehouseManagement] = React.useState(-1); 
+  const [showUserManagement, setShowUserManagement] = React.useState(-1); 
+  const [showUserPage, setShowUserPage] = React.useState(-1); 
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -298,233 +301,61 @@ export default function MiniDrawer() {
   };
 
   const drawerButtonClicked = (name, index) => {
-    if (name.includes("Éditeur")) {
-      // dashboard2
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
-      setShowBiblio(-1);
-      setShowAide(-1);
-      setShowMaps(-1);
-      setMapGestion(-1);
-      setMapOverview(-1);
-      setShowScreener(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("Trotteur")) {
-      // Rapport trotteur
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
-      setShowAide(-1);
-      setShowBiblio(-1);
-      setShowScreener(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("Écarts")) {
-      // Rapport Favori
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowStatsTrotteurs(-1);
-      setShowEcartFavoris(1);
-      setShowBiblio(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
-      setShowAide(-1);
-      setShowMaps(-1);
-      setMapGestion(-1);
-      setShowScreener(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("Statistiques")) {
-      // Statistiques Trotteurs
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowMonDossier(-1);
-      setShowStatsTrotteurs(1);
-      setShowBiblio(-1);
-      setShowAdmin(-1);
-      setShowAide(-1);
-      setShowMaps(-1);
-      setMapGestion(-1);
-      setShowScreener(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("Mes")) {
-      // Statistiques Trotteurs
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowBiblio(-1);
-      setShowMonDossier(1);
-      setShowAdmin(-1);
-      setShowAide(-1);
-      setShowMaps(-1);
-      setMapGestion(-1);
-      setShowScreener(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("Mise à jour")) {
-      // Administration
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowBiblio(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(1);
-      setShowAide(-1);
-      setShowMaps(-1);
-      setMapGestion(-1);
-      setShowScreener(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("Aide")) {
-      // Aide
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowBiblio(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
-      setShowAide(1);
-      setShowMaps(-1);
-      setMapGestion(-1);
-      setShowScreener(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("Screener")) {
-      // Screener
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowBiblio(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
-      setShowAide(-1);
-      setShowScreener(1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("Biblio")) {
-      // Biblio
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
-      setShowAide(-1);
-      setShowMaps(-1);
-      setMapGestion(-1);
-      setMapOverview(-1);
-      setShowScreener(-1);
-      setShowBiblio(1);
-      setShowTableauDeBordMaps(-1);
-      setShowUserManagement(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("tableau")) {
+     if (name.includes("tableau")) {
       // Tableau de bord
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-      setMapOverview(-1);
-      setShowScreener(-1);
-      setShowBiblio(-1);
-      setShowTableauDeBordMaps(-1);
-      setShowUserManagement(-1);
+
+      // 
       setShowTableauDeBord(1);
+      setShowTableauDeBordMaps(-1);
+      setShowWarehouseManagement(-1);
+      setShowUserManagement(-1);
     } else if (name.includes("maps")) {
-      // Tableau de bord
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-      setMapOverview(-1);
-      setShowScreener(-1);
-      setShowBiblio(-1);
+
+      // 
+      // maps overview
+      setShowTableauDeBord(-1);
       setShowTableauDeBordMaps(1);
+      setShowWarehouseManagement(-1);
       setShowUserManagement(-1);
-      setShowTableauDeBord(-1);
-    } else if (name.includes("maps_overview")) {
-      // Tableau de bord
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
+    } else if (name.includes("manage_warehouse")) {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-      setMapOverview(-1);
-      setShowScreener(-1);
-      setShowBiblio(-1);
-      setShowTableauDeBordMaps(-1);
-      setShowUserManagement(-1);
+
+      // 
+      // manage_warehouse
       setShowTableauDeBord(-1);
-      setMapOverview(1);
+      setShowTableauDeBordMaps(-1);
+      setShowWarehouseManagement(1);
+      setShowUserManagement(-1);
+      
     } else if (name.includes("manage_users")) {
-      // Tableau de bord
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-      setMapOverview(-1);
-      setShowScreener(-1);
-      setShowBiblio(-1);
-      setShowTableauDeBordMaps(-1);
+
+      // 
+      // manage_users
       setShowTableauDeBord(-1);
-      setMapOverview(-1);
+      setShowTableauDeBordMaps(-1);
+      setShowWarehouseManagement(-1);
       setShowUserManagement(1);
     } else if (name.includes("user")) {
-      // Tableau de bord
-      setShowDetailsSelection(-1);
-      setShowClassementTrotteur(-1);
-      setShowRechercheSelections(-1);
-      setShowEcartFavoris(-1);
-      setShowStatsTrotteurs(-1);
-      setShowMonDossier(-1);
-      setShowAdmin(-1);
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-      setMapOverview(-1);
-      setShowScreener(-1);
-      setShowBiblio(-1);
-      setShowTableauDeBordMaps(-1);
+
+      // 
+      // user
       setShowTableauDeBord(-1);
-      setMapOverview(-1);
+      setShowTableauDeBordMaps(-1);
+      setShowWarehouseManagement(-1);
       setShowUserManagement(-1);
     }
   };
@@ -712,19 +543,20 @@ export default function MiniDrawer() {
             </IconButton>
           </div>
           <Divider />
-          <List>
+          <List style={{left: "7px"}}>
             <Tooltip title={t("sidebar_robots")} placement="right">
               <ListItem
                 button
                 onClick={() => {
                   drawerButtonClicked("tableau", 1);
                 }}
+                
               >
                 <ListItemIcon>
                   <DashboardOutlinedIcon />
                   {/* <img width="30" height="30" src="./images/trolley.png" /> */}
                 </ListItemIcon>
-                <ListItemText primary="Tableau de bord"></ListItemText>
+                <ListItemText primary={t("sidebar_robots")}></ListItemText>
               </ListItem>
             </Tooltip>
             <Divider />
@@ -736,10 +568,9 @@ export default function MiniDrawer() {
                 }}
               >
                 <ListItemIcon>
-                  {/* <img width="25" height="25" src="./images/maps.png" /> */}
                   <MapOutlinedIcon></MapOutlinedIcon>
                 </ListItemIcon>
-                <ListItemText primary="Journaux"></ListItemText>
+                <ListItemText primary={t("sidebar_maps")}></ListItemText>
               </ListItem>
             </Tooltip>
             <Divider />
@@ -754,7 +585,7 @@ export default function MiniDrawer() {
                   {/* <img width="25" height="25" src="./images/maps.png" /> */}
                   <PermContactCalendarIcon></PermContactCalendarIcon>
                 </ListItemIcon>
-                <ListItemText primary="Journaux"></ListItemText>
+                <ListItemText primary={t("sidebar_manag")}></ListItemText>
               </ListItem>
             </Tooltip>
             <Divider />
@@ -769,7 +600,7 @@ export default function MiniDrawer() {
                   {/* <img width="25" height="25" src="./images/maps.png" /> */}
                   <PersonIcon></PersonIcon>
                 </ListItemIcon>
-                <ListItemText primary="Journaux"></ListItemText>
+                <ListItemText primary={t("sidebar_user")}></ListItemText>
               </ListItem>
             </Tooltip>
           </List>
