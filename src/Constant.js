@@ -1,59 +1,65 @@
 /** DEPLOIEMENT LOCAL POUR DEBUG SERVEUR API **/
 /** PERMET DE PASSER PAR LE SERVEUR API DEPLOYE EN LOCAL **/
-const env = "193.70.86.40";
-// const env = "127.0.0.1";
+const envMySql = "193.70.86.40";
+const portMySql ="8081";
+// const envMongoDB = "127.0.0.1";
+const portMongoDB = "5000";
+// const envMySql = "127.0.0.1";
+// const portMySql ="80";
+const envMongoDB = "193.70.86.40";
+// const portMongoDB = "5000";
 
 export const URL_GET_LAST_HEARTBEAT_MSG =
-  "http://qenvi.space:8081/GetDashboardReqByClientWS";
+  "http://"+ envMySql + ":"+ portMySql + "/GetDashboardReqByClientWS";
 
 export const URL_GET_ALL_MAPS =
-  "http://qenvi.space:8081/GetAllMsgMapWS";
+  "http://"+ envMySql + ":"+ portMySql + "/GetAllMsgMapWS";
 
 export const URL_UPD_STATUS_MANAG_PAGE =
-  "http://qenvi.space:8081/updateHeartBeatWS";
+  "http://"+ envMySql + ":"+ portMySql + "/updateHeartBeatWS";
 
 export const URL_FETCH_LAST_HEARTBEAT_MSG =
-  "http://qenvi.space:8081/fetchLastHeartbeatMessageWS";
+  "http://"+ envMySql + ":"+ portMySql + "/fetchLastHeartbeatMessageWS";
 
 export const URL_UPD_STATUS_MAP_PAGE =
-  "http://qenvi.space:8081/updateMsgMapStatusByMapIdWS";
+  "http://"+ envMySql + ":"+ portMySql + "/updateMsgMapStatusByMapIdWS";
 
-export const URL_WS_LOGIN = "http://"+env+":5000/api/signin";
-export const URL_WS_USERS = "http://"+env+":5000/api/user";
-export const URL_WS_MANAGE_USERS = "http://"+env+":5000/api/user/autorize";
-export const URL_WS_DELETE_USER = "http://"+env+":5000/api/user/delete";
-export const URL_WS_RESET_PASS = "http://"+env+":5000/api/reset";
-export const URL_WS_CONFIRM_RESET_PASS = "http://"+env+":5000/api/reset/confirm";
-export const URL_WS_SIGNUP = "http://"+env+":5000/api/signup";
+export const URL_WS_LOGIN = "http://"+envMongoDB+":"+ portMongoDB + "/api/signin";
+export const URL_WS_USERS = "http://"+envMongoDB+":"+ portMongoDB + "/api/user";
+export const URL_WS_MANAGE_USERS = "http://"+envMongoDB+":"+ portMongoDB + "/api/user/autorize";
+export const URL_WS_DELETE_USER = "http://"+envMongoDB+":"+ portMongoDB + "/api/user/delete";
+export const URL_WS_RESET_PASS = "http://"+envMongoDB+":"+ portMongoDB + "/api/reset";
+export const URL_WS_CONFIRM_RESET_PASS = "http://"+envMongoDB+":"+ portMongoDB + "/api/reset/confirm";
+export const URL_WS_SIGNUP = "http://"+envMongoDB+":"+ portMongoDB + "/api/signup";
 
 export const URL_WS_SWITCH_WAREHOUSE =
-  "http://193.70.86.40:8081/updateMsgMapChangeWarehouseWS";
+  "http://"+ envMySql + ":"+ portMySql + "/updateMsgMapChangeWarehouseWS";
 export const URL_WS_PROVIDE_METRICS =
-  "http://193.70.86.40:8081/getAllMetricsWS";
+  "http://"+ envMySql + ":"+ portMySql + "/getAllMetricsWS";
 export const URL_WS_PROVIDE_DETAILS =
-  "http://193.70.86.40:8081/getAllMetricsByCobotWS";
-export const URL_WS_ALL_MAPS = "http://193.70.86.40:8081/GetAllMsgMapByRobotWS";
-export const URL_WS_INS_DEF = "http://193.70.86.40:8081/InsertMsgDefItineWS";
+  "http://"+ envMySql + ":"+ portMySql + "/getAllMetricsByCobotWS";
+export const URL_WS_ALL_MAPS = "http://"+ envMySql + ":"+ portMySql + "/GetAllMsgMapByRobotWS";
+export const URL_WS_INS_DEF = "http://"+ envMySql + ":"+ portMySql + "/InsertMsgDefItineWS";
 export const URL_WS_FETCH_HEARTBEAT =
-  "http://193.70.86.40:8081/GetAllMetricsByClientAndRobotAndPKWS";
+  "http://"+ envMySql + ":"+ portMySql + "/GetAllMetricsByClientAndRobotAndPKWS";
 export const URL_WS_SET_USER_COMMENT =
-  "http://193.70.86.40:8081/SetUserCommentByPkWS";
-export const URL_WS_SET_MAP_NAME = "http://193.70.86.40:8081/SetMapNameByPkWS";
-export const URL_WS_INS_ACT = "http://193.70.86.40:8081/InsertActionsWS";
+  "http://"+ envMySql + ":"+ portMySql + "/SetUserCommentByPkWS";
+export const URL_WS_SET_MAP_NAME = "http://"+ envMySql + ":"+ portMySql + "/SetMapNameByPkWS";
+export const URL_WS_INS_ACT = "http://"+ envMySql + ":"+ portMySql + "/InsertActionsWS";
 export const URL_WS_ALL_ROBOTS =
-  "http://193.70.86.40:8081/GetAllRobotByClientWS";
-export const URL_WS_ALL_DEF = "http://193.70.86.40:8081/GetAllDefItineWS";
-export const URL_WS_DEL_DEF = "http://193.70.86.40:8081/DeleteMsgDefItineWS";
+  "http://"+ envMySql + ":"+ portMySql + "/GetAllRobotByClientWS";
+export const URL_WS_ALL_DEF = "http://"+ envMySql + ":"+ portMySql + "/GetAllDefItineWS";
+export const URL_WS_DEL_DEF = "http://"+ envMySql + ":"+ portMySql + "/DeleteMsgDefItineWS";
 export const URL_WS_DEL_ALL_DEF =
-  "http://193.70.86.40:8081/DeleteAllMsgDefItineWS";
+  "http://"+ envMySql + ":"+ portMySql + "/DeleteAllMsgDefItineWS";
 
-export const URL_WS_DEL_ONE_MAP = "http://193.70.86.40:8081/DeleteMapWS";
-export const URL_WS_DEL_ALL_MAPS = "http://193.70.86.40:8081/DeleteAllMapsWS";
+export const URL_WS_DEL_ONE_MAP = "http://"+ envMySql + ":"+ portMySql + "/DeleteMapWS";
+export const URL_WS_DEL_ALL_MAPS = "http://"+ envMySql + ":"+ portMySql + "/DeleteAllMapsWS";
 
-export const URL_WS_ROBOT_INFO = "http://193.70.86.40:8081/GetRobotByMapWS";
-export const URL_WS_ROBOT_HEARTS = "http://193.70.86.40:8081/GetAllHeartBeatWs";
+export const URL_WS_ROBOT_INFO = "http://"+ envMySql + ":"+ portMySql + "/GetRobotByMapWS";
+export const URL_WS_ROBOT_HEARTS = "http://"+ envMySql + ":"+ portMySql + "/GetAllHeartBeatWs";
 
-export const URL_WS_ADD_ACTION = "http://193.70.86.40:8081/AddCommandeWS";
+export const URL_WS_ADD_ACTION = "http://"+ envMySql + ":"+ portMySql + "/AddCommandeWS";
 
 export const URL_WS_SYNTHESE = "http://localhost:8080/syntheseSelectionWS";
 export const URL_WS_DETAIL = "http://localhost:8080/detailSelectionWS";

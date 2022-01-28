@@ -763,8 +763,9 @@ export default function MiniDrawer() {
         {/* pas besoinde callback - pas de bouton de retour */}
         {showUserManagement > -1 && apiKey != null && (
           <PageUserManagement
-            callbackNeedToLogin={handleCallbackNeedToLogin}
             apiKey={apiKey}
+            email={email}
+            callbackNeedToLogin={handleCallbackNeedToLogin}
             callbackOpenDetails={handleCallbackOpenDetails}
             callbackOpenMaps={handleCallbackOpenMaps}
             callbackOpenMapOverview={handleCallbackOpenMapOverview}

@@ -566,8 +566,9 @@ class PageUserManagement extends React.Component {
     )
   }
   render() { 
-    const { t, callBackRetourTableauDeBord } = this.props;
+    const { t, callBackRetourTableauDeBord, email } = this.props;
     const {users, success, error, search, addUserMode, allowedWarehouseOnSignup} = this.state;
+    console.log(email);
     return (
       <div id="PageUserManagement">
           <Grid container spacing={2}>
@@ -669,7 +670,7 @@ class PageUserManagement extends React.Component {
                       {users.map(({name, robot, email}, idx) => (
                         <TableRow key={idx}>
                           <TableCell align="left" style={{textTransform:"capitalize"}}>
-                            {name}{this.state["editing"+idx] ? this.deleteIcon(idx):""}
+                            {name}{this.state["editing"+idx] && email !== this.props.email ? this.deleteIcon(idx):""}
                           </TableCell>
                           <TableCell align="left"> {this.handleDisplayWarehouses(idx)} </TableCell>
                           <TableCell align="left">
