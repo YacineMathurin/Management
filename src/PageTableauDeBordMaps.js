@@ -81,8 +81,8 @@ function PageTableauDeBordMaps(props) {
     )
       .then((res) => res.json())
       .then((data) => {
-         console.log(data);
-         data = data.filter(item => item.on_map === 1);
+        data = data.filter(item => item.on_map === 1);
+        console.log(data);
          formating(data);
          setLoading(false);
       })

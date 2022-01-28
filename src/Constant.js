@@ -1,7 +1,7 @@
 /** DEPLOIEMENT LOCAL POUR DEBUG SERVEUR API **/
 /** PERMET DE PASSER PAR LE SERVEUR API DEPLOYE EN LOCAL **/
-// const env = "193.70.86.40";
-const env = "127.0.0.1";
+const env = "193.70.86.40";
+// const env = "127.0.0.1";
 
 export const URL_GET_LAST_HEARTBEAT_MSG =
   "http://qenvi.space:8081/GetDashboardReqByClientWS";

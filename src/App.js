@@ -45,6 +45,7 @@ import DeviceHubIcon from '@material-ui/icons/DeviceHub';
 import PageUserManagement from "./PageUserManagement";
 import PersonIcon from '@material-ui/icons/Person';
 import jwt_decode from "jwt-decode";
+import PageUser from "./PageUser";
 
 
 
@@ -127,6 +128,7 @@ export default function MiniDrawer() {
   const [openDialogProfil, setOpenDialogProfil] = React.useState(false);
   const [apiKey, setApiKey] = React.useState(null);
   const [isAdmin, setIsAdmin] = React.useState(false);
+  const [email, setEmail] = React.useState("");
   const [dateFinAbonnement, setDateFinAbonnement] = React.useState(null);
   const [showDetailsSelection, setShowDetailsSelection] = React.useState(-1);
   const [showDetailsMetrics, setShowDetailsMetrics] = React.useState(-1);
@@ -176,9 +178,10 @@ export default function MiniDrawer() {
     console.log("callback : data = " + data + " " + dateFinAbonnement);
     setShowToastLoginOK(1);
     setApiKey(data);
-    const {isAdmin} = jwt_decode(data);
+    const {isAdmin, email} = jwt_decode(data);
     console.log("IS ADMIN", isAdmin);
     setIsAdmin(isAdmin);
+    setEmail(email);
     isAdmin ? setShowTableauDeBord(1):setShowUserPage(1);
     setDateFinAbonnement(dateFinAbonnement);
   };
@@ -767,6 +770,12 @@ export default function MiniDrawer() {
             callbackOpenMapOverview={handleCallbackOpenMapOverview}
             callbackRetourDetails={handleCallbackRetourDetails}
             callBackRetourTableauDeBord={handleRetourTableauDeBord}
+          />
+        )}{" "}
+        {showUserPage > -1 && apiKey != null && (
+          <PageUser
+            apiKey={apiKey}
+            email={email}
           />
         )}{" "}
         

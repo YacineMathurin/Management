@@ -71,7 +71,7 @@ class PageUserManagement extends React.Component {
       .then((data) => {
         console.log(data);
         data = data.filter(item => item.on_map === 1);
-         this.setState({metrics:data})
+        this.setState({metrics:data})
         //  this.getAllWarehouses(data);
         allWarehouses = getAllWarehouses(data);
         this.setState({allWarehouses})
