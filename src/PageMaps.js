@@ -113,6 +113,7 @@ class PageMaps extends React.Component {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         if (
           data.hasOwnProperty("message") &&
           data.message.includes("TOKEN_NON_VALIDE")
@@ -125,6 +126,7 @@ class PageMaps extends React.Component {
               ["showIconMapDetails" + index]: false,
             });
           });
+          data = data.filter(item => item.on_map === 1);
           this.setState({
             maps: data,
             default: data,
@@ -260,7 +262,6 @@ class PageMaps extends React.Component {
   }
 
   render() {
-    // console.log("State", this.state);
     const { t } = this.props;
     const { open, openDeleteModal, success,error, allWarehouses, switchWarehouse } = this.state;
     return (
@@ -604,6 +605,29 @@ class PageMaps extends React.Component {
                       }
                     }}
                   />
+                </FormControl>
+              </CardContent>
+            </Card>
+
+            <Card className="sidebarCards">
+              <CardHeader
+                avatar={<MapIcon fontSize="large" />}
+                title={t("maps_mapping")}
+                subheader={t("maps_new_mapping_sub")}
+              />
+              <CardContent>
+                <FormControl size="small" fullWidth variant="outlined">
+                  <Button
+                    fullWidth={false}
+                    width="2em"
+                    // onClick={() => this.addActionNewMapping()}
+                    onClick={() => this.renamingModalDisplay()}
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                  >
+                    {t("maps_new_mapping_btn")}
+                  </Button>
                 </FormControl>
               </CardContent>
             </Card>

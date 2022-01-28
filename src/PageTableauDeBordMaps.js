@@ -65,6 +65,7 @@ function PageTableauDeBordMaps(props) {
         }
     });
     console.log("result", result);
+    result = result.sort((a,b) => a.id - b.id);
     setlisteMetrics(result);
     setdefaultMetrics(result);
     setAllData(data);
@@ -81,6 +82,7 @@ function PageTableauDeBordMaps(props) {
       .then((res) => res.json())
       .then((data) => {
          console.log(data);
+         data = data.filter(item => item.on_map === 1);
          formating(data);
          setLoading(false);
       })

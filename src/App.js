@@ -47,6 +47,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import jwt_decode from "jwt-decode";
 
 
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -125,6 +126,7 @@ export default function MiniDrawer() {
   const [open, setOpen] = React.useState(false);
   const [openDialogProfil, setOpenDialogProfil] = React.useState(false);
   const [apiKey, setApiKey] = React.useState(null);
+  const [isAdmin, setIsAdmin] = React.useState(false);
   const [dateFinAbonnement, setDateFinAbonnement] = React.useState(null);
   const [showDetailsSelection, setShowDetailsSelection] = React.useState(-1);
   const [showDetailsMetrics, setShowDetailsMetrics] = React.useState(-1);
@@ -148,7 +150,7 @@ export default function MiniDrawer() {
   const [showMapOverview, setMapOverview] = React.useState(-1);
   const [showScreener, setShowScreener] = React.useState(-1);
   const [showBiblio, setShowBiblio] = React.useState(-1);
-  const [showTableauDeBord, setShowTableauDeBord] = React.useState(1); // default screen
+  const [showTableauDeBord, setShowTableauDeBord] = React.useState(-1); // default screen
   const [showTableauDeBordMaps, setShowTableauDeBordMaps] = React.useState(-1); 
   const [showWarehouseManagement, setShowWarehouseManagement] = React.useState(-1); 
   const [showUserManagement, setShowUserManagement] = React.useState(-1); 
@@ -174,6 +176,10 @@ export default function MiniDrawer() {
     console.log("callback : data = " + data + " " + dateFinAbonnement);
     setShowToastLoginOK(1);
     setApiKey(data);
+    const {isAdmin} = jwt_decode(data);
+    console.log("IS ADMIN", isAdmin);
+    setIsAdmin(isAdmin);
+    isAdmin ? setShowTableauDeBord(1):setShowUserPage(1);
     setDateFinAbonnement(dateFinAbonnement);
   };
 
@@ -306,6 +312,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
+      setMapOverview(-1);
 
       // 
       setShowTableauDeBord(1);
@@ -316,7 +323,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-
+      setMapOverview(-1);
       // 
       // maps overview
       setShowTableauDeBord(-1);
@@ -327,7 +334,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-
+      setMapOverview(-1);
       // 
       // manage_warehouse
       setShowTableauDeBord(-1);
@@ -339,7 +346,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-
+      setMapOverview(-1);
       // 
       // manage_users
       setShowTableauDeBord(-1);
@@ -350,7 +357,7 @@ export default function MiniDrawer() {
       setShowAide(-1);
       setShowMaps(-1);
       setMapGestion(-1);
-
+      setMapOverview(-1);
       // 
       // user
       setShowTableauDeBord(-1);
@@ -544,6 +551,7 @@ export default function MiniDrawer() {
           </div>
           <Divider />
           <List style={{left: "7px"}}>
+            {isAdmin && <React.Fragment>
             <Tooltip title={t("sidebar_robots")} placement="right">
               <ListItem
                 button
@@ -588,7 +596,7 @@ export default function MiniDrawer() {
                 <ListItemText primary={t("sidebar_manag")}></ListItemText>
               </ListItem>
             </Tooltip>
-            <Divider />
+            <Divider /></React.Fragment>}
             <Tooltip title={t("sidebar_user")} placement="right">
               <ListItem
                 button
