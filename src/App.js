@@ -322,6 +322,7 @@ export default function MiniDrawer() {
       setShowTableauDeBordMaps(-1);
       setShowWarehouseManagement(-1);
       setShowUserManagement(-1);
+      setShowUserPage(-1);
     } else if (name.includes("maps")) {
       setShowAide(-1);
       setShowMaps(-1);
@@ -333,6 +334,7 @@ export default function MiniDrawer() {
       setShowTableauDeBordMaps(1);
       setShowWarehouseManagement(-1);
       setShowUserManagement(-1);
+      setShowUserPage(-1);
     } else if (name.includes("manage_warehouse")) {
       setShowAide(-1);
       setShowMaps(-1);
@@ -344,7 +346,7 @@ export default function MiniDrawer() {
       setShowTableauDeBordMaps(-1);
       setShowWarehouseManagement(1);
       setShowUserManagement(-1);
-      
+      setShowUserPage(-1);
     } else if (name.includes("manage_users")) {
       setShowAide(-1);
       setShowMaps(-1);
@@ -356,6 +358,7 @@ export default function MiniDrawer() {
       setShowTableauDeBordMaps(-1);
       setShowWarehouseManagement(-1);
       setShowUserManagement(1);
+      setShowUserPage(-1);
     } else if (name.includes("user")) {
       setShowAide(-1);
       setShowMaps(-1);
@@ -367,6 +370,7 @@ export default function MiniDrawer() {
       setShowTableauDeBordMaps(-1);
       setShowWarehouseManagement(-1);
       setShowUserManagement(-1);
+      setShowUserPage(1);
     }
   };
 

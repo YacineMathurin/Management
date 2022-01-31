@@ -207,11 +207,11 @@ class PageUserManagement extends React.Component {
   }
   handleDisplayRobots = (idx) => {
     const { editableUserWarehouses, fetchedUser } = this.state;
-    const userRobots = fetchedUser[idx]["robot"];
+    var userRobots = fetchedUser[idx]["robot"];
     var availableRobots = [];
     availableRobots = this.getAvailableRobots();
-    availableRobots = availableRobots.sort((a, b) => a.id - b.id);
-
+    userRobots = userRobots.sort((a, b) => a.id - b.id);
+    console.log("userRobots", userRobots);
  
     if(this.state["editing"+idx]) { 
       return availableRobots.map(({id, from}, index) => {
@@ -565,6 +565,11 @@ class PageUserManagement extends React.Component {
       >Delete</span>
     )
   }
+  currentAdmin = () => {
+    return (
+      <span style={{padding:"0.3em", margin:"0 0.3em", background:"rgb(75,75,75)", color:"white", fontSize:"0.8em"}}>You</span>
+    )
+  }
   render() { 
     const { t, callBackRetourTableauDeBord, email } = this.props;
     const {users, success, error, search, addUserMode, allowedWarehouseOnSignup} = this.state;
@@ -670,7 +675,7 @@ class PageUserManagement extends React.Component {
                       {users.map(({name, robot, email}, idx) => (
                         <TableRow key={idx}>
                           <TableCell align="left" style={{textTransform:"capitalize"}}>
-                            {name}{this.state["editing"+idx] && email !== this.props.email ? this.deleteIcon(idx):""}
+                            {name}{email === this.props.email ? this.currentAdmin():""}{this.state["editing"+idx] && email !== this.props.email ? this.deleteIcon(idx):""}
                           </TableCell>
                           <TableCell align="left"> {this.handleDisplayWarehouses(idx)} </TableCell>
                           <TableCell align="left">
