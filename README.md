@@ -59,23 +59,23 @@ verifiez, si le backend fonctionne pour autorisation et utilisation du logiciell
 
 Once your changes are commitend and pushed, (as for now we don't have runners on gitlab) ssh connect to your server then:
 
-- <!-- Pour compiler le projet pour un déploiement utiliser la commande suivante : -->
-<!-- - $ npm run-script build -->
-
-<!-- > Qenvi_Robotics@1.0.0 build
-> react-scripts build
-
-Creating an optimized production build...
+Fetch the project by https or ssh, i.e. via https
 
 ```
-<!--
-Le résultat de la compilation se trouve dans une nouvelle dossier **build** du projet. le contenu de ce dossier doit etre deplacé dans dossier apps dans **/var/www/html/**, voici une ligne de commande. --> -->
+git clone https://www.qenvilab.space/laurent/client_softrobot.git
+```
+
+Build the project
 
 ```
-clone/pull the project
 npm run-script build
-sudo mv build/* /var/www/html/apps/
 
+```
+
+Copy the built at the deployed nginx folder
+
+```
+sudo mv build/* /var/www/html/apps/
 ```
 
 <!-- exactement à quoi cela ressemble pour l'état actuel (le 9 Septembre 2021):
