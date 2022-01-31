@@ -12,8 +12,9 @@ This is a fleet managemet system. For the current project we do manage bunch of 
 
 # Pre-requirements
 
-You should have had setup the backend handling authentification and autorization at this [page](https://www.qenvilab.space/yacine/softrobot_access)
-You should have had setup the backend providing you data about robots at this [page](https://www.qenvilab.space/laurent/client_softrobot_backend)
+You should have had setup the backend handling authentification and autorization at this page: [Softrobot Access](https://www.qenvilab.space/yacine/softrobot_access)
+
+You should have had setup the backend providing you data about robots at this page: [Client Softrobot Backend](https://www.qenvilab.space/laurent/client_softrobot_backend)
 
 # Getting Started
 
