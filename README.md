@@ -10,7 +10,7 @@ Please before working on this project, create a new branch, implement and test y
 
 This is a fleet managemet system. For the current project we do manage bunch of robots in one or more warehouse. A system's admin draws in a representative image (slam) of a warehouse, a path for robots to perform a specified action (moving to some destinations mainly in a purpose of delivrying simple package of really heavy one), then affects the management of the robots to previously created and granted users.
 
-# Pre-requirements
+# prerequisite
 
 You should have had setup the backend handling authentification and autorization at this page: [Softrobot Access](https://www.qenvilab.space/yacine/softrobot_access)
 
