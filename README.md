@@ -1,4 +1,24 @@
-# UPD 31 January 2022
+# UPD 03 Feb 2022
+
+Bonjour Yacine,
+le doc est minimal,
+pourrais-tu, s'il te plait, améliorer les points suivantes:
+On reparle lundi
+1. partie utilisateur
+1.1 organisation du projet vue utilisateur
+1.2 notice explicative pour utilisateur
+1.3 vidéo ou gif de l'exemple d'utilisation
+
+2. partie développeur
+2.1 comment le projet est organisé UML vue développeur
+2.2 bases des données et d'autres dépendances
+2.3 authentification de démo, ajouter l'utilisateur, assigner les droits
+2.4 description des US/commits pour voir des modules à changer
+2.5 déploiement
+2.6 debug recommendations
+2.7 futurs actions à effectuer
+2.8 recommendation sécurité
+2.9 brève explication des US (des travaux realisés)
 
 # Note
 
