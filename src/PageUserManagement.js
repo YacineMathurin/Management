@@ -41,6 +41,8 @@ class PageUserManagement extends React.Component {
       editableUserWarehouses: [],
       allowedWarehouseOnSignup: [],
       allowedRobotOnSignup: [],
+      currentAdmin: {email:"", name:""},
+      currentAdminIdx: null
     }
   }
   componentDidMount() {
@@ -48,12 +50,21 @@ class PageUserManagement extends React.Component {
     this.provideMetrics();
   }
   fetchUsers = () => {
+    var currentAdmin = [];
+    var currentAdminIdx = 0;
     fetch(Const.URL_WS_USERS+"/all")
     .then((res) => res.json())
     .then(({users}) => {
-      console.log(users);
-      this.setState({users, fetchedUser: JSON.parse(JSON.stringify(users))});
-      // this.edit(users);
+      console.log("users", users);
+      currentAdmin = users.filter((item, idx) => {
+        if(item.email === this.props.email) {
+          currentAdminIdx = idx;
+          return item;
+        }
+      });
+      console.log("currentAdminIdx", currentAdminIdx);
+      users = users.sort((a, b) => a.name > b.name);
+      this.setState({currentAdmin,currentAdminIdx, users, fetchedUser: JSON.parse(JSON.stringify(users))});
     })
     .catch(err => {
       console.error(err);
@@ -185,7 +196,7 @@ class PageUserManagement extends React.Component {
         newEditableUserRobots = editableUserRobots.filter(item => {
           return item.from !== id
         })
-        this.setState({editableUserRobots:newEditableUserRobots});
+        this.setState({editableUserRobots: newEditableUserRobots});
       }
     }
     
@@ -565,9 +576,44 @@ class PageUserManagement extends React.Component {
       >Delete</span>
     )
   }
-  currentAdmin = () => {
+  currentAdminBadge = () => {
     return (
       <span style={{padding:"0.3em", margin:"0 0.3em", background:"rgb(75,75,75)", color:"white", fontSize:"0.8em"}}>You</span>
+    )
+  }
+  displayCurrentAdmin = () => {
+    const {currentAdminIdx, currentAdmin} = this.state;
+    if (currentAdminIdx) return this.displayUsers(currentAdmin[0]["name"], currentAdmin[0]["email"], currentAdminIdx);
+  }
+  displayUsers = (name, email, idx) => {
+    return (
+      <TableRow key={idx}>
+        <TableCell align="left" style={{textTransform:"capitalize"}}>
+          {name}{email === this.props.email ? this.currentAdminBadge():""}{this.state["editing"+idx] && email !== this.props.email ? this.deleteIcon(idx):""}
+          <p>{email !== this.props.email ? <a style={{textTransform:"none", textDecoration:"none"}} href={"mailto:" + email} target="_blank">{email}</a>:""}</p>
+        </TableCell>
+        <TableCell align="left"> {this.handleDisplayWarehouses(idx)} </TableCell>
+        <TableCell align="left">
+          <div style={{
+            display:"grid",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr"
+          }}>
+            {this.handleDisplayRobots(idx)}
+          </div>
+        </TableCell>
+        <TableCell align="center">
+          <Button style={{width:"5em"}} variant="outlined" color="primary" size="small" onClick={ () => this.state["editing"+idx] ? this.save(idx):this.editMode(idx)}
+          >{this.state["editing"+idx] ? "SAVE":"EDIT"}</Button>
+          <br></br>
+          {this.state["editing"+idx] && <Button
+             style={{margin:"1em 0", width:"5em"}}
+             variant="outlined" 
+             color="secondary" 
+             size="small"
+             onClick={() => this.handleCancelation(idx)}
+          >CANCEL</Button>}
+        </TableCell>
+      </TableRow>
     )
   }
   render() { 
@@ -672,34 +718,10 @@ class PageUserManagement extends React.Component {
                       
                     
                     <TableBody>
-                      {users.map(({name, robot, email}, idx) => (
-                        <TableRow key={idx}>
-                          <TableCell align="left" style={{textTransform:"capitalize"}}>
-                            {name}{email === this.props.email ? this.currentAdmin():""}{this.state["editing"+idx] && email !== this.props.email ? this.deleteIcon(idx):""}
-                          </TableCell>
-                          <TableCell align="left"> {this.handleDisplayWarehouses(idx)} </TableCell>
-                          <TableCell align="left">
-                            <div style={{
-                              display:"grid",
-                              gridTemplateColumns: "1fr 1fr 1fr 1fr"
-                            }}>
-                              {this.handleDisplayRobots(idx)}
-                            </div>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Button style={{width:"5em"}} variant="outlined" color="primary" size="small" onClick={ () => this.state["editing"+idx] ? this.save(idx):this.editMode(idx)}
-                            >{this.state["editing"+idx] ? "SAVE":"EDIT"}</Button>
-                            <br></br>
-                            {this.state["editing"+idx] && <Button
-                               style={{margin:"1em 0", width:"5em"}}
-                               variant="outlined" 
-                               color="secondary" 
-                               size="small"
-                               onClick={() => this.handleCancelation(idx)}
-                            >CANCEL</Button>}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {this.displayCurrentAdmin()}
+                      {users.map(({name, email}, idx) => {
+                        if(email !==  this.props.email) return this.displayUsers(name, email, idx)
+                      })}
                     </TableBody>
                   </Table>
                 </CardContent>

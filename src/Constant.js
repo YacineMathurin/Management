@@ -2,11 +2,11 @@
 /** PERMET DE PASSER PAR LE SERVEUR API DEPLOYE EN LOCAL **/
 const envMySql = "193.70.86.40";
 const portMySql ="8081";
-// const envMongoDB = "127.0.0.1";
+const envMongoDB = "127.0.0.1";
 const portMongoDB = "5000";
 // const envMySql = "127.0.0.1";
 // const portMySql ="80";
-const envMongoDB = "193.70.86.40";
+// const envMongoDB = "193.70.86.40";
 // const portMongoDB = "5000";
 
 export const URL_GET_LAST_HEARTBEAT_MSG =
