@@ -119,5 +119,9 @@ export const TRANSLATIONS_EN = {
   users_toast_ok: "Great, Operation succeeded !",
   users_toast_ko: "Oups, something went wrong !",
   users_select_warehouse:"Click on a warehouse name to assign it",
-  users_select_robot:"Click on a robot ID to assign it"
+  users_select_robot:"Click on a robot ID to assign it",
+
+  /** Page User */
+  user_title: "User Page",
+  user_subtitle:"Choose robot then interact with it"
 };

@@ -27,6 +27,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { useTranslation, withTranslation } from "react-i18next";
 import Toast from "./Toast";
 import { getAllWarehouses } from "./commonFunctions/functions";
+import Header from "./components/header";
 
 
 class PageUserManagement extends React.Component {
@@ -118,6 +119,7 @@ class PageUserManagement extends React.Component {
       })
     })
     // console.log("getAvailableRobots", res);
+    res = res.sort((a, b) => (a.id > b.id) ? 1: ((a.id < b.id) ? -1: 0))
     return res;
   };
   edit = (users) => {
@@ -221,7 +223,7 @@ class PageUserManagement extends React.Component {
     var userRobots = fetchedUser[idx]["robot"];
     var availableRobots = [];
     availableRobots = this.getAvailableRobots();
-    userRobots = userRobots.sort((a, b) => a.id - b.id);
+    userRobots = userRobots.sort((a, b) => (a.id > b.id) ? 1: ((a.id < b.id) ? -1: 0));
     console.log("userRobots", userRobots);
  
     if(this.state["editing"+idx]) { 
@@ -576,21 +578,22 @@ class PageUserManagement extends React.Component {
       >Delete</span>
     )
   }
-  currentAdminBadge = () => {
+  currentAdminBadge = (text) => {
     return (
-      <span style={{padding:"0.3em", margin:"0 0.3em", background:"rgb(75,75,75)", color:"white", fontSize:"0.8em"}}>You</span>
+      <span style={{padding:"0.3em", margin:"0 0.3em", background:"rgb(75,75,75)", color:"white", fontSize:"0.8em"}}>{text}</span>
     )
   }
   displayCurrentAdmin = () => {
     const {currentAdminIdx, currentAdmin} = this.state;
-    if (currentAdminIdx) return this.displayUsers(currentAdmin[0]["name"], currentAdmin[0]["email"], currentAdminIdx);
+    if (currentAdminIdx) return this.displayUsers(currentAdmin[0]["name"], currentAdmin[0]["email"], currentAdmin[0]["isAdmin"], currentAdminIdx);
   }
-  displayUsers = (name, email, idx) => {
+  displayUsers = (name, email, isAdmin, idx) => {
     return (
       <TableRow key={idx}>
         <TableCell align="left" style={{textTransform:"capitalize"}}>
-          {name}{email === this.props.email ? this.currentAdminBadge():""}{this.state["editing"+idx] && email !== this.props.email ? this.deleteIcon(idx):""}
-          <p>{email !== this.props.email ? <a style={{textTransform:"none", textDecoration:"none"}} href={"mailto:" + email} target="_blank">{email}</a>:""}</p>
+          {name}{email === this.props.email ? this.currentAdminBadge("You"):""}{isAdmin ? this.currentAdminBadge("Admin"):""}
+          {this.state["editing"+idx] && email !== this.props.email ? this.deleteIcon(idx):""}
+          {this.state["editing"+idx] && <p>{email !== this.props.email ? <a style={{textTransform:"none", textDecoration:"none"}} href={"mailto:" + email} target="_blank">{email}</a>:""}</p>}
         </TableCell>
         <TableCell align="left"> {this.handleDisplayWarehouses(idx)} </TableCell>
         <TableCell align="left">
@@ -624,25 +627,9 @@ class PageUserManagement extends React.Component {
       <div id="PageUserManagement">
           <Grid container spacing={2}>
             <Grid item xs={12} md={8} lg={9}>
+              <Header title={t("users_title")} subheader={t("users_subtitle")} onBackClicked={callBackRetourTableauDeBord}></Header>
               <Card>
-                <CardHeader
-                  avatar={
-                    <div>
-                      <img width="32" src="./images/carrier.svg" />
-                    </div>
-                  }
-                  title={t("users_title")}
-                  subheader={t("users_subtitle")}
-                />
                 <CardContent >
-                  <div style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        position: "relative",
-                        bottom: "6.5em",
-                  }}>
-                    <img onClick={() => callBackRetourTableauDeBord()} src={"./images/go_back.png"} style={{width:"50px", marginRight:"1em", position:"relative", top:"15px", left:"17px"}}></img>
-                  </div>
                   {success && <Toast
                     severity="success"
                     message={t("users_toast_ok")}
@@ -719,8 +706,8 @@ class PageUserManagement extends React.Component {
                     
                     <TableBody>
                       {this.displayCurrentAdmin()}
-                      {users.map(({name, email}, idx) => {
-                        if(email !==  this.props.email) return this.displayUsers(name, email, idx)
+                      {users.map(({name, email, isAdmin}, idx) => {
+                        if(email !==  this.props.email) return this.displayUsers(name, email, isAdmin, idx)
                       })}
                     </TableBody>
                   </Table>

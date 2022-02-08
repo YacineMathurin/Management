@@ -769,6 +769,7 @@ export default function MiniDrawer() {
           <PageUserManagement
             apiKey={apiKey}
             email={email}
+            isAdmin={isAdmin}
             callbackNeedToLogin={handleCallbackNeedToLogin}
             callbackOpenDetails={handleCallbackOpenDetails}
             callbackOpenMaps={handleCallbackOpenMaps}
