@@ -71,16 +71,55 @@ code {
   padding: 0.5em 1em;
   color: white;
 }
+.depart_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .depart_btn {
   background-color: rgb(75, 75, 75);
   color: white;
   /* width: fit-content; */
   text-align: center;
-  width: 7em;
+  width: 10em;
   padding: 1em;
   text-transform: capitalize;
   cursor: pointer;
-  margin-bottom: 3em;
+  /* margin-bottom: 7em; */
+  margin: 1px 0;
+}
+.depart_distance {
+  width: 25px;
+  height: 100px;
+  background: rgb(75, 75, 75);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  opacity: 0.5;
+  margin: 0 3px;
+  position: relative;
+  left: 1.1em;
+}
+.depart_distance_realtime {
+  width: 25px;
+  height: 50px;
+  background: rgb(75, 75, 75);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  margin: 0 3px;
+  left: 1.1em;
+  position: absolute;
+  top: 0;
+}
+.depart_percentage {
+  position: relative;
+  left: 1.5em;
+  font-size: 0.75em;
 }
 @media only screen and (max-width: 1200px) {
   #signin_password_container {

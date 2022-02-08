@@ -72,8 +72,18 @@ class PageUser extends Component {
     }
     handleBackClick = () => {}
     getDeparts = () => {
-        const {departs} = this.state;
-        return departs.map((item, idx) => <Depart key={idx} text={"Depart "+(idx + 1)}></Depart>)
+        const {departs, idRobot} = this.state;
+        const departsLength = departs.length;
+        return (
+                <div>
+                    {idRobot && <Depart text={"Depart"} distance={10}  current={true}></Depart>}
+                    {departs.map((item, idx) => {
+                       if(departsLength - 1 !== idx || idx === 0) return <Depart key={idx} text={"Destination "+(idx + 1)} distance={10}></Depart>
+                       else if(departsLength - 1 !== idx) return <Depart key={idx} text={"Destination "+(idx + 1)} distance={10}></Depart>
+                       else return <Depart key={idx} text={"Destination "+(idx + 1)}></Depart>
+                    })}
+                </div>
+                )
     }
     render() { 
         const { t } = this.props;
@@ -108,11 +118,13 @@ class PageUser extends Component {
                 <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
                     {idRobot && <div style={{margin: "3.5em 0"}}>
                         <h3 style={{textTransform: "uppercase", margin: "0"}}>Departs for the robot {idRobot}</h3>
-                        <p style={{margin: 0, fontSize: "0.85em"}}>Total number of destination is: <strong>{departs.length}</strong></p>
+                        <p style={{margin: 0, fontSize: "0.85em"}}>Total number of destination(s) is: <strong>{departs.length}</strong></p>
                         <p style={{margin: 0, fontSize: "0.85em"}}>Click on your next destination</p>
                         </div>
                     }
                     {this.getDeparts()}
+                    <svg>
+                    </svg>
                 </div>
             </div>
         );
