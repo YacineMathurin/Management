@@ -593,7 +593,7 @@ class PageUserManagement extends React.Component {
         <TableCell align="left" style={{textTransform:"capitalize"}}>
           {name}{email === this.props.email ? this.currentAdminBadge("You"):""}{isAdmin ? this.currentAdminBadge("Admin"):""}
           {this.state["editing"+idx] && email !== this.props.email ? this.deleteIcon(idx):""}
-          {this.state["editing"+idx] && <p>{email !== this.props.email ? <a style={{textTransform:"none", textDecoration:"none"}} href={"mailto:" + email} target="_blank">{email}</a>:""}</p>}
+          {this.state["editing"+idx] && <p><a style={{textTransform:"none", textDecoration:"none"}} href={"mailto:" + email} target="_blank">{email}</a></p>}
         </TableCell>
         <TableCell align="left"> {this.handleDisplayWarehouses(idx)} </TableCell>
         <TableCell align="left">

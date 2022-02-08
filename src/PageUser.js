@@ -90,7 +90,7 @@ class PageUser extends Component {
         const {user, warehouse, robot, idRobot, departs} = this.state;
         console.log(user, warehouse, robot);
         return (
-            <div>
+            <div style={{marginBottom:"5em"}}>
                 <Header title={t("user_title")} subheader={t("user_subtitle")} onBackClicked={this.handleBackClick}></Header>
                  {warehouse.map(({name, id:idWarehouse, value: isWarehouse}, idx) => {
                     if(isWarehouse) return (
@@ -123,9 +123,12 @@ class PageUser extends Component {
                         </div>
                     }
                     {this.getDeparts()}
-                    <svg>
-                    </svg>
                 </div>
+                {idRobot && 
+                    <div style={{position: "fixed", right:"2em", bottom:"3em"}}>
+                        <Depart style={{backgroundColor:"#E03B8B", padding: "3em", fontWeight:"bold", letterSpacing:"5px"}} text={"STOP"}></Depart>
+                    </div>
+                }
             </div>
         );
     }
