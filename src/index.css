@@ -81,12 +81,16 @@ code {
   color: white;
   /* width: fit-content; */
   text-align: center;
-  width: 10em;
+  width: 11em;
   padding: 1em;
   text-transform: capitalize;
   cursor: pointer;
   /* margin-bottom: 7em; */
   margin: 1px 0;
+  transition: 0.3s;
+}
+.depart_btn:active {
+  letter-spacing: 3px;
 }
 .depart_distance {
   width: 25px;

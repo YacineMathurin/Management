@@ -126,7 +126,7 @@ class PageUser extends Component {
                 </div>
                 {idRobot && 
                     <div style={{position: "fixed", right:"2em", bottom:"3em"}}>
-                        <Depart style={{backgroundColor:"#E03B8B", padding: "3em", fontWeight:"bold", letterSpacing:"5px"}} text={"STOP"}></Depart>
+                        <Depart style={{backgroundColor:"#E03B8B", padding: "3em", fontWeight:"bold", }} text={"STOP"}></Depart>
                     </div>
                 }
             </div>

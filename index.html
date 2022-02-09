@@ -60,6 +60,9 @@
               <button type="button" class="btn btn-primary" onclick="restart()">
                 Reset &#x21bb;
               </button>
+              <button type="button" class="btn btn-danger" onclick="stop()">
+                Stop &#9785;
+              </button>
             </p>
             <button type="button" class="btn btn-primary" onclick="dest1()" >
               — Destination 1 —
@@ -101,7 +104,7 @@
       var idRobot = 1;
       const idClientSelect = document.getElementById('idclient');
       const idRobotSelect = document.getElementById('idrobot');
-
+      var intervalDest1 = 0, intervalDest2 = 0;
       idClientSelect.addEventListener('change', (event) => {
         idClient = event.target.value;
       });
@@ -113,14 +116,14 @@
         console.log("idClient & idRobot", idClient , idRobot);
         var count = 1;
         var arrived = 0;
-        var interval = setInterval(() => {
+        intervalDest1 = setInterval(() => {
           progress.setAttribute("value", Math.round((count * 100) / 34));
           db.innerText = Math.round((count * 100) / 34);
 
           console.log(count);
           if (count >= 34) {
             arrived = 1;
-            clearInterval(interval);
+            clearInterval(intervalDest1);
           }
           axios
             .get("http://qenvi.space:8081/updateHeartBeatWS", {
@@ -158,14 +161,14 @@
       function dest2() {
         var count = 1;
         var arrived = 0;
-        var interval = setInterval(() => {
+        intervalDest2 = setInterval(() => {
           progress.setAttribute("value", Math.round((count * 100) / 34));
           db.innerText = Math.round((count * 100) / 34);
 
           console.log(count);
           if (count >= 34) {
             arrived = 1;
-            clearInterval(interval);
+            clearInterval(intervalDest2);
           }
           axios
             .get("http://qenvi.space:8081/updateHeartBeatWS", {
@@ -176,9 +179,11 @@
                 IS_MOVING: arrived === 1 ? 0 : 1,
                 PATH_INDEX: 1,
                 ARRIVED: arrived,
-                TIMESTAMP: Date.now(),
+                TIMESTAMP: Math.round(Date.now()/1000),
                 STATUS: 0,
-                BAT_LEVEL: 80,
+                BAT_LEVEL: 70,
+                MEMORY: 15,
+                CPU: 12,
                 X_COORD: 312,
                 Y_COORD: 146 + count * 3,
               },
@@ -209,9 +214,11 @@
                 IS_MOVING: 0,
                 PATH_INDEX: 1,
                 ARRIVED: 1,
-                TIMESTAMP: Date.now(),
+                TIMESTAMP: Math.round(Date.now()/1000),
                 STATUS: 0,
-                BAT_LEVEL: 80,
+                BAT_LEVEL: 70,
+                MEMORY: 15,
+                CPU: 12,
                 X_COORD: 210,
                 Y_COORD: 146,
               },
@@ -232,6 +239,11 @@
               // handle error
               console.log(error);
             })
+      }
+    
+      function stop() {
+        clearInterval(intervalDest1);
+        clearInterval(intervalDest2);
       }
     </script>
   </body>
