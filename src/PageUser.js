@@ -14,7 +14,8 @@ class PageUser extends Component {
             allWarehouses: [],
             warehouse: [],
             robot: [],
-            departs: []
+            departs: [],
+            onceArrived: false
         }
     }
     componentDidMount() {
@@ -70,17 +71,57 @@ class PageUser extends Component {
         })
         .catch(err => console.error(err))
     }
-    handleBackClick = () => {}
-    getDeparts = () => {
+    fetchLastHeartbeatMsg = () => {
         const {departs, idRobot} = this.state;
+        return fetch(
+          Const.URL_FETCH_LAST_HEARTBEAT_MSG +
+            "?id_client=" +
+            departs[0]["id_client"] +
+            "&id_robot=" + idRobot,
+          { retry: 3, retryDelay: 1000 }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("From:", data[0]["X_COORD"], data[0]["Y_COORD"]);
+            return {
+                startingX: data[0]["X_COORD"],
+                startingY: data[0]["Y_COORD"]
+            }
+          })
+          .catch((err) => console.error(err));
+    };
+    handleBackClick = () => {}
+    computeDistance = ({startingX, startingY}, {endX, endY}) => {
+        return Math.sqrt(Math.pow((endX - startingX), 2) + Math.pow((endY - startingY), 2));
+    }
+    handleDestChoosen = async (idx) => {
+        var { departs, onceArrived } = this.state;
+        var distance = 0;
+        // Fetch last heartbeat
+        const startCoord = await this.fetchLastHeartbeatMsg();
+        const endCoord = { endX: departs[idx]["x_pixel"], endY: departs[idx]["y_pixel"]};
+
+        console.log("Start", startCoord);
+        const initialDistance =  Math.round(this.computeDistance(startCoord, endCoord));
+        console.log("Initial Distance", initialDistance);
+        console.log("To: ", departs[idx]["x_pixel"], departs[idx]["y_pixel"]);
+        // Inject in departs at corresponding index vars runthrough and percent in order to display realtime move
+        // departs[idx]["runthrough"] = true;
+        departs[idx]["percent"] = distance;
+        this.setState({ departs });
+        // Use ars runthrough and percent in Depart component
+        // Advanced: Skip a destination
+    }
+    getDeparts = () => {
+        const { departs, idRobot} = this.state;
         const departsLength = departs.length;
         return (
                 <div>
                     {idRobot && <Depart text={"Depart"} distance={10}  current={true}></Depart>}
                     {departs.map((item, idx) => {
-                       if(departsLength - 1 !== idx || idx === 0) return <Depart key={idx} text={"Destination "+(idx + 1)} distance={10}></Depart>
-                       else if(departsLength - 1 !== idx) return <Depart key={idx} text={"Destination "+(idx + 1)} distance={10}></Depart>
-                       else return <Depart key={idx} text={"Destination "+(idx + 1)}></Depart>
+                       if(departsLength - 1 !== idx || idx === 0) return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} distance={10} onHandleDestChoosen={this.handleDestChoosen}></Depart>
+                       else if(departsLength - 1 !== idx) return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} distance={10} onHandleDestChoosen={this.handleDestChoosen}></Depart>
+                       else return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} onHandleDestChoosen={this.handleDestChoosen}></Depart>
                     })}
                 </div>
                 )
@@ -117,7 +158,7 @@ class PageUser extends Component {
                 <br></br>
                 <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
                     {idRobot && <div style={{margin: "3.5em 0"}}>
-                        <h3 style={{textTransform: "uppercase", margin: "0"}}>Departs for the robot {idRobot}</h3>
+                        <h3 style={{textTransform: "uppercase", margin: "0"}}>Destinations for the robot {idRobot}</h3>
                         <p style={{margin: 0, fontSize: "0.85em"}}>Total number of destination(s) is: <strong>{departs.length}</strong></p>
                         <p style={{margin: 0, fontSize: "0.85em"}}>Click on your next destination</p>
                         </div>

@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Depart = ({text, distance, current, ...rest}) => {
+const Depart = ({text, distance, current, onHandleDestChoosen, index, ...rest}) => {
     return ( 
-        <div className="depart_container">
+        <div className="depart_container" onClick={()=>onHandleDestChoosen(index)}>
             <div className="depart_btn" {...rest}><span>{text}</span></div>
             {(distance || current) && <div style={{display:"flex", alignItems:"center", position:"relative"}}>
                 {distance && <div style={{left: current ? "1.1em":"0"}} className="depart_distance"></div>}
