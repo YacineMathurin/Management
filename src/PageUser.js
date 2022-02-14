@@ -6,6 +6,7 @@ import { useTranslation, withTranslation } from "react-i18next";
 import Header from './components/header';
 import Depart from './components/depart';
 
+var interval = 0;
 class PageUser extends Component {
     constructor(props) {
         super(props);
@@ -66,6 +67,7 @@ class PageUser extends Component {
         fetch(Const.URL_WS_ALL_DEF + "?id=" + id, { retry: 3, retryDelay: 1000 })
         .then(res => res.json())
         .then(data => {
+            data.splice(0, 0, {});
             console.log(id, data);
             this.setState({departs: data});
         })
@@ -76,16 +78,18 @@ class PageUser extends Component {
         return fetch(
           Const.URL_FETCH_LAST_HEARTBEAT_MSG +
             "?id_client=" +
-            departs[0]["id_client"] +
+            departs[1]["id_client"] +
             "&id_robot=" + idRobot,
           { retry: 3, retryDelay: 1000 }
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log("From:", data[0]["X_COORD"], data[0]["Y_COORD"]);
+
+            console.log("From:", data, data[0]["X_COORD"], data[0]["Y_COORD"]);
             return {
                 startingX: data[0]["X_COORD"],
-                startingY: data[0]["Y_COORD"]
+                startingY: data[0]["Y_COORD"],
+                arrived: data[0]["ARRIVED"]
             }
           })
           .catch((err) => console.error(err));
@@ -94,21 +98,37 @@ class PageUser extends Component {
     computeDistance = ({startingX, startingY}, {endX, endY}) => {
         return Math.sqrt(Math.pow((endX - startingX), 2) + Math.pow((endY - startingY), 2));
     }
+    realtimePosition = (initialDistance, idx, endCoord) => {
+        var { departs } = this.state;
+        interval = setInterval(async () => {
+            const realtimeCoord = await this.fetchLastHeartbeatMsg();
+            console.log("Arrived", realtimeCoord.arrived);
+            
+            const distance =  Math.round(this.computeDistance(realtimeCoord, endCoord));
+            const runThrough = (initialDistance - distance) / initialDistance;
+            const percent = Math.round(runThrough * 100);
+            console.log("%", percent);
+            departs[idx - 1]["percent"] = percent;
+            this.setState({departs});
+            if (realtimeCoord.arrived) return clearInterval(interval);
+        }, 1000);
+    }
     handleDestChoosen = async (idx) => {
         var { departs, onceArrived } = this.state;
         var distance = 0;
         // Fetch last heartbeat
-        const startCoord = await this.fetchLastHeartbeatMsg();
+        const realtimeCoord = await this.fetchLastHeartbeatMsg();
         const endCoord = { endX: departs[idx]["x_pixel"], endY: departs[idx]["y_pixel"]};
-
-        console.log("Start", startCoord);
-        const initialDistance =  Math.round(this.computeDistance(startCoord, endCoord));
+        const initialDistance =  Math.round(this.computeDistance(realtimeCoord, endCoord));
+        console.log("Start", realtimeCoord);
         console.log("Initial Distance", initialDistance);
         console.log("To: ", departs[idx]["x_pixel"], departs[idx]["y_pixel"]);
         // Inject in departs at corresponding index vars runthrough and percent in order to display realtime move
         // departs[idx]["runthrough"] = true;
-        departs[idx]["percent"] = distance;
-        this.setState({ departs });
+        this.realtimePosition(initialDistance, idx, endCoord);
+
+        // departs[idx]["percent"] = distance;
+        // this.setState({ departs });
         // Use ars runthrough and percent in Depart component
         // Advanced: Skip a destination
     }
@@ -117,10 +137,10 @@ class PageUser extends Component {
         const departsLength = departs.length;
         return (
                 <div>
-                    {idRobot && <Depart text={"Depart"} distance={10}  current={true}></Depart>}
+                    {/* {idRobot && <Depart text={"Depart"} distance={10}  current={true}></Depart>} */}
                     {departs.map((item, idx) => {
-                       if(departsLength - 1 !== idx || idx === 0) return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} distance={10} onHandleDestChoosen={this.handleDestChoosen}></Depart>
-                       else if(departsLength - 1 !== idx) return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} distance={10} onHandleDestChoosen={this.handleDestChoosen}></Depart>
+                       if(idx === 0) return <Depart key={idx} text={"Depart"} showPath={true}  percent={item.percent}></Depart>
+                       else if(departsLength - 1 !== idx) return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} showPath={true} percent={item.percent} onHandleDestChoosen={this.handleDestChoosen}></Depart>
                        else return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} onHandleDestChoosen={this.handleDestChoosen}></Depart>
                     })}
                 </div>
