@@ -16,7 +16,8 @@ class PageUser extends Component {
             warehouse: [],
             robot: [],
             departs: [],
-            onceArrived: false
+            onceArrived: false,
+            move: {direction: "forward", idx: 1}
         }
     }
     componentDidMount() {
@@ -98,8 +99,22 @@ class PageUser extends Component {
     computeDistance = ({startingX, startingY}, {endX, endY}) => {
         return Math.sqrt(Math.pow((endX - startingX), 2) + Math.pow((endY - startingY), 2));
     }
+    setBluring = () => {
+        var { departs, move } = this.state;
+        var { direction, idx} = move;
+        const departsLength = departs.length;
+        
+        if (idx === 0 || (direction === "forward" && departsLength - 1 !== move.idx)) {
+            move.direction = "forward";
+            move.idx += 1;
+            return this.setState({move});
+        }
+        move.direction = "backward";
+        move.idx -= 1;
+        this.setState({move});
+    }
     realtimePosition = (initialDistance, idx, endCoord) => {
-        var { departs } = this.state;
+        var { departs, move } = this.state;
         interval = setInterval(async () => {
             const realtimeCoord = await this.fetchLastHeartbeatMsg();
             console.log("Arrived", realtimeCoord.arrived);
@@ -110,11 +125,14 @@ class PageUser extends Component {
             console.log("%", percent);
             departs[idx - 1]["percent"] = percent;
             this.setState({departs});
-            if (realtimeCoord.arrived) return clearInterval(interval);
+            if (realtimeCoord.arrived) {
+                this.setBluring();
+                return clearInterval(interval);
+            } 
         }, 1000);
     }
     handleDestChoosen = async (idx) => {
-        var { departs, onceArrived } = this.state;
+        var { departs, move } = this.state;
         var distance = 0;
         // Fetch last heartbeat
         const realtimeCoord = await this.fetchLastHeartbeatMsg();
@@ -132,20 +150,30 @@ class PageUser extends Component {
         // Use ars runthrough and percent in Depart component
         // Advanced: Skip a destination
     }
+    isBlured = (idx) => {
+        const { move} = this.state;
+        const {idx: index, direction} = move;
+        var res = false;
+        if (direction === "forward") {
+            res = (idx !== index) ? true : false;
+            return res;
+        }
+        return res = (idx !== index) ? true : false;
+    }
     getDeparts = () => {
-        const { departs, idRobot} = this.state;
+        const { departs, idRobot, move} = this.state;
         const departsLength = departs.length;
         return (
                 <div>
-                    {/* {idRobot && <Depart text={"Depart"} distance={10}  current={true}></Depart>} */}
                     {departs.map((item, idx) => {
-                       if(idx === 0) return <Depart key={idx} text={"Depart"} showPath={true}  percent={item.percent}></Depart>
-                       else if(departsLength - 1 !== idx) return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} showPath={true} percent={item.percent} onHandleDestChoosen={this.handleDestChoosen}></Depart>
-                       else return <Depart key={idx} index={idx} text={"Destination "+(idx + 1)} onHandleDestChoosen={this.handleDestChoosen}></Depart>
+                       if(idx === 0) return <Depart key={idx} text={"Depart"} showPath={true} percent={item.percent} onHandleDestChoosen={()=>{console.log("Depart")}} blured={this.isBlured(idx)}></Depart>
+                       else if(departsLength - 1 !== idx) return <Depart key={idx} index={idx} text={"Destination "+(idx)} showPath={true} percent={item.percent} blured={this.isBlured(idx)} onHandleDestChoosen={this.handleDestChoosen}></Depart>
+                       else return <Depart key={idx} index={idx} text={"Destination "+(idx)} onHandleDestChoosen={this.handleDestChoosen} blured={this.isBlured(idx)}></Depart>
                     })}
                 </div>
                 )
     }
+    handleStop = () => clearInterval(interval);
     render() { 
         const { t } = this.props;
         const {user, warehouse, robot, idRobot, departs} = this.state;
@@ -178,16 +206,16 @@ class PageUser extends Component {
                 <br></br>
                 <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
                     {idRobot && <div style={{margin: "3.5em 0"}}>
-                        <h3 style={{textTransform: "uppercase", margin: "0"}}>Destinations for the robot {idRobot}</h3>
-                        <p style={{margin: 0, fontSize: "0.85em"}}>Total number of destination(s) is: <strong>{departs.length}</strong></p>
-                        <p style={{margin: 0, fontSize: "0.85em"}}>Click on your next destination</p>
+                            <h3 style={{textTransform: "uppercase", margin: "0"}}>Destinations for the robot {idRobot}</h3>
+                            <p style={{margin: 0, fontSize: "0.85em"}}>Total number of destination(s) is: <strong>{departs.length - 1}</strong></p>
+                            <p style={{margin: 0, fontSize: "0.85em"}}>Click on your next destination</p>
                         </div>
                     }
                     {this.getDeparts()}
                 </div>
                 {idRobot && 
                     <div style={{position: "fixed", right:"2em", bottom:"3em"}}>
-                        <Depart style={{backgroundColor:"#E03B8B", padding: "3em", fontWeight:"bold", }} text={"STOP"}></Depart>
+                        <Depart style={{backgroundColor:"#E03B8B", padding: "3em", fontWeight:"bold", }} text={"STOP"} onHandleDestChoosen={this.handleStop}></Depart>
                     </div>
                 }
             </div>
