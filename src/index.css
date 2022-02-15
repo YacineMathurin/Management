@@ -133,6 +133,13 @@ code {
   left: 1.5em;
   font-size: 0.75em;
 }
+.user_dest_subtitle,
+.user_dest_helper {
+  font-size: 0.85em;
+}
+.header_icon {
+  width: 32px;
+}
 @media only screen and (max-width: 1200px) {
   #signin_password_container {
     margin-top: 3em;
@@ -189,6 +196,24 @@ code {
   }
   #bar #zoom-percentage {
     bottom: 15px;
+  }
+  .user_dest_subtitle,
+  .user_dest_helper,
+  .header_subtitle {
+    font-size: 1.75em;
+  }
+  .user_warehouse,
+  .header_title,
+  .depart_btn_text,
+  .user_dest_title {
+    font-size: 2em;
+  }
+  .header_icon {
+    width: 50px;
+  }
+  .depart_btn {
+    width: 20em;
+    padding: 3em;
   }
   /*
   #MapGestionButtons #legend p {

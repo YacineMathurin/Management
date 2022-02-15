@@ -191,7 +191,7 @@ class PageUser extends Component {
                                             <Button 
                                                 key={idx} 
                                                 style={{marginRight:"1em"}} 
-                                                color="primary" size="small" 
+                                                color="primary" size="large" 
                                                 variant={id === idRobot ? "contained":"outlined"}
                                                 onClick={()=>this.setState({idRobot: id}, this.fetchDeparts(id))}
                                             >
@@ -206,9 +206,9 @@ class PageUser extends Component {
                 <br></br>
                 <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
                     {idRobot && <div style={{margin: "3.5em 0"}}>
-                            <h3 style={{textTransform: "uppercase", margin: "0"}}>Destinations for the robot {idRobot}</h3>
-                            <p style={{margin: 0, fontSize: "0.85em"}}>Total number of destination(s) is: <strong>{departs.length - 1}</strong></p>
-                            <p style={{margin: 0, fontSize: "0.85em"}}>Click on your next destination</p>
+                            <h3 className="user_dest_title" style={{textTransform: "uppercase", margin: "0"}}>Destinations for the robot {idRobot}</h3>
+                            <p className="user_dest_subtitle" style={{margin: 0}}>Total number of destination(s) is: <strong>{departs.length - 1}</strong></p>
+                            <p className="user_dest_helper" style={{margin: 0}}>Click on your next destination</p>
                         </div>
                     }
                     {this.getDeparts()}

@@ -9,11 +9,11 @@ const Header = ({title, subheader, onBackClicked}) => {
             <CardHeader
                 avatar={
                 <div>
-                    <img width="32" src="./images/carrier.svg" />
+                    <img className="header_icon" src="./images/carrier.svg" />
                 </div>
                 }
-                title={title}
-                subheader={subheader}
+                title={<span className="header_title">{title}</span>}
+                subheader={<span className="header_subtitle">{subheader}</span>}
             />
             <CardContent >
                 <div style={{
