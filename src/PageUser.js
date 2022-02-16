@@ -70,9 +70,16 @@ class PageUser extends Component {
         .then(data => {
             data.splice(0, 0, {});
             console.log(id, data);
-            this.setState({departs: data});
+            this.setState({departs: data}, () => this.setInitialPoint(data));
         })
         .catch(err => console.error(err))
+    }
+    setInitialPoint = async (departs) => {
+        const initialPoint = await this.fetchLastHeartbeatMsg();
+        departs[0]["x_pixel"] = initialPoint.startingX;
+        departs[0]["y_pixel"] = initialPoint.startingY;
+        console.log("Initial point set", departs);
+        this.setState({departs})
     }
     fetchLastHeartbeatMsg = () => {
         const {departs, idRobot} = this.state;
@@ -118,6 +125,7 @@ class PageUser extends Component {
     realtimePosition = (initialDistance, idx, endCoord) => {
         // Disable the clicked button
         var { departs, move } = this.state;
+        const { direction } = move;
         interval = setInterval(async () => {
             const realtimeCoord = await this.fetchLastHeartbeatMsg();
             console.log("Arrived", realtimeCoord.arrived);
@@ -126,7 +134,12 @@ class PageUser extends Component {
             const runThrough = (initialDistance - distance) / initialDistance;
             const percent = Math.round(runThrough * 100);
             console.log("%", percent);
-            departs[idx - 1]["percent"] = percent;
+            if (direction === "forward") {
+                departs[idx - 1]["percent"] = percent;
+            } else {
+                departs[idx]["percent"] = percent;
+            }
+            
             departs[idx]["temp_blur"] = true;
             this.setState({departs});
             if (realtimeCoord.arrived) {
@@ -139,8 +152,9 @@ class PageUser extends Component {
     }
     handleDestChoosen = async (idx) => {
         var { departs, move } = this.state;
-        var distance = 0;
+        if (idx === 0 && move.direction === "forward") return 0;
         // Fetch last heartbeat
+        console.log("idx & departs", idx, departs[idx], departs[idx]["x_pixel"], departs[idx]["y_pixel"]);
         const realtimeCoord = await this.fetchLastHeartbeatMsg();
         const endCoord = { endX: departs[idx]["x_pixel"], endY: departs[idx]["y_pixel"]};
         const initialDistance =  Math.round(this.computeDistance(realtimeCoord, endCoord));
@@ -168,13 +182,14 @@ class PageUser extends Component {
     }
     getDeparts = () => {
         const { departs, idRobot, move} = this.state;
+        const { direction } = move;
         const departsLength = departs.length;
         return (
                 <div style={{width: "100%"}}>
                     {departs.map((item, idx) => {
-                       if(idx === 0) return <Depart key={idx} text={"Depart"} showPath={true} temp_blur={item.temp_blur} percent={item.percent} onHandleDestChoosen={()=>{console.log("Depart")}} blured={this.isBlured(idx)} ></Depart>
-                       else if(departsLength - 1 !== idx) return <Depart key={idx} index={idx} text={"Destination "+(idx)} showPath={true} temp_blur={item.temp_blur} percent={item.percent} blured={this.isBlured(idx)} onHandleDestChoosen={this.handleDestChoosen}></Depart>
-                       else return <Depart key={idx} index={idx} text={"Destination "+(idx)} temp_blur={item.temp_blur} onHandleDestChoosen={this.handleDestChoosen} blured={this.isBlured(idx)}></Depart>
+                       if(idx === 0) return <Depart key={idx} direction={direction} text={"Depart"} showPath={true} index={idx} temp_blur={item.temp_blur} percent={item.percent} onHandleDestChoosen={this.handleDestChoosen} blured={this.isBlured(idx)} ></Depart>
+                       else if(departsLength - 1 !== idx) return <Depart key={idx} direction={direction} index={idx} text={"Destination "+(idx)} showPath={true} temp_blur={item.temp_blur} percent={item.percent} blured={this.isBlured(idx)} onHandleDestChoosen={this.handleDestChoosen}></Depart>
+                       else return <Depart key={idx} direction={direction} index={idx} text={"Destination "+(idx)} temp_blur={item.temp_blur} onHandleDestChoosen={this.handleDestChoosen} blured={this.isBlured(idx)}></Depart>
                     })}
                 </div>
                 )

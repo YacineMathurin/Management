@@ -75,6 +75,22 @@
             >
               | Destination 2 |
             </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="backTo1()"
+              style="margin-left: 1em"
+            >
+              | Back To 1 |
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="backToDepart()"
+              style="margin-left: 1em"
+            >
+              — Back To Depart —
+            </button>
           </div>
           
         </fieldset>
@@ -158,7 +174,7 @@
         }, 900);
       }
       
-      function reverseDest1() {
+      function backToDepart() {
         console.log("idClient & idRobot", idClient , idRobot);
         var count = 1;
         var arrived = 0;
@@ -205,8 +221,51 @@
       }
 
       function dest2() {
-      
-      function reverseDest2() {
+        var count = 1;
+        var arrived = 0;
+        intervalDest2 = setInterval(() => {
+          progress.setAttribute("value", Math.round((count * 100) / 34));
+          db.innerText = Math.round((count * 100) / 34);
+
+          console.log(count);
+          if (count >= 34) {
+            arrived = 1;
+            clearInterval(intervalDest2);
+          }
+          axios
+            .get("http://qenvi.space:8081/updateHeartBeatWS", {
+              params: {
+                MSG_TYPE: 0,
+                ID_CLIENT: idClient,
+                ID_ROBOT: idRobot,
+                IS_MOVING: arrived === 1 ? 0 : 1,
+                PATH_INDEX: 1,
+                ARRIVED: arrived,
+                TIMESTAMP: Math.round(Date.now()/1000),
+                STATUS: 0,
+                BAT_LEVEL: 70,
+                MEMORY: 15,
+                CPU: 12,
+                X_COORD: 312,
+                Y_COORD: 146 + count * 3,
+              },
+            })
+            .then(function (response) {
+              // handle success
+              console.log(response);
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+            .then(function () {
+              // always executed
+            });
+          count++;
+        }, 900);
+      }
+    
+      function backTo1() {
         var count = 1;
         var arrived = 0;
         intervalDest2 = setInterval(() => {
