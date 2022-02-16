@@ -212,8 +212,17 @@ code {
     width: 50px;
   }
   .depart_btn {
-    width: 20em;
+    width: 100%;
     padding: 3em;
+  }
+  .user_robots {
+    flex-direction: column;
+  }
+  .user_robot_btn {
+    margin: 0 0 3em 0;
+  }
+  .depart_percentage {
+    font-size: 2em;
   }
   /*
   #MapGestionButtons #legend p {

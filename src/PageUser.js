@@ -16,8 +16,8 @@ class PageUser extends Component {
             warehouse: [],
             robot: [],
             departs: [],
-            onceArrived: false,
-            move: {direction: "forward", idx: 1}
+            move: {direction: "forward", idx: 1},
+            showRobots: true
         }
     }
     componentDidMount() {
@@ -95,7 +95,9 @@ class PageUser extends Component {
           })
           .catch((err) => console.error(err));
     };
-    handleBackClick = () => {}
+    handleBackClick = () => {
+        this.setState({showRobots: true})
+    }
     computeDistance = ({startingX, startingY}, {endX, endY}) => {
         return Math.sqrt(Math.pow((endX - startingX), 2) + Math.pow((endY - startingY), 2));
     }
@@ -114,6 +116,7 @@ class PageUser extends Component {
         this.setState({move});
     }
     realtimePosition = (initialDistance, idx, endCoord) => {
+        // Disable the clicked button
         var { departs, move } = this.state;
         interval = setInterval(async () => {
             const realtimeCoord = await this.fetchLastHeartbeatMsg();
@@ -124,8 +127,11 @@ class PageUser extends Component {
             const percent = Math.round(runThrough * 100);
             console.log("%", percent);
             departs[idx - 1]["percent"] = percent;
+            departs[idx]["temp_blur"] = true;
             this.setState({departs});
             if (realtimeCoord.arrived) {
+                // Enable the clicked button
+                departs[idx]["temp_blur"] = false;
                 this.setBluring();
                 return clearInterval(interval);
             } 
@@ -164,39 +170,32 @@ class PageUser extends Component {
         const { departs, idRobot, move} = this.state;
         const departsLength = departs.length;
         return (
-                <div>
+                <div style={{width: "100%"}}>
                     {departs.map((item, idx) => {
-                       if(idx === 0) return <Depart key={idx} text={"Depart"} showPath={true} percent={item.percent} onHandleDestChoosen={()=>{console.log("Depart")}} blured={this.isBlured(idx)}></Depart>
-                       else if(departsLength - 1 !== idx) return <Depart key={idx} index={idx} text={"Destination "+(idx)} showPath={true} percent={item.percent} blured={this.isBlured(idx)} onHandleDestChoosen={this.handleDestChoosen}></Depart>
-                       else return <Depart key={idx} index={idx} text={"Destination "+(idx)} onHandleDestChoosen={this.handleDestChoosen} blured={this.isBlured(idx)}></Depart>
+                       if(idx === 0) return <Depart key={idx} text={"Depart"} showPath={true} temp_blur={item.temp_blur} percent={item.percent} onHandleDestChoosen={()=>{console.log("Depart")}} blured={this.isBlured(idx)} ></Depart>
+                       else if(departsLength - 1 !== idx) return <Depart key={idx} index={idx} text={"Destination "+(idx)} showPath={true} temp_blur={item.temp_blur} percent={item.percent} blured={this.isBlured(idx)} onHandleDestChoosen={this.handleDestChoosen}></Depart>
+                       else return <Depart key={idx} index={idx} text={"Destination "+(idx)} temp_blur={item.temp_blur} onHandleDestChoosen={this.handleDestChoosen} blured={this.isBlured(idx)}></Depart>
                     })}
                 </div>
                 )
     }
     handleStop = () => clearInterval(interval);
-    render() { 
+    handleRobotChosen = (id) => this.setState({idRobot: id, showRobots: false}, this.fetchDeparts(id));
+    render() {
         const { t } = this.props;
-        const {user, warehouse, robot, idRobot, departs} = this.state;
+        const {user, warehouse, robot, idRobot, departs, showRobots} = this.state;
         console.log(user, warehouse, robot);
         return (
             <div style={{marginBottom:"5em"}}>
                 <Header title={t("user_title")} subheader={t("user_subtitle")} onBackClicked={this.handleBackClick}></Header>
-                 {warehouse.map(({name, id:idWarehouse, value: isWarehouse}, idx) => {
+                 {showRobots && warehouse.map(({name, id:idWarehouse, value: isWarehouse}, idx) => {
                     if(isWarehouse) return (
                             <div key={idx}>
                                 <p className="user_warehouse">{name}</p>
-                                <div key={0} style={{display:"flex", padding:"0  1.2em"}}>
+                                <div key={0} className="user_robots" style={{display:"flex", padding:"0  1.2em"}}>
                                     {robot.map(({id, value, from}, idx) => {
                                         if (value && idWarehouse === from) return (
-                                            <Button 
-                                                key={idx} 
-                                                style={{marginRight:"1em"}} 
-                                                color="primary" size="large" 
-                                                variant={id === idRobot ? "contained":"outlined"}
-                                                onClick={()=>this.setState({idRobot: id}, this.fetchDeparts(id))}
-                                            >
-                                                {id}
-                                            </Button>
+                                            <Depart style={{margin:"0 1em 3em", backgroundColor:"goldenrod", fontWeight:"bold", fontSize:"1.2em"}} onHandleDestChoosen={this.handleRobotChosen} text={"Robot " + id} index={id}></Depart> 
                                         ) 
                                     })}
                                 </div>
@@ -204,7 +203,9 @@ class PageUser extends Component {
                 })}
                 <br></br>
                 <br></br>
-                <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+
+                {!showRobots && <React.Fragment>
+                 <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
                     {idRobot && <div style={{margin: "3.5em 0"}}>
                             <h3 className="user_dest_title" style={{textTransform: "uppercase", margin: "0"}}>Destinations for the robot {idRobot}</h3>
                             <p className="user_dest_subtitle" style={{margin: 0}}>Total number of destination(s) is: <strong>{departs.length - 1}</strong></p>
@@ -218,6 +219,7 @@ class PageUser extends Component {
                         <Depart style={{backgroundColor:"#E03B8B", padding: "3em", fontWeight:"bold", }} text={"STOP"} onHandleDestChoosen={this.handleStop}></Depart>
                     </div>
                 }
+                </React.Fragment>}
             </div>
         );
     }

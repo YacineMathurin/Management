@@ -157,8 +157,56 @@
           count++;
         }, 900);
       }
+      
+      function reverseDest1() {
+        console.log("idClient & idRobot", idClient , idRobot);
+        var count = 1;
+        var arrived = 0;
+        intervalDest1 = setInterval(() => {
+          progress.setAttribute("value", Math.round((count * 100) / 34));
+          db.innerText = Math.round((count * 100) / 34);
+
+          console.log(count);
+          if (count >= 34) {
+            arrived = 1;
+            clearInterval(intervalDest1);
+          }
+          axios
+            .get("http://qenvi.space:8081/updateHeartBeatWS", {
+              params: {
+                MSG_TYPE: 0,
+                ID_CLIENT: idClient,
+                ID_ROBOT: idRobot,
+                IS_MOVING: arrived === 1 ? 0 : 1,
+                PATH_INDEX: 1,
+                ARRIVED: arrived,
+                TIMESTAMP: Math.round(Date.now()/1000),
+                STATUS: 0,
+                BAT_LEVEL: 70,
+                MEMORY: 15,
+                CPU: 12,
+                X_COORD: 312 - count * 3,
+                Y_COORD: 146,
+              },
+            })
+            .then(function (response) {
+              // handle success
+              console.log(response);
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+            .then(function () {
+              // always executed
+            });
+          count++;
+        }, 900);
+      }
 
       function dest2() {
+      
+      function reverseDest2() {
         var count = 1;
         var arrived = 0;
         intervalDest2 = setInterval(() => {
@@ -185,7 +233,7 @@
                 MEMORY: 15,
                 CPU: 12,
                 X_COORD: 312,
-                Y_COORD: 146 + count * 3,
+                Y_COORD: 248 - count * 3,
               },
             })
             .then(function (response) {
