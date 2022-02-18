@@ -142,7 +142,7 @@ class MapGestion extends React.Component {
         console.log("Request failed", error);
       });
   }
-
+  // Refresh 
   provideCoordinates() {
     var fields = this.props.showDetailsMapGestion.data.split("blob");
     var id = fields[0];
@@ -776,21 +776,8 @@ class MapGestion extends React.Component {
       : this.setState({ imageHeight: null, choosingDest: true, msg: t('manag_add_dest') });
   };
   enterArea(area) {
-    //Pas Besoin
-    /*
-    this.setState({
-      hoveredArea: area,
-      msg: `Vous êtes rentré sur ${area.shape} ${area.name} `
-    });
-    */
   }
   leaveArea(area) {
-    //Pas Besoin
-    /*
-    this.setState({
-      hoveredArea: null,
-      msg: `Vous avez quitté ${area.shape} ${area.name}`
-    });*/
   }
 
   render() {

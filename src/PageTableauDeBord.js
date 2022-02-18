@@ -95,6 +95,7 @@ function PageTableauDeBord(props) {
         )
           .then((res) => res.json())
           .then((data) => {
+            console.log(data);
             setlisteMetrics(data);
             setdefaultMetrics(data);
             provideMaps();
@@ -173,7 +174,7 @@ function PageTableauDeBord(props) {
     console.log("batLevels", batLevels);
   };
   const setFiltMoving = (value) => {
-    const movingFilter = moving == null ? value : null;
+    const movingFilter = (moving == null) ? value : null;
     setMoving(movingFilter);
     autoReset(batFilters, movingFilter);
   };
@@ -205,7 +206,7 @@ function PageTableauDeBord(props) {
 
     if (moving != null) {
       console.log("Moving set !");
-      newData = newData.filter((item) => item.STATUS === moving);
+      newData = newData.filter((item) => item.is_moving === moving);
     }
     console.log("New Data", newData);
     setlisteMetrics(newData);
