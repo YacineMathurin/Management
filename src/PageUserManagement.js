@@ -35,6 +35,7 @@ class PageUserManagement extends React.Component {
     super(props);
     this.state = {
       users: [],
+      fetchedUser: [],
       editing: false,
       allWarehouses: [],
       allRobots: [],
@@ -127,13 +128,22 @@ class PageUserManagement extends React.Component {
     this.setState({editableUserWarehouses: users[0].warehouse});
   }
   searchFilterFunction = (text) => {
-    
+    const { fetchedUser } = this.state;
+
+    const newData = fetchedUser.filter((item) => {
+      const itemData = `${item.name}`;
+      return itemData.includes(text);
+    });
+    console.log("FILTERED", newData);
+    this.setState({fetchedUser: newData, value: text});
+    // this.setState({ value: text});
   };
   resetFilter = () => {
-    
-
-  };
+    const { users } = this.state;
+    this.setState({ fetchedUser: JSON.parse(JSON.stringify(users)) });
+  }
   handleDisplayWarehouses = (idx) => {
+    console.log("handleDisplayWarehouses", idx);
     const { allWarehouses, users, fetchedUser } = this.state;
     const userWarehouses = fetchedUser[idx]["warehouse"];
     if(this.state["editing"+idx]) {
@@ -621,7 +631,7 @@ class PageUserManagement extends React.Component {
   }
   render() { 
     const { t, callBackRetourTableauDeBord, email } = this.props;
-    const {users, success, error, search, addUserMode, allowedWarehouseOnSignup} = this.state;
+    const {users, fetchedUser, success, error, search, addUserMode, allowedWarehouseOnSignup} = this.state;
     console.log(email);
     return (
       <div id="PageUserManagement">
@@ -706,7 +716,7 @@ class PageUserManagement extends React.Component {
                     
                     <TableBody>
                       {this.displayCurrentAdmin()}
-                      {users.map(({name, email, isAdmin}, idx) => {
+                      {fetchedUser.map(({name, email, isAdmin}, idx) => {
                         if(email !==  this.props.email) return this.displayUsers(name, email, isAdmin, idx)
                       })}
                     </TableBody>
@@ -727,22 +737,11 @@ class PageUserManagement extends React.Component {
                   <FormControl size="small" fullWidth variant="outlined">
                     <TextField
                       disabled={true}
+                      // disabled={fetchedUser.length > 0 ? false:true}
                       size="small"
-                      placeholder={t("dashboard_maps_search")}
+                      placeholder={t("users_search")}
                       value={search}
-                      onChange={(event) => {
-                        const { value } = event.target;
-                        // this.setState({ search: value });
-                        this.setState({search:value});
-                        if (value !== "") {
-                          // searchFilterFunction(value);
-                        } else {
-                          // this.setState({
-                          //   listeMetrics: defaultMetrics,
-                          // });
-                          // setlisteMetrics(defaultMetrics);
-                        }
-                      }}
+                      onChange={(e) => this.searchFilterFunction(e.target.value)}
                     />
                   </FormControl>
   

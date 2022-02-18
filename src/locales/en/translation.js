@@ -120,6 +120,7 @@ export const TRANSLATIONS_EN = {
   users_toast_ko: "Oups, something went wrong !",
   users_select_warehouse:"Click on a warehouse name to assign it",
   users_select_robot:"Click on a robot ID to assign it",
+  users_search:"Search for user's name",
 
   /** Page User */
   user_title: "User Page",

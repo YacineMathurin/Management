@@ -145,10 +145,6 @@ function PageTableauDeBord(props) {
       const itemData = `${item.ID_ROBOT}`;
       return itemData.includes(text);
     });
-
-    // this.setState({
-    //   listeMetrics: newData,
-    // });
     setlisteMetrics(newData);
   };
   const autoReset = (newBatLevels, movingFilter) => {
