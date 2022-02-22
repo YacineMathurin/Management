@@ -34,6 +34,7 @@ This is a fleet managemet system. For the current project we do manage bunch of 
 # Diagram
 
 ![plot](./Softrobot Diagram Dark.PNG)
+![plot](./Softrobot Diagram Light.PNG)
 
 # prerequisite
 
