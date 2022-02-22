@@ -4,21 +4,22 @@ Bonjour Yacine,
 le doc est minimal,
 pourrais-tu, s'il te plait, améliorer les points suivantes:
 On reparle lundi
+
 1. partie utilisateur
-1.1 organisation du projet vue utilisateur
-1.2 notice explicative pour utilisateur
-1.3 vidéo ou gif de l'exemple d'utilisation
+   1.1 organisation du projet vue utilisateur
+   1.2 notice explicative pour utilisateur
+   1.3 vidéo ou gif de l'exemple d'utilisation
 
 2. partie développeur
-2.1 comment le projet est organisé UML vue développeur
-2.2 bases des données et d'autres dépendances
-2.3 authentification de démo, ajouter l'utilisateur, assigner les droits
-2.4 description des US/commits pour voir des modules à changer
-2.5 déploiement
-2.6 debug recommendations
-2.7 futurs actions à effectuer
-2.8 recommendation sécurité
-2.9 brève explication des US (des travaux realisés)
+   2.1 comment le projet est organisé UML vue développeur
+   2.2 bases des données et d'autres dépendances
+   2.3 authentification de démo, ajouter l'utilisateur, assigner les droits
+   2.4 description des US/commits pour voir des modules à changer
+   2.5 déploiement
+   2.6 debug recommendations
+   2.7 futurs actions à effectuer
+   2.8 recommendation sécurité
+   2.9 brève explication des US (des travaux realisés)
 
 # Note
 
@@ -29,6 +30,10 @@ Please before working on this project, create a new branch, implement and test y
 # Usage
 
 This is a fleet managemet system. For the current project we do manage bunch of robots in one or more warehouse. A system's admin draws in a representative image (slam) of a warehouse, a path for robots to perform a specified action (moving to some destinations mainly in a purpose of delivrying simple package of really heavy one), then affects the management of the robots to previously created and granted users.
+
+# Diagram
+
+![plot](./Softrobot Diagram Light.PNG)
 
 # prerequisite
 

@@ -1,0 +1,15 @@
+-- Connection --
+
+if (!Admin)
+
+    Entrepôts et Robots autorisés --> Depacement Robots
+
+else
+
+    Tableau de bord robots --> Détails Robots --> Gestion de Carte --> Gestion de destination
+
+    Tableau de bord entrepôts --> Visualisation deplacement robot en temps réel
+
+    Gestion des utilisateurs
+
+    Entrepôts et Robots autorisés --> Depacement Robots
