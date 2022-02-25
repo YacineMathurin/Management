@@ -1,4 +1,4 @@
-# UPD 22 Feb. 2022
+# UPD 25 Feb. 2022
 
 Bonjour Yacine,
 le doc est minimal,
@@ -36,6 +36,10 @@ This is a fleet managemet system. For the current project we do manage bunch of 
 ![plot](./Softrobot Diagram Light.PNG)
 
 # prerequisite
+
+You should have had **Git** installed, if not please visit [this page](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
+You should have had **Node** and **npm** installed if not please visit [this page](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), after intalling try node -v and npm -v to chech everything is okay.
 
 You should have had setup the backend handling authentification and autorization at this page: [Softrobot Access](https://www.qenvilab.space/yacine/softrobot_access)
 
