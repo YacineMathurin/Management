@@ -70,6 +70,7 @@ class PageUserManagement extends React.Component {
     })
     .catch(err => {
       console.error(err);
+      this.setState({errorMessage: "users_error_fetch_all",error: true});
     })
   }
   provideMetrics = () => {
@@ -91,6 +92,7 @@ class PageUserManagement extends React.Component {
       })
       .catch((error) => {
         console.error("Request failed", error);
+        this.setState({error: true});
       });
   };
   getAvailableRobotsOnSignup = () => {
@@ -325,7 +327,10 @@ class PageUserManagement extends React.Component {
       this.fetchUsers();
       this.editMode();
     })
-    .catch(err=> console.log(err))
+    .catch(err=> { 
+      console.log(err);
+      // this.setState({errorMessage: "users_toast_ko",error: true});      
+    })
   };
   editMode = (idx) => {
     const { users, fetchedUser } = this.state;
@@ -520,8 +525,8 @@ class PageUserManagement extends React.Component {
         color="primary" 
         style={{marginRight:"1em"}}
         onClick={() => this.addUser()}
-      ><span>CREATE</span></Button>
-      <Button  size="small" variant="outlined" color="default"onClick={() => this.setState({addUserMode: false})}>CLOSE</Button>
+      ><span>{t("users_add_user")}</span></Button>
+      <Button  size="small" variant="outlined" color="default"onClick={() => this.setState({addUserMode: false})}>{t("users_close")}</Button>
     </div>
   )}
   addUser = () => {
@@ -553,18 +558,20 @@ class PageUserManagement extends React.Component {
     })
     .catch( err =>{
       console.error(err);
+      this.setState({errorMessage:"users_error_add", error: true});
     })
   }
   deleteIcon = (idx)=> { 
     const {fetchedUser} = this.state;
+    const { t } = this.props;
     const body = {email: fetchedUser[idx]["email"]};
     const handleDelete = () => {
-      const result = window.confirm("Do you confirm deletion ?");
+      const result = window.confirm(t("users_confirm_delete"));
       if(result) confirmDelete();
     }
     const confirmDelete = () => {
       console.log(body);
-      fetch(Const.URL_WS_DELETE_USER,{
+      fetch(Const.URL_WS_DELETE_USER, {
         method:"POST",
         headers:{
           "Content-Type":"application/json"
@@ -578,7 +585,7 @@ class PageUserManagement extends React.Component {
           this.fetchUsers()
       })
       .catch(err => {
-        this.setState({error: true})
+        this.setState({errorMessage: "users_error_deletion", error: true });
       })
     }
     return (
@@ -631,7 +638,7 @@ class PageUserManagement extends React.Component {
   }
   render() { 
     const { t, callBackRetourTableauDeBord, email } = this.props;
-    const {users, fetchedUser, success, error, search, addUserMode, allowedWarehouseOnSignup} = this.state;
+    const {users, fetchedUser, success, error, search, addUserMode, allowedWarehouseOnSignup, errorMessage} = this.state;
     console.log(email);
     return (
       <div id="PageUserManagement">
@@ -649,7 +656,7 @@ class PageUserManagement extends React.Component {
                   />}
                   {error && <Toast
                     severity="error"
-                    message={t("users_toast_ko")}
+                    message={t(errorMessage)}
                     callback={() => {
                       this.setState({error: false})
                     }}
@@ -756,7 +763,6 @@ class PageUserManagement extends React.Component {
                     color="secondary"
                     size="small"
                     onClick={() => this.resetFilter()}
-                    
                   >
                     {t("dashboard_maps_filter_reset")}
                   </Button>

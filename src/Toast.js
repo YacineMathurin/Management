@@ -39,7 +39,7 @@ export default function CustomizedSnackbars(props) {
   return (
     // severity = error (red), warning (yellow), info (blue), success (green)
     <div className={classes.root}>
-      <Snackbar open={open} autoHideDuration={1500} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert onClose={handleClose} severity={props.severity}>
           {props.message}
         </Alert>

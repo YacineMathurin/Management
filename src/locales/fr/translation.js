@@ -1,4 +1,5 @@
 export const TRANSLATIONS_FR = {
+  /** Login Page */
   title: "Authentification",
   firstname: "Prénom",
   username: "Email",
@@ -7,6 +8,9 @@ export const TRANSLATIONS_FR = {
   contact: "Contactez le service client / technique",
   go_button: "lancer le logiciel Softrobot",
   signup_button: "Creer mon compte",
+  reset_button: "Obtenir code de reinitialisation",
+  rest_code: "Code de Reinitialisation",
+  confirm_rest_button: "Reinitialiser mon mot de passe",
   copyright: "Tous droits réservés © ",
   company: "QENVI ROBOTICS",
   translate_text: "Traduire le site en ·",
@@ -18,6 +22,8 @@ export const TRANSLATIONS_FR = {
   reset_password:"Mot de passe oublié",
   no_account:"Creer votre compte",
   has_account:"J'ai déjà un compte",
+  login_ko_reset: "Verifier que l'email entrer est correct, Si oui, consulter votre boite mail",
+
 
   /** Side Bar */
   sidebar_robots:"LISTER TOUT VOS ROBOTS",
@@ -98,4 +104,31 @@ export const TRANSLATIONS_FR = {
   manag_step2_help: 'Pour supprimer une destination, cliquez sur un point existant de l\'image puis cliquez sur "Effacer une destination"',
   manag_step3_help: 'Pour supprimer toutes les destination, cliquez juste sur "Effacer destinations"',
   manag_step4_help: 'Le bouton "GO !", envoie une action avec le nombre de points au robot',
+
+    /** Manage Users */
+    users_title: "Gestion des utilisateurs",
+    users_subtitle: "Creation et assignation de droit",
+    users_col1: "Prénom",
+    users_col2: "Entrepôt",
+    users_col3: "Robots",
+    users_add_user: "+ Nouvel utilisateur",
+    users_add_warehouse: "+ Nouvel entrepôt",
+    users_toast_ok: "Parfait, Operation reussi !",
+    users_toast_ko: "Oups, souci technique, reessayer plus tard !",
+    users_select_warehouse:"Cliquez sur un entrepôt pour l'assigner",
+    users_select_robot:"Cliquez sur un ID robot pour l'assigner",
+    users_search:"Rechercher par nom",
+    users_error_deletion:"Erreur au cours de la suppression, reessayer plus tard",
+    users_error_add: "La requête à échoué, pour rappel l'email utilisateur doit être unique",
+    users_confirm_delete: "Confirmez vous la suppression ?",
+    users_add_user:"AJOUTER",
+    users_close: "FERMER",
+    users_error_fetch_all: "Erreur lors de la recupération des cuomptes utilisateurs, reessayer plus tard",
+
+    /** Page User */
+    user_title: "Page Utilisateur",
+    user_subtitle:"Choisissez votre robot puis choisissez vos destinations",
+    user_destinations_title: "DESTINATIONs DU ROBOT ",
+    user_destinations_total: "Le nombre total de destination(s) est:",
+    user_destinations_helper: "Cliquer sur votre prochaine destination  "
 };

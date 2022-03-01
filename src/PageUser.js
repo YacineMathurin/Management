@@ -222,9 +222,9 @@ class PageUser extends Component {
                 {!showRobots && <React.Fragment>
                  <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
                     {idRobot && <div style={{margin: "3.5em 0"}}>
-                            <h3 className="user_dest_title" style={{textTransform: "uppercase", margin: "0"}}>Destinations for the robot {idRobot}</h3>
-                            <p className="user_dest_subtitle" style={{margin: 0}}>Total number of destination(s) is: <strong>{departs.length - 1}</strong></p>
-                            <p className="user_dest_helper" style={{margin: 0}}>Click on your next destination</p>
+                            <h3 className="user_dest_title" style={{textTransform: "uppercase", margin: "0"}}> {t("user_destinations_title")}{idRobot}</h3>
+                            <p className="user_dest_subtitle" style={{margin: 0}}>{t("user_destinations_total")} <strong>{departs.length - 1}</strong></p>
+                            <p className="user_dest_helper" style={{margin: 0}}>{t("user_destinations_helper")}</p>
                         </div>
                     }
                     {this.getDeparts()}

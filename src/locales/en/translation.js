@@ -20,7 +20,7 @@ export const TRANSLATIONS_EN = {
   login_ok: "login succeed",
   logout_ok: "logout succeed",
   login_ko: "Connexion failed, please try later",
-  login_ko_reset: "Check your email is correct, if so You've alreaady received by email your code",
+  login_ko_reset: "Check that email you just typed is correct, if so You've alreaady received by email your code",
   reset_password:"Password Forgotten",
   no_account:"Create your account",
   has_account:"I Already have an account",
@@ -121,8 +121,17 @@ export const TRANSLATIONS_EN = {
   users_select_warehouse:"Click on a warehouse name to assign it",
   users_select_robot:"Click on a robot ID to assign it",
   users_search:"Search for user's name",
+  users_error_deletion:"Error on deletion, try later please",
+  users_error_add: "Something went wrong, check if the typed user's email hasn't been used before",
+  users_confirm_delete: "Do you confirm deletion ?",
+  users_add_user:"CREATE",
+  users_close: "CLOSE",
+  users_error_fetch_all: "Can't retreive all users, please try again later",
 
   /** Page User */
   user_title: "User Page",
-  user_subtitle:"Choose robot then interact with it"
+  user_subtitle:"Choose robot then interact with it",
+  user_destinations_title: "DESTINATIONS FOR THE ROBOT ",
+  user_destinations_total: "Total number of destination(s) is:",
+  user_destinations_helper: "Click on your next destination"
 };
